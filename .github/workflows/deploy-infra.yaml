@@ -42,7 +42,7 @@ jobs:
       - name: Deploy Networking
         if: ${{ inputs.networking == true }}
         run: |
-          cd $GITHUB_WORKSPACE/terraform/networking
+          cd $GITHUB_WORKSPACE/infra/networking
           terraform init
           terraform ${{ inputs.action }} --auto-approve \
             -var 'compartment_ocid=${{ secrets.OCI_COMPARTMENT_OCID }}'
@@ -51,11 +51,11 @@ jobs:
         if: ${{ inputs.compute == true }}
         run: |
           # Ensure the subnet ID is available
-          cd $GITHUB_WORKSPACE/terraform/networking
+          cd $GITHUB_WORKSPACE/infra/networking
           terraform init
           export "TF_VAR_subnet_id=$(terraform output -raw subnet_id)"
 
-          cd $GITHUB_WORKSPACE/terraform/compute
+          cd $GITHUB_WORKSPACE/infra/compute
           terraform init
 
           terraform ${{ inputs.action }} --auto-approve \
