@@ -1,0 +1,64 @@
+name: Promote Release to Prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to promote (e.g., 1.2.3). Leave blank for latest."
+        required: false
+        default: ""
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # so we have tags
+
+      - name: Determine version to promote
+        id: version
+        run: |
+          if [ -z "${{ github.event.inputs.version }}" ]; then
+            VERSION=$(git describe --tags --abbrev=0)
+          else
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Promoting version: $VERSION"
+
+      - name: Download release artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: release.yaml
+          workflow_conclusion: success
+          name: release-build
+          path: ./release
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "Deploying frontend (version $VERSION)..."
+            sudo rm -rf /opt/sep-business/frontend/*
+            sudo cp -r ${{ github.workspace }}/release/frontend/* /opt/sep-business/frontend/
+
+            echo "Deploying backend..."
+            sudo rm -rf /opt/sep-business/backend/*
+            sudo cp -r ${{ github.workspace }}/release/backend/* /opt/sep-business/backend/
+
+            echo "Installing backend dependencies..."
+            cd /opt/sep-business/backend/
+            npm install --production
+
+            echo "Restarting backend service..."
+            sudo systemctl daemon-reload
+            sudo systemctl restart sep-business-backend
+            sudo systemctl status sep-business-backend
