@@ -1,7 +1,7 @@
 document.getElementById('fetchBtn').addEventListener('click', async () => {
     const outputElement = document.getElementById('output');
     try {
-        const response = await fetch('http://localhost:3000/api/hello');
+        const response = await fetch(`${window.APP_CONFIG.API_BASE_URL}/api/hello`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
