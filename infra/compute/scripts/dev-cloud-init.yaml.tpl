@@ -45,6 +45,8 @@ write_files:
       }
 
 runcmd:
+  # Allow new SSH connections on port 22
+  - iptables -I INPUT 1 -p tcp --dport 22 -m conntrack --ctstate NEW -j ACCEPT
   # Allow new incoming TCP connections on port 80 (HTTP)
   - iptables -I INPUT 5 -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
   # Allow new incoming TCP connections on port 443 (HTTPS)
