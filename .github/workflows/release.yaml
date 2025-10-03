@@ -1,0 +1,84 @@
+name: Release Build & Deploy to Dev
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Get release version
+        id: version
+        run: echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+
+      - name: Inject version into config.js
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          echo "Injecting version $VERSION into frontend/config.js"
+          sed -i "s/version: \".*\"/version: \"$VERSION\"/" frontend/config.js
+
+      - name: Package app
+        run: |
+          mkdir artifact
+          cp -r frontend artifact/frontend
+          cp -r backend artifact/backend
+          tar czf app.tar.gz artifact
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-build
+          path: app.tar.gz
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: release
+    environment: dev
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-build
+
+      - name: Extract artifact
+        run: tar xzf app.tar.gz
+
+      - name: Deploy to Dev
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_DEV }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "Deploying to Dev..."
+            sudo rm -rf /opt/sep-business/frontend/*
+            sudo cp -r artifact/frontend/* /opt/sep-business/frontend/
+
+            sudo rm -rf /opt/sep-business/backend/*
+            sudo cp -r artifact/backend/* /opt/sep-business/backend/
+
+            cd /opt/sep-business/backend
+            npm install --production
+
+            sudo systemctl daemon-reload
+            sudo systemctl restart sep-business-backend
+            sudo systemctl status sep-business-backend
