@@ -1,36 +1,18 @@
-name: Promote Release to Prod
+name: Promote to Prod
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Version to promote (e.g., 1.2.3). Leave blank for latest."
-        required: false
-        default: ""
+
+permissions:
+  contents: read
 
 jobs:
-  promote:
+  promote-prod:
+    name: Deploy to Prod
     runs-on: ubuntu-latest
     environment: prod
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # so we have tags
-
-      - name: Determine version to promote
-        id: version
-        run: |
-          if [ -z "${{ github.event.inputs.version }}" ]; then
-            VERSION=$(git describe --tags --abbrev=0)
-          else
-            VERSION="${{ github.event.inputs.version }}"
-          fi
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Promoting version: $VERSION"
-
-      - name: Download release artifact
+      - name: Download latest release artifact
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -39,20 +21,23 @@ jobs:
           name: release-build
           path: ./release
 
+      - name: Extract artifact
+        run: tar -xzf ./release/app.tar.gz -C ./release
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ secrets.PROD_SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "Deploying frontend (version $VERSION)..."
+            echo "Deploying frontend (version ${{ env.VERSION }})..."
             sudo rm -rf /opt/sep-business/frontend/*
-            sudo cp -r ${{ github.workspace }}/release/frontend/* /opt/sep-business/frontend/
+            sudo cp -r $GITHUB_WORKSPACE/release/frontend/* /opt/sep-business/frontend/
 
             echo "Deploying backend..."
             sudo rm -rf /opt/sep-business/backend/*
-            sudo cp -r ${{ github.workspace }}/release/backend/* /opt/sep-business/backend/
+            sudo cp -r $GITHUB_WORKSPACE/release/backend/* /opt/sep-business/backend/
 
             echo "Installing backend dependencies..."
             cd /opt/sep-business/backend/

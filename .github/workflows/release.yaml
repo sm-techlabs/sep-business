@@ -1,84 +1,95 @@
-name: Release Build & Deploy to Dev
+name: Release & Deploy to Dev
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   release:
+    name: Semantic Release
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          fetch-depth: 0
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Run semantic release
+        uses: go-semantic-release/action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
-
-      - name: Get release version
-        id: version
-        run: echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
-
-      - name: Inject version into config.js
+      - name: Tag v1 and v1.2
+        if: success()
         run: |
-          VERSION=${{ steps.version.outputs.version }}
-          echo "Injecting version $VERSION into frontend/config.js"
-          sed -i "s/version: \".*\"/version: \"$VERSION\"/" frontend/config.js
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $LATEST_TAG"
+          echo "VERSION=$LATEST_TAG" >> $GITHUB_ENV
 
-      - name: Package app
+          CLEAN_TAG=${LATEST_TAG#v}
+          MAJOR=$(echo $CLEAN_TAG | cut -d. -f1)
+          MINOR=$(echo $CLEAN_TAG | cut -d. -f1-2)
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -f "v$MINOR"
+          git tag -f "v$MAJOR"
+          git push origin "v$MINOR" --force
+          git push origin "v$MAJOR" --force
+
+      - name: Build app
         run: |
-          mkdir artifact
-          cp -r frontend artifact/frontend
-          cp -r backend artifact/backend
-          tar czf app.tar.gz artifact
+          mkdir dist
+          cp -r frontend dist/
+          cp -r backend dist/
+          tar -czf app.tar.gz -C dist .
 
-      - name: Upload artifact
+      - name: Upload release artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-build
           path: app.tar.gz
 
   deploy-dev:
+    name: Deploy to Dev
     runs-on: ubuntu-latest
-    needs: release
     environment: dev
-
+    needs: release
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download release artifact
+        uses: actions/download-artifact@v4
         with:
           name: release-build
+          path: ./release
 
       - name: Extract artifact
-        run: tar xzf app.tar.gz
+        run: tar -xzf ./release/app.tar.gz -C ./release
 
-      - name: Deploy to Dev
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST_DEV }}
+          host: ${{ secrets.DEV_SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "Deploying to Dev..."
+            echo "Deploying frontend (version ${{ env.VERSION }})..."
             sudo rm -rf /opt/sep-business/frontend/*
-            sudo cp -r artifact/frontend/* /opt/sep-business/frontend/
+            sudo cp -r $GITHUB_WORKSPACE/release/frontend/* /opt/sep-business/frontend/
 
+            echo "Deploying backend..."
             sudo rm -rf /opt/sep-business/backend/*
-            sudo cp -r artifact/backend/* /opt/sep-business/backend/
+            sudo cp -r $GITHUB_WORKSPACE/release/backend/* /opt/sep-business/backend/
 
-            cd /opt/sep-business/backend
+            echo "Installing backend dependencies..."
+            cd /opt/sep-business/backend/
             npm install --production
 
+            echo "Restarting backend service..."
             sudo systemctl daemon-reload
             sudo systemctl restart sep-business-backend
             sudo systemctl status sep-business-backend
