@@ -1,0 +1,41 @@
+name: Deploy Code to Dev or Prod
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Map branch to environment
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          echo "Deploying frontend..."
+          sudo rm -rf /opt/sep-business/frontend/*
+          sudo cp -r ${{ github.workspace }}/frontend/* /var/www/html/
+
+          echo "Deploying backend..."
+          sudo rm -rf /opt/sep-business/backend/*
+          sudo cp -r ${{ github.workspace }}/backend/* /opt/sep-business/backend/
+
+          echo "Installing backend dependencies..."
+          cd /opt/sep-business/backend/
+          npm install --production
+
+          echo "Restarting backend service..."
+          sudo systemctl daemon-reload
+          sudo systemctl restart sep-business-backend
+          sudo systemctl status sep-business-backend
