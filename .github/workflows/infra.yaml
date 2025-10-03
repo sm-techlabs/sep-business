@@ -1,0 +1,64 @@
+name: Deploy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        type: choice
+        options:
+          - apply
+          - destroy
+        required: true
+        default: apply
+      networking:
+        description: 'Deploy Networking components (e.g., VCN, subnets)'
+        type: boolean
+        required: true
+        default: false
+      compute:
+        description: 'Deploy Compute (VMs)'
+        type: boolean
+        required: true
+        default: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up OCI
+        uses: sm-techlabs/github-actions-toolkit/actions/connect-to-oci@v1
+        with:
+          oci-config-file: ${{ secrets.OCI_CONFIG }}
+          oci-private-key: ${{ secrets.OCI_API_KEY }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Deploy Networking
+        if: ${{ inputs.networking == true }}
+        run: |
+          cd $GITHUB_WORKSPACE/infra/networking
+          terraform init
+          terraform ${{ inputs.action }} --auto-approve \
+            -var 'compartment_ocid=${{ secrets.OCI_COMPARTMENT_OCID }}'
+
+      - name: Deploy Compute
+        if: ${{ inputs.compute == true }}
+        run: |
+          # Ensure the subnet ID is available
+          cd $GITHUB_WORKSPACE/infra/networking
+          terraform init
+          export "TF_VAR_subnet_id=$(terraform output -raw subnet_id)"
+
+          cd $GITHUB_WORKSPACE/infra/compute
+          terraform init
+
+          terraform ${{ inputs.action }} --auto-approve \
+            -var 'compartment_ocid=${{ secrets.OCI_COMPARTMENT_OCID }}' \
+            -var 'cloudflare_zone_id=${{ secrets.CLOUDFLARE_ZONE_ID }}' \
+            -var 'cloudflare_api_token=${{ secrets.CLOUDFLARE_API_TOKEN }}' \
