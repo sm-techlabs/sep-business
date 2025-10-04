@@ -39,7 +39,7 @@ jobs:
     uses: ./.github/workflows/_build-and-deploy.yaml
     with:
       environment: dev
-      version: ${{ needs.release.outputs.version }}
+      version: ${{ github.sha }}
     secrets: inherit
 
   promote-prod:
