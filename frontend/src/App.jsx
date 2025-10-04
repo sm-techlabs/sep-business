@@ -8,7 +8,7 @@ import './styles/global.css';
 
 const App = () => {
   return (
-    <div className="app">
+    <div className="app-container">
       <Header />
       <main>
         <Routes>
