@@ -37,6 +37,7 @@ write_files:
     content: |
       https://${frontend_subdomain}.${domain} {
           root * /opt/sep-business/frontend
+          try_files {path} /index.html
           file_server
       }
 
@@ -45,8 +46,6 @@ write_files:
       }
 
 runcmd:
-  # Allow new SSH connections on port 22
-  - iptables -I INPUT 1 -p tcp --dport 22 -m conntrack --ctstate NEW -j ACCEPT
   # Allow new incoming TCP connections on port 80 (HTTP)
   - iptables -I INPUT 5 -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
   # Allow new incoming TCP connections on port 443 (HTTPS)
@@ -66,28 +65,13 @@ runcmd:
   - git clone --depth 1 https://github.com/sm-techlabs/sep-business /opt/sep-business
 
   # Replace the frontend config with the correct API URL
-  - API_BASE_URL='https://${api_subdomain}.${domain}'
-  - >
-    sed -i -E
-    "s|(API_BASE_URL[[:space:]]*:[[:space:]]*\")[^\"]*(\")|\1$${API_BASE_URL}\2|"
-    /opt/sep-business/frontend/js/config.js
+  - echo "VITE_API_BASE_URL=https://${api_subdomain}.${domain}" | tee -a /etc/environment
+  - export VITE_API_BASE_URL="https://${api_subdomain}.${domain}"
 
   # Set permissions (directories: 755, files: 644)
   - find /opt/sep-business -type d -exec chmod 755 {} \;
   - find /opt/sep-business -type f -exec chmod 644 {} \;
   - chown -R www-data:www-data /opt
-
-  # # Format and mount the block volume
-  # - |
-  #   for device in /dev/oracleoci/oraclevd*; do
-  #     if oci-iscsi-config -c "$device" | grep -q "unknown"; then
-  #       mkfs.ext4 "$device"
-  #       echo "$device /var/lib/caddy ext4 defaults,noatime,_netdev,nofail 0 2" >> /etc/fstab
-  #       break
-  #     fi
-  #   done
-  # - mkdir -p /var/lib/caddy
-  # - mount -a
 
   # Backend setup
   - cd /opt/sep-business/backend

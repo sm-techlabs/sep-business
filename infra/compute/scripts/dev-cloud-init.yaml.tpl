@@ -26,18 +26,27 @@ write_files:
       Restart=always
       User=www-data
       Group=www-data
-      Environment=PORT=3000
-      Environment=JWT_SECRET=${jwt_secret}
-    
+      Environment="PORT=3000"
+      Environment="JWT_SECRET=${jwt_secret}"
+      EnvironmentFile=/etc/environment
+
       [Install]
       WantedBy=multi-user.target
 
   - path: /etc/caddy/Caddyfile
     permissions: '0644'
     content: |
+      {
+          email admin@${domain}
+          # Optional but recommended: enable automatic HTTPS and logging
+          auto_https on
+      }
+
       https://${frontend_subdomain}.${domain} {
           root * /opt/sep-business/frontend
+          try_files {path} /index.html
           file_server
+          encode gzip zstd
       }
 
       https://${api_subdomain}.${domain} {
@@ -45,59 +54,40 @@ write_files:
       }
 
 runcmd:
-  # Allow new SSH connections on port 22
-  - iptables -I INPUT 1 -p tcp --dport 22 -m conntrack --ctstate NEW -j ACCEPT
-  # Allow new incoming TCP connections on port 80 (HTTP)
-  - iptables -I INPUT 5 -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
-  # Allow new incoming TCP connections on port 443 (HTTPS)
-  - iptables -I INPUT 6 -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
+  # Firewall rules (prefer ufw for readability & persistence)
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
+  - ufw --force enable
 
-  # Install Caddy
-  - >
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key'
-    | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-  - >
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt'
-    | tee /etc/apt/sources.list.d/caddy-stable.list
+  # Install Caddy (cleaner key installation)
+  - apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
+  - curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor | tee /usr/share/keyrings/caddy.gpg >/dev/null
+  - curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | tee /etc/apt/sources.list.d/caddy.list
   - apt-get update
-  - apt-get install -y -o Dpkg::Options::="--force-confold" caddy
+  - apt-get install -y caddy
 
-  # Clone the source code (default branch: main)
+  # Clone the repository
   - git clone --depth 1 https://github.com/sm-techlabs/sep-business /opt/sep-business
 
-  # Replace the frontend config with the correct API URL
-  - API_BASE_URL='https://${api_subdomain}.${domain}'
-  - >
-    sed -i -E
-    "s|(API_BASE_URL[[:space:]]*:[[:space:]]*\")[^\"]*(\")|\1$${API_BASE_URL}\2|"
-    /opt/sep-business/frontend/js/config.js
+  # Environment configuration
+  - echo "VITE_API_BASE_URL=https://${api_subdomain}.${domain}" | tee -a /etc/environment
+  - export VITE_API_BASE_URL="https://${api_subdomain}.${domain}"
 
-  # Set permissions (directories: 755, files: 644)
+  # Permissions (recursive + consistent ownership)
+  - chown -R www-data:www-data /opt/sep-business
   - find /opt/sep-business -type d -exec chmod 755 {} \;
   - find /opt/sep-business -type f -exec chmod 644 {} \;
-  - chown -R www-data:www-data /opt
-
-  # # Format and mount the block volume
-  # - |
-  #   for device in /dev/oracleoci/oraclevd*; do
-  #     if oci-iscsi-config -c "$device" | grep -q "unknown"; then
-  #       mkfs.ext4 "$device"
-  #       echo "$device /var/lib/caddy ext4 defaults,noatime,_netdev,nofail 0 2" >> /etc/fstab
-  #       break
-  #     fi
-  #   done
-  # - mkdir -p /var/lib/caddy
-  # - mount -a
 
   # Backend setup
   - cd /opt/sep-business/backend
-  - npm install --omit=dev
+  - npm ci --omit=dev
 
   # Enable and start backend service
   - systemctl daemon-reload
-  - systemctl enable --now sep-business-backend
+  - systemctl enable sep-business-backend
+  - systemctl restart sep-business-backend
 
-  # Restart Caddy
+  # Restart Caddy to apply configuration
   - systemctl restart caddy
 
-final_message: "The system is now configured and ready to use."
+final_message: "✅ SEP Business instance is now configured and ready!"
