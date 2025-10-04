@@ -36,14 +36,8 @@ write_files:
   - path: /etc/caddy/Caddyfile
     permissions: '0644'
     content: |
-      {
-          email admin@${domain}
-          # Optional but recommended: enable automatic HTTPS and logging
-          auto_https on
-      }
-
       https://${frontend_subdomain}.${domain} {
-          root * /opt/sep-business/frontend
+          root * /opt/sep-business/frontend/dist
           try_files {path} /index.html
           file_server
           encode gzip zstd
@@ -54,17 +48,21 @@ write_files:
       }
 
 runcmd:
-  # Firewall rules (prefer ufw for readability & persistence)
-  - ufw allow 80/tcp
-  - ufw allow 443/tcp
-  - ufw --force enable
+  # Allow new incoming TCP connections on port 80 (HTTP)
+  - iptables -I INPUT 5 -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+  # Allow new incoming TCP connections on port 443 (HTTPS)
+  - iptables -I INPUT 6 -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
 
-  # Install Caddy (cleaner key installation)
-  - apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
-  - curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor | tee /usr/share/keyrings/caddy.gpg >/dev/null
-  - curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | tee /etc/apt/sources.list.d/caddy.list
+
+  # Install Caddy
+  - >
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key'
+    | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  - >
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt'
+    | tee /etc/apt/sources.list.d/caddy-stable.list
   - apt-get update
-  - apt-get install -y caddy
+  - apt-get install -y -o Dpkg::Options::="--force-confold" caddy
 
   # Clone the repository
   - git clone --depth 1 https://github.com/sm-techlabs/sep-business /opt/sep-business
@@ -77,6 +75,11 @@ runcmd:
   - chown -R www-data:www-data /opt/sep-business
   - find /opt/sep-business -type d -exec chmod 755 {} \;
   - find /opt/sep-business -type f -exec chmod 644 {} \;
+
+  # Frontend setup
+  - cd /opt/sep-business/frontend
+  - npm ci --omit-dev
+  - npm run build
 
   # Backend setup
   - cd /opt/sep-business/backend

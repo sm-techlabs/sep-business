@@ -12,60 +12,33 @@ permissions:
   contents: write
 
 concurrency:
-  group: release-deploy
+  group: release
   cancel-in-progress: true
   
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Run semantic release
         uses: go-semantic-release/action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and package release
-        run: |
-          # Create all necessary directories
-          mkdir -p release_bundle/frontend release_bundle/backend
-
-          # Build the frontend
-          cd frontend
-          npm ci
-          npm run build
-          cd ..
-
-          # Copy built frontend *contents* (not the dist folder itself)
-          cp -r frontend/dist/* release_bundle/frontend/
-
-          # Copy backend
-          cp -r backend/* release_bundle/backend
-
-          # Package everything
-          tar -czf release.tar.gz -C release_bundle .
-
-
-      - name: Upload release artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-bundle
-          path: release.tar.gz
-
   deploy-dev:
     needs: release
-    uses: ./.github/workflows/_deploy.yaml
+    uses: ./.github/workflows/_build-and-deploy.yaml
     with:
       environment: dev
     secrets: inherit
 
   promote-prod:
     needs: deploy-dev
-    uses: ./.github/workflows/_deploy.yaml
+    uses: ./.github/workflows/_build-and-deploy.yaml
     with:
       environment: prod
     secrets: inherit

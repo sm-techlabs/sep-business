@@ -1,0 +1,98 @@
+name: Build and Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      # --- Checkout code ---
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # --- Build & Package ---
+      - name: Build and package release
+        run: |
+          set -e
+          echo "📦 Building release for environment: ${{ inputs.environment }}"
+
+          # Prepare directories
+          mkdir -p release_bundle/frontend release_bundle/backend
+
+          # Inject API_BASE_URL into frontend config
+          echo "🔧 Injecting API base URL..."
+          cd frontend
+          sed -i "s#__API_BASE_URL__#${{ vars.API_BASE_URL }}#" src/config.js
+          echo "✅ Using API URL:" && cat src/config.js
+
+          # Build frontend
+          echo "🏗️ Building frontend..."
+          npm ci
+          npm run build
+          cd ..
+
+          # Copy built frontend contents
+          cp -r frontend/dist release_bundle/frontend/
+
+          # Copy backend code
+          cp -r backend/* release_bundle/backend/
+
+          # Package everything
+          echo "🗜️ Packaging release bundle..."
+          tar -czf release.tar.gz -C release_bundle .
+          echo "✅ Release packaged as release.tar.gz"
+
+      # --- Copy to VM ---
+      - name: Copy release tarball to remote server
+        run: |
+          echo "🔑 Preparing SSH key..."
+          echo "${{ secrets.SSH_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+          echo "🚀 Copying release.tar.gz to remote host..."
+          scp -o StrictHostKeyChecking=no -i private_key.pem \
+            release.tar.gz \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/release.tar.gz
+
+      # --- Deploy remotely ---
+      - name: Run remote deployment
+        run: |
+          echo "⚙️ Starting remote deployment..."
+          ssh -o StrictHostKeyChecking=no -i private_key.pem \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+              set -e
+              cd /home/${USER}
+
+              echo "📂 Extracting release tarball..."
+              tar -xzf release.tar.gz
+              rm release.tar.gz
+
+              echo "📦 Deploying to /opt/sep-business..."
+              sudo mkdir -p /opt/sep-business
+              sudo rm -rf /opt/sep-business/frontend /opt/sep-business/backend
+              sudo mv frontend backend /opt/sep-business/
+
+              echo "📦 Installing backend dependencies..."
+              cd /opt/sep-business/backend
+              npm ci --omit=dev
+
+              echo "🔄 Restarting backend service..."
+              sudo systemctl daemon-reload
+              sudo systemctl restart sep-business-backend
+              sudo systemctl status sep-business-backend --no-pager
+
+              echo "✅ Deployment successful at $(date)" | sudo tee /opt/sep-business/DEPLOY_LOG.txt
+
+              # Cleanup
+              cd /home/${USER}
+              rm -rf frontend backend || true
+          EOF

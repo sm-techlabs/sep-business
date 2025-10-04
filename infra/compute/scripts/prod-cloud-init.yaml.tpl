@@ -26,9 +26,10 @@ write_files:
       Restart=always
       User=www-data
       Group=www-data
-      Environment=PORT=3000
-      Environment=JWT_SECRET=${jwt_secret}
-    
+      Environment="PORT=3000"
+      Environment="JWT_SECRET=${jwt_secret}"
+      EnvironmentFile=/etc/environment
+
       [Install]
       WantedBy=multi-user.target
 
@@ -36,9 +37,10 @@ write_files:
     permissions: '0644'
     content: |
       https://${frontend_subdomain}.${domain} {
-          root * /opt/sep-business/frontend
+          root * /opt/sep-business/frontend/dist
           try_files {path} /index.html
           file_server
+          encode gzip zstd
       }
 
       https://${api_subdomain}.${domain} {
@@ -51,6 +53,7 @@ runcmd:
   # Allow new incoming TCP connections on port 443 (HTTPS)
   - iptables -I INPUT 6 -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
 
+
   # Install Caddy
   - >
     curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key'
@@ -61,27 +64,33 @@ runcmd:
   - apt-get update
   - apt-get install -y -o Dpkg::Options::="--force-confold" caddy
 
-  # Clone the source code (default branch: main)
+  # Clone the repository
   - git clone --depth 1 https://github.com/sm-techlabs/sep-business /opt/sep-business
 
-  # Replace the frontend config with the correct API URL
+  # Environment configuration
   - echo "VITE_API_BASE_URL=https://${api_subdomain}.${domain}" | tee -a /etc/environment
   - export VITE_API_BASE_URL="https://${api_subdomain}.${domain}"
 
-  # Set permissions (directories: 755, files: 644)
+  # Permissions (recursive + consistent ownership)
+  - chown -R www-data:www-data /opt/sep-business
   - find /opt/sep-business -type d -exec chmod 755 {} \;
   - find /opt/sep-business -type f -exec chmod 644 {} \;
-  - chown -R www-data:www-data /opt
+
+  # Frontend setup
+  - cd /opt/sep-business/frontend
+  - npm ci --omit-dev
+  - npm run build
 
   # Backend setup
   - cd /opt/sep-business/backend
-  - npm install --omit=dev
+  - npm ci --omit=dev
 
   # Enable and start backend service
   - systemctl daemon-reload
-  - systemctl enable --now sep-business-backend
+  - systemctl enable sep-business-backend
+  - systemctl restart sep-business-backend
 
-  # Restart Caddy
+  # Restart Caddy to apply configuration
   - systemctl restart caddy
 
-final_message: "The system is now configured and ready to use."
+final_message: "✅ SEP Business instance is now configured and ready!"
