@@ -44,7 +44,7 @@ jobs:
           cp -r frontend/dist/* release_bundle/frontend/
 
           # Copy backend
-          cp -r backend release_bundle/backend
+          cp -r backend/* release_bundle/backend
 
           # Package everything
           tar -czf release.tar.gz -C release_bundle .
