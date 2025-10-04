@@ -1,0 +1,35 @@
+{
+  # Global options
+}
+
+# Common configuration for all sites
+(common) {
+  # Enable compression
+  encode zstd gzip
+
+  # Add trailing slashes to all requests
+  route {
+    try_files {path} {path}/
+    rewrite * {http.request.uri.path}/
+  }
+}
+
+# Your site
+localhost {
+  # Import common configuration
+  import common
+
+  # Serve static files from the dist directory
+  file_server
+
+  # Handle API requests
+  handle_path /api/* {
+    reverse_proxy localhost:3000
+  }
+
+  # Handle all other requests by serving the index.html file
+  handle {
+    root * /path/to/your/project/frontend/dist
+    try_files {path} /index.html
+  }
+}
