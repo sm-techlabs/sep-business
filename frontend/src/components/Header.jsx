@@ -1,18 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import './Header.css';
 
 const Header = () => {
   return (
-    <header>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-        </ul>
+    <header className="navbar">
+      <div className="navbar-logo">SEP Business</div>
+      <nav className="navbar-links">
+        <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
+          Home
+        </NavLink>
+        <NavLink to="/login" className={({ isActive }) => (isActive ? 'active' : '')}>
+          Login
+        </NavLink>
       </nav>
     </header>
   );

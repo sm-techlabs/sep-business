@@ -1,13 +1,125 @@
-body {
+/* Reset & base styling */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: #0f1115;
+  color: #e4e6eb;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Smooth transitions for links and buttons */
+a, button {
+  transition: all 0.2s ease;
+}
+
+/* Header / Nav */
+header {
+  background-color: #1a1d23;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #2b2f36;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.4rem;
+  color: #f5f6fa;
+  letter-spacing: 0.5px;
+}
+
+.navbar {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #b0b3b8;
+  font-weight: 500;
+  position: relative;
+}
+
+.navbar a:hover,
+.navbar a.active {
+  color: #00bfa6;
+}
+
+/* Main content */
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Footer */
+footer {
+  background-color: #1a1d23;
+  padding: 1rem;
+  text-align: center;
+  color: #888;
+  border-top: 1px solid #2b2f36;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+/* Buttons */
+button {
+  background-color: #00bfa6;
+  color: #0f1115;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+button:hover {
+  background-color: #03dac5;
+}
+
+/* Form elements */
+input {
+  background-color: #181a1f;
+  color: #e4e6eb;
+  border: 1px solid #2b2f36;
+  border-radius: 6px;
+  padding: 0.6rem;
+  width: 100%;
+  font-size: 1rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: #00bfa6;
+}
+
+/* Utility */
+pre {
+  background-color: #181a1f;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: monospace;
+  color: #b0b3b8;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+h1, h2, h3 {
+  color: #f5f6fa;
 }
