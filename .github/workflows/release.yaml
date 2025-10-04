@@ -21,25 +21,29 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.semrel.outputs.version }}
+      dev-version: ${{ steps.short-sha.outputs.version }}
+      prod-version: ${{ steps.semrel.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Run semantic release
+      - name: Short SHA Output - Dev Version
+        id: short-sha
+        run: echo "version=0.1.7-dev.${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+      - name: Semantic Release - Prod Version
         id: semrel
         uses: go-semantic-release/action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
+      
 
   deploy-dev:
     needs: release
     uses: ./.github/workflows/_build-and-deploy.yaml
     with:
       environment: dev
-      version: ${{ github.sha }}
+      version: ${{ needs.release.outputs.dev-version }}
     secrets: inherit
 
   promote-prod:
@@ -47,5 +51,5 @@ jobs:
     uses: ./.github/workflows/_build-and-deploy.yaml
     with:
       environment: prod
-      version: ${{ needs.release.outputs.version }}
+      version: ${{ needs.release.outputs.prod-version }}
     secrets: inherit
