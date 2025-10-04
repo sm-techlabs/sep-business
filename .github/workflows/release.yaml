@@ -20,16 +20,18 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.semrel.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Run semantic release
+        id: semrel
         uses: go-semantic-release/action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          update-file: package.json
 
 
   deploy-dev:
@@ -37,11 +39,13 @@ jobs:
     uses: ./.github/workflows/_build-and-deploy.yaml
     with:
       environment: dev
+      version: ${{ needs.release.outputs.version }}
     secrets: inherit
 
   promote-prod:
-    needs: deploy-dev
+    needs: [release, deploy-dev]
     uses: ./.github/workflows/_build-and-deploy.yaml
     with:
       environment: prod
+      version: ${{ needs.release.outputs.version }}
     secrets: inherit
