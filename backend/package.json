@@ -1,6 +1,6 @@
 {
   "name": "sep-backend",
-  "version": "1.0.0",
+  "version": "0.1.7",
   "description": "Backend for SEP Business App",
   "main": "src/app.js",
   "type": "module",
