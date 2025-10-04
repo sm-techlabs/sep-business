@@ -29,12 +29,26 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create release tarball
+      - name: Build and package release
         run: |
-          mkdir -p release_bundle
-          cp -r frontend release_bundle/frontend
+          # Create all necessary directories
+          mkdir -p release_bundle/frontend release_bundle/backend
+
+          # Build the frontend
+          cd frontend
+          npm ci
+          npm run build
+          cd ..
+
+          # Copy built frontend *contents* (not the dist folder itself)
+          cp -r frontend/dist/* release_bundle/frontend/
+
+          # Copy backend
           cp -r backend release_bundle/backend
+
+          # Package everything
           tar -czf release.tar.gz -C release_bundle .
+
 
       - name: Upload release artifact
         uses: actions/upload-artifact@v4
