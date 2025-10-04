@@ -28,7 +28,7 @@ resource "oci_core_instance" "vm" {
   metadata = {
     ssh_authorized_keys = tls_private_key.ssh_key.public_key_openssh
     jwt_secret          = random_password.jwt_secret.result
-    user_data = base64encode(templatefile("${path.module}/scripts/${each.key}-cloud-init.yaml.tpl", {
+    user_data = base64encode(templatefile("${path.module}/scripts/cloud-init.yaml.tpl", {
       domain                           = each.value.domain
       api_subdomain                    = each.value.api_subdomain
       frontend_subdomain               = each.value.frontend_subdomain

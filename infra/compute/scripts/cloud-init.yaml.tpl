@@ -28,7 +28,6 @@ write_files:
       Group=www-data
       Environment="PORT=3000"
       Environment="JWT_SECRET=${jwt_secret}"
-      EnvironmentFile=/etc/environment
 
       [Install]
       WantedBy=multi-user.target
@@ -67,17 +66,17 @@ runcmd:
   # Clone the repository
   - git clone --depth 1 https://github.com/sm-techlabs/sep-business /opt/sep-business
 
-  # Environment configuration
-  - echo "VITE_API_BASE_URL=https://${api_subdomain}.${domain}" | tee -a /etc/environment
-  - export VITE_API_BASE_URL="https://${api_subdomain}.${domain}"
-
   # Permissions (recursive + consistent ownership)
   - chown -R www-data:www-data /opt/sep-business
   - find /opt/sep-business -type d -exec chmod 755 {} \;
   - find /opt/sep-business -type f -exec chmod 644 {} \;
 
-  # Frontend setup
+  # Frontend setup  
+  # Inject environment variables
   - cd /opt/sep-business/frontend
+  - sed -i "s#__API_BASE_URL__#https://${api_subdomain}.${domain}#" src/config.js 
+
+  # Build frontend
   - npm ci --omit-dev
   - npm run build
 
