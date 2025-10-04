@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: release-deploy
+  cancel-in-progress: true
+  
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -40,119 +44,12 @@ jobs:
 
   deploy-dev:
     needs: release
-    runs-on: ubuntu-latest
     environment: dev
-    steps:
-      - name: Download release artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: release-bundle
-          path: ./release
-
-      - name: Copy release tarball
-        run: |
-          echo "${{ secrets.SSH_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-          scp -o StrictHostKeyChecking=no -i private_key.pem ./release/release.tar.gz \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/release.tar.gz
-
-      - name: Deploy to Dev
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
-            set -e
-            cd /home/${USER}
-
-            echo "Extracting release tarball..."
-            tar -xzf release.tar.gz
-            rm release.tar.gz
-
-            echo "Preserving existing config.js (if present)..."
-            if [ -f /opt/sep-business/frontend/js/config.js ]; then
-              cp /opt/sep-business/frontend/js/config.js ./config.js.bak
-            fi
-
-            echo "Deploying frontend and backend..."
-            sudo rm -rf /opt/sep-business/frontend /opt/sep-business/backend
-            sudo mv frontend backend /opt/sep-business/
-
-            echo "Restoring config.js (if we backed it up)..."
-            if [ -f ./config.js.bak ]; then
-              sudo mkdir -p /opt/sep-business/frontend/js
-              sudo mv ./config.js.bak /opt/sep-business/frontend/js/config.js
-              # optional: adjust ownership if needed, e.g.
-              # sudo chown ubuntu:ubuntu /opt/sep-business/frontend/js/config.js
-            fi
-
-            echo "Installing backend dependencies..."
-            cd /opt/sep-business/backend
-            npm ci --omit=dev
-
-            echo "Restarting backend service..."
-            sudo systemctl daemon-reload
-            sudo systemctl restart sep-business-backend
-            sudo systemctl status sep-business-backend --no-pager
-
-            # optional cleanup of extracted files in home
-            cd /home/${USER}
-            rm -rf frontend backend || true
-          EOF
-
+    uses: ./.github/workflows/_deploy.yaml
+    secrets: inherit
 
   promote-prod:
     needs: deploy-dev
-    runs-on: ubuntu-latest
-    environment: prod   # <--- this triggers approval if required in settings
-    steps:
-      - name: Download release artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: release-bundle
-          path: ./release
-
-      - name: Copy release tarball
-        run: |
-          echo "${{ secrets.SSH_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-          scp -o StrictHostKeyChecking=no -i private_key.pem ./release/release.tar.gz \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USERNAME }}/release.tar.gz
-
-      - name: Deploy to Prod
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
-            set -e
-            cd /home/${USER}
-
-            echo "Extracting release tarball..."
-            tar -xzf release.tar.gz
-            rm release.tar.gz
-
-            echo "Preserving existing config.js (if present)..."
-            if [ -f /opt/sep-business/frontend/js/config.js ]; then
-              cp /opt/sep-business/frontend/js/config.js ./config.js.bak
-            fi
-
-            echo "Deploying frontend and backend..."
-            sudo rm -rf /opt/sep-business/frontend /opt/sep-business/backend
-            sudo mv frontend backend /opt/sep-business/
-
-            echo "Restoring config.js (if we backed it up)..."
-            if [ -f ./config.js.bak ]; then
-              sudo mkdir -p /opt/sep-business/frontend/js
-              sudo mv ./config.js.bak /opt/sep-business/frontend/js/config.js
-              # optional: adjust ownership if needed, e.g.
-              # sudo chown ubuntu:ubuntu /opt/sep-business/frontend/js/config.js
-            fi
-
-            echo "Installing backend dependencies..."
-            cd /opt/sep-business/backend
-            npm ci --omit=dev
-
-            echo "Restarting backend service..."
-            sudo systemctl daemon-reload
-            sudo systemctl restart sep-business-backend
-            sudo systemctl status sep-business-backend --no-pager
-
-            # optional cleanup of extracted files in home
-            cd /home/${USER}
-            rm -rf frontend backend || true
-          EOF
+    environment: prod
+    uses: ./.github/workflows/_deploy.yaml§
+    secrets: inherit
