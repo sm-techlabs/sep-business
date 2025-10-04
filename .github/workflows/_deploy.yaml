@@ -18,6 +18,13 @@ jobs:
           name: release-bundle
           path: ./release
 
+      - name: Investigate tarball contents
+        run: |
+          tar -tzf ./release/release.tar.gz
+          ls -l ./release/release_bundle
+          ls -l ./release/release_bundle/frontend
+          ls -l ./release/release_bundle/backend
+          
       - name: Copy release tarball
         run: |
           echo "${{ secrets.SSH_KEY }}" > private_key.pem
