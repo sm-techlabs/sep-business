@@ -44,12 +44,14 @@ jobs:
 
   deploy-dev:
     needs: release
-    environment: dev
     uses: ./.github/workflows/_deploy.yaml
+    with:
+      environment: dev
     secrets: inherit
 
   promote-prod:
     needs: deploy-dev
-    environment: prod
-    uses: ./.github/workflows/_deploy.yaml§
+    uses: ./.github/workflows/_deploy.yaml
+    with:
+      environment: prod
     secrets: inherit
