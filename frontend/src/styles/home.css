@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* fills the whole screen nicely */
+  min-height: 70vh; /* fills the whole screen nicely */
   gap: 1.5rem; /* balanced breathing room */
 }
 
