@@ -1,0 +1,42 @@
+name: Integration
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - '.github/workflows/integration.yaml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integration
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: 🏷️ Set Dev Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.short-sha.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate short SHA-based version
+        id: short-sha
+        run: echo "version=0.1.7-dev.${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+  deploy-dev:
+    name: 🚀 Deploy (Development)
+    needs: version
+    uses: ./.github/workflows/_build-and-deploy.yaml
+    with:
+      environment: dev
+      version: ${{ needs.version.outputs.version }}
+    secrets: inherit

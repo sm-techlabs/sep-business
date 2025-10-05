@@ -1,13 +1,7 @@
-name: Release & Deploy
+name: Release
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'frontend/**'
-      - 'backend/**'
-      - '.github/workflows/release.yaml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,38 +12,26 @@ concurrency:
   
 jobs:
   release:
-    name: Release
+    name: 🏷️ Release
     runs-on: ubuntu-latest
     outputs:
-      dev-version: ${{ steps.short-sha.outputs.version }}
-      prod-version: ${{ steps.semrel.outputs.version }}
+      version: ${{ steps.semrel.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Short SHA Output - Dev Version
-        id: short-sha
-        run: echo "version=0.1.7-dev.${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-      - name: Semantic Release - Prod Version
+      - name: Semantic Release - Official Version
         id: semrel
         uses: go-semantic-release/action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      
 
-  deploy-dev:
+  deploy-prod:
+    name: 🚀 Deploy (Production)
     needs: release
     uses: ./.github/workflows/_build-and-deploy.yaml
     with:
-      environment: dev
-      version: ${{ needs.release.outputs.dev-version }}
-    secrets: inherit
-
-  promote-prod:
-    needs: [release, deploy-dev]
-    uses: ./.github/workflows/_build-and-deploy.yaml
-    with:
       environment: prod
-      version: ${{ needs.release.outputs.prod-version }}
+      version: ${{ needs.release.outputs.version }}
     secrets: inherit
