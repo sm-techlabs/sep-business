@@ -113,6 +113,14 @@ jobs:
 
       - name: Add deployment summary
         run: |
-          DOMAIN="${{ inputs.environment == 'prod' && 'sep.sammosios.com' || 'dev.sep.sammosios.com' }}"
-          echo "### 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.environment }}" = "prod" ]; then
+            DOMAIN="sep.sammosios.com"
+            MSG="🚀 Production deployment complete!"
+          else
+            DOMAIN="dev.sep.sammosios.com"
+            MSG="🚀 Development deployment complete!"
+          fi
+
+          echo "### $MSG" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "[🌐 Open your app here](https://${DOMAIN})" >> $GITHUB_STEP_SUMMARY
