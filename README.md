@@ -1,26 +1,96 @@
-# Minimal SEP App Scaffold  
+# 🧱 SEP Business App - Modern Methods of Software Engineering - Group 17
 
-A simple web app with:  
-- **Frontend:** static HTML  
-- **Backend:** Node.js + Express  
-- **CI/CD:** GitHub Actions for Dev & Prod  
+A minimal web application for the SEP. Demonstrates a React frontend and a Node.js Express backend.
 
-## Running Locally  
+---
 
-### Backend  
-```bash
-cd backend
-npm install
-npm run dev
+## Project Structure
+
 ```
-➡ Runs at [http://localhost:3000](http://localhost:3000)  
+sep-business/
+├── .github/workflows/  # CI/CD Automation
+├── backend/            # Node.js Express API
+├── frontend/           # React UI
+└── infra/              # Terraform OCI Infrastructure
+```
 
-### Frontend  
-Just open `frontend/index.html` in your browser and click **“Fetch Hello”**.  
+---
 
-## Deployment  
+## Running the App Locally
 
-- **Dev:** Deploys automatically when you push to `main`.  
-- **Prod:** After testing Dev, trigger “Promote to Prod” in GitHub Actions (requires approval).  
+### Backend
 
-✅ That’s it. You can run it locally, push to deploy to Dev, and promote to Prod when ready.  
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the server:
+   ```bash
+   npm start
+   ```
+
+The backend runs at **http://localhost:3000** (unless configured otherwise).
+
+---
+
+### Frontend (React)
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the dev server:
+   ```bash
+   npm run dev
+   ```
+
+The frontend will start on the port shown in the terminal (e.g. `http://localhost:5173` for Vite).
+
+---
+
+### Run full-stack application
+
+Open two terminals and run backend and frontend separately:
+```bash
+# Terminal 1
+cd backend && npm start
+# Terminal 2
+cd frontend && npm run dev
+```
+
+---
+
+## Running Backend Tests
+
+In the `backend` directory:
+```bash
+npm test
+```
+
+Tests use Jest and cover routes and basic logic.
+
+---
+
+## Versioning
+
+Automated with **semantic-release**. Use Conventional Commits for proper version bumps.
+
+---
+
+## Authors
+
+**Moa Granberg** - KTH Physics Graduate
+**Pavlos Spanoudakis** - MSc Student @ KTH  
+**Sam Mosios** — Site Reliability Engineer & MSc Student @ KTH
