@@ -110,3 +110,9 @@ jobs:
               cd /home/${USER}
               rm -rf frontend backend || true
           EOF
+
+      - name: Add deployment summary
+        run: |
+          DOMAIN="${{ inputs.environment == 'prod' && 'sep.sammosios.com' || 'dev.sep.sammosios.com' }}"
+          echo "### 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "[🌐 Open your app here](https://${DOMAIN})" >> $GITHUB_STEP_SUMMARY
