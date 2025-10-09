@@ -7,11 +7,14 @@ const Header = () => {
     <header className="navbar">
       <div className="navbar-logo">SEP Business</div>
       <nav className="navbar-links">
-        <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
+        <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>
           Home
         </NavLink>
         <NavLink to="/login" className={({ isActive }) => (isActive ? 'active' : '')}>
           Login
+        </NavLink>
+        <NavLink to="/health" end className={({ isActive }) => (isActive ? 'active' : '')}>
+          Health
         </NavLink>
       </nav>
     </header>
