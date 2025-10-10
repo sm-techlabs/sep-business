@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import health from './routes/health.js';
+import { sequelize, initSampleData } from './models/index.js';
 
 const app = express();
 const port = 3000;
@@ -10,8 +11,16 @@ app.use(cors());
 
 app.use('/api/health', health);
 
-const server = app.listen(port, () => {
-  console.log(`Backend server listening at http://localhost:${port}`);
+const server = app.listen(port, async () => {
+  try {
+    await sequelize.sync();
+		console.log('DB synced');
+    await initSampleData();
+		console.log('DB Sample data initialized');
+	} catch (err) {
+		console.error('Database sync error:', err);
+	}
+    console.log(`Backend server listening at http://localhost:${port}`);
 });
 
 export { app, server };
