@@ -46,7 +46,7 @@ router.post('/login', async (req, res) => {
 router.get('/validate', (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    return res.status(403).json({ message: 'Missing Authorization header' });
+    return res.status(401).json({ message: 'Missing authorization header. You need to log in!' });
   }
 
   const token = authHeader.split(' ')[1];
