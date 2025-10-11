@@ -1,55 +1,65 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { Employee } from '../models/index.js';  
+import cookieParser from 'cookie-parser';
+import { Employee } from '../models/index.js';
 
 const router = express.Router();
-const SECRET_KEY = process.env.JWT_SECRET || 'default-dev-key'; // ⚠️ Use environment variables in production!
+router.use(cookieParser()); // ✅ enables req.cookies access
+
+const SECRET_KEY = process.env.JWT_SECRET || 'default-dev-key';
 if (!SECRET_KEY) {
   console.warn('⚠️ JWT_SECRET not set — using default (for dev only)');
 }
 
-// --- PSEUDOCODE: Database functions ---
-async function getUsername(username) { /* ... */ }
-async function getPassword(username) { /* ... */ }
-async function validateToken(username, token) { /* ... */ }
+/**
+ * 🧩 Helper to generate and send a signed JWT cookie
+ */
+function setAuthCookie(res, payload) {
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
 
-// --- Login route ---
+  res.cookie('token', token, {
+    httpOnly: true,       // ❌ not accessible by JavaScript
+    secure: true,         // ✅ only sent over HTTPS
+    sameSite: 'strict',   // prevents CSRF
+    maxAge: 60 * 60 * 1000, // 1 hour
+  });
+}
+
+/**
+ * 🧩 Login route
+ */
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  // console.log('Login attempt:' + username + ' ' + password);
-  // 1️⃣ Find user
-  // const user = await Employee. getUsername(username);
-  const user = await Employee.findOne({ where: { username } });
 
-  // console.log('User:' + user);
+  // 1️⃣ Find user
+  const user = await Employee.findOne({ where: { username } });
   if (!user) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
   // 2️⃣ Verify password
-  const storedPassword = user.password;
-  const match = await bcrypt.compare(password, storedPassword);
+  const match = await bcrypt.compare(password, user.password);
   if (!match) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
-  const name = user.name;
-  const jobTitle = user.jobTitle;
-  // 3️⃣ Create JWT
-  const token = jwt.sign({ name, jobTitle }, SECRET_KEY, { expiresIn: '1h' });
 
-  // 5️⃣ Send response
-  res.json({ message: 'Login successful', token });
+  // 3️⃣ Set JWT cookie
+  const payload = { name: user.name, jobTitle: user.jobTitle };
+  setAuthCookie(res, payload);
+
+  // 4️⃣ Send confirmation
+  res.json({ message: 'Login successful' });
 });
 
-// --- Example protected route ---
+/**
+ * 🧩 Validate route (for frontend to check session)
+ */
 router.get('/validate', (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ message: 'Missing authorization header. You need to log in!' });
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: 'Missing authentication token. Please log in again.' });
   }
-
-  const token = authHeader.split(' ')[1];
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
@@ -57,6 +67,19 @@ router.get('/validate', (req, res) => {
   } catch (err) {
     res.status(401).json({ message: 'Invalid or expired token' });
   }
+});
+
+/**
+ * 🧩 Logout route
+ * Clears the cookie by setting it to expire immediately.
+ */
+router.post('/logout', (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+  });
+  res.json({ message: 'Logged out successfully' });
 });
 
 export default router;

@@ -2,8 +2,8 @@ import apiClient from './apiClient';
 
 const healthClient = {
   getHealth: async () => {
-    const { data } = await apiClient.get('/api/health', { auth: false });
-    return data;
+    const response = await apiClient.get('/api/health');
+    return response.data;
   },
 };
 
