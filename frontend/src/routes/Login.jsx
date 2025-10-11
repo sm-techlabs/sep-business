@@ -12,8 +12,8 @@ const Login = () => {
   const handleLogin = async () => {
   try {
     const response = await authClient.login({ username, password });
-    // setLoginResult(response.message);
-    window.location.href = '/';
+    setLoginResult(response.message);
+    // window.location.href = '/dashboard';
   } catch (err) {
     setLoginResult(err.response.data.error);
   }
