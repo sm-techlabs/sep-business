@@ -65,3 +65,10 @@
   word-break: break-word; /* breaks long strings if needed */
   overflow-x: hidden;     /* no horizontal scroll */
 }
+
+button[disabled],
+input[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+

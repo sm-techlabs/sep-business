@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../styles/health.css';
 import healthClient from '../clients/healthClient';
 import authClient from '../clients/authClient';
+import Loader from '../components/Loader';
 
 const Health = () => {
   const [healthInfo, setHealthInfo] = useState(null);

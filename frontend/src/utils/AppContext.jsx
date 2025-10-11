@@ -27,8 +27,14 @@ export const AppProvider = ({ children }) => {
     validate();
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem('jwt');
+    setUser(null);
+    setTokenValid(false);
+  };
+
   return (
-    <AppContext.Provider value={{ user, tokenValid, loading }}>
+    <AppContext.Provider value={{ user, tokenValid, loading, logout }}>
       {children}
     </AppContext.Provider>
   );
