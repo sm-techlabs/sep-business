@@ -1,16 +1,15 @@
 import request from 'supertest';
-import { app, initServer } from '../src/app.js';
-
-let server;
+import { app } from '../src/app.js';
+import { initSampleData } from '../src/models/index.js';
+import { sequelize } from '../src/models/index.js';
 
 beforeAll(async () => {
-  // Start server and DB before tests
-  server = await initServer();
+  await sequelize.sync({ force: true });
+  initSampleData();
 });
 
 afterAll(async () => {
-  // Clean shutdown after tests
-  if (server) await server.close();
+  await sequelize.close();
 });
 
 describe('🧪 Authentication API', () => {
