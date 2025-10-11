@@ -1,9 +1,17 @@
-import '../styles/workspace.css';
 import { useAppContext } from '../utils/AppContext';
+import '../styles/workspace.css';
+import Departments from '../components/cards/Departments';
+import Employees from '../components/cards/Employees';
+import Tasks from '../components/cards/Tasks';
+import NewEventRequest from '../components/cards/EventRequests';
+import Applications from '../components/cards/Applications';
+import HR from '../components/cards/HR';
+import Teams from '../components/cards/Teams';
+import EventArchive from '../components/cards/EventArchive';
+import Clients from '../components/cards/Clients';
 
 const Workspace = () => {
-  const { user, tokenValid, loading } = useAppContext();
-  // const authorizedJobTitles = ['Manager', 'Admin'];
+  const { tokenValid, loading } = useAppContext();
 
   // 🕓 Wait while token is being validated
   if (loading) return <Loader />;
@@ -16,20 +24,17 @@ const Workspace = () => {
     <div className="workspace-container">
       <h1>Workspace</h1>
       <h3>You should only see content you're authorized for.</h3>
-      {/* 
-      <Card 1 /> e.g. New Request (registered / non-registered) - Request preferences
-      <Card 2 /> e.g. Ongoing Applications + Budget Adjustment Requests, Financial Situation Request, Hiring / Outsourcing Requests
-      <Card 3 /> e.g. Tasks
-      <Card 4 /> e.g. Financial Situation Requests
-      <Card 5 /> e.g. Hiring or Outsourcing Requests
-      <Card 6 /> e.g. Job Advertisements
-      <Card 7 /> e.g. Departments
-      <Card 8 /> e.g. Teams
-      <Card 9 /> e.g. Employees
-      <Card 10 /> e.g. Events (archived)
-      <Card 11 /> e.g. Clients
-      <Card 12 /> e.g. Settings
-      */}
+      <div className="workspace-grid">
+        <Employees />
+        <Departments />
+        <Tasks />
+        <NewEventRequest />
+        <Applications />
+        <HR />
+        <Teams />
+        <EventArchive />
+        <Clients />
+      </div>
     </div>
   );
 };

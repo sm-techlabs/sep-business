@@ -11,12 +11,6 @@ const routes = [
   { path: '/login', element: <Login />, protected: false },
   { path: '/health', element: <Health />, protected: false },
   { path: '/workspace', element: <Workspace />, protected: true },
-  // {
-  //   path: '/admin',
-  //   element: <AdminDashboard />,
-  //   protected: true,
-  //   allowedRoles: ['Admin'],
-  // },
 ];
 
 function App() {

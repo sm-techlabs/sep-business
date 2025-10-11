@@ -3,6 +3,8 @@ import '../styles/health.css';
 import healthClient from '../clients/healthClient';
 import authClient from '../clients/authClient';
 import Loader from '../components/Loader';
+import ActionButton from '../components/ActionButton';
+import { Heart, HeartPulse, KeyRound } from 'lucide-react';
 
 const Health = () => {
   const [healthInfo, setHealthInfo] = useState(null);
@@ -43,11 +45,9 @@ Welcome ${result.name} (${result.jobTitle})
   return (
     <div className="health-container">
       <h1>Do you hear a pulse?</h1>
-
-      <button onClick={healthCheck}>Check API Health</button>
+      <ActionButton icon={HeartPulse} label="Check API Health" onClick={healthCheck} />
       {healthInfo && <pre className="health-output">{healthInfo}</pre>}
-
-      <button onClick={validateToken}>Validate Current Token</button>
+      <ActionButton icon={KeyRound} label="Validate Current Token" onClick={validateToken} />
       {validationResult && (
         <div className="validation-result">
           <pre>{validationResult}</pre>

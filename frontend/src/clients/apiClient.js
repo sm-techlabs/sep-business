@@ -5,7 +5,7 @@ import { getApiBaseUrl } from '../config.js';
 const apiClient = axios.create({
   baseURL: getApiBaseUrl(''), // Base URL from config or vite proxy in dev
   timeout: 10000,
-  withCredentials: true, // Always include cookies for same-origin/session-based auth
+  withCredentials: true, // Always include cookies
 });
 
 // ✅ Request interceptor
