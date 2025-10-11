@@ -1,38 +1,23 @@
 import axios from 'axios';
 import { getApiBaseUrl } from '../config.js';
 
-// Create a single configured Axios instance
+// ✅ Create a single configured Axios instance
 const apiClient = axios.create({
-  baseURL: getApiBaseUrl(''),
+  baseURL: getApiBaseUrl(''), // Base URL from config or vite proxy in dev
   timeout: 10000,
+  withCredentials: true, // Always include cookies for same-origin/session-based auth
 });
 
-// ✅ REQUEST INTERCEPTOR
+// ✅ Request interceptor
 apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('jwt');
-
-    // Attach Authorization header unless auth is explicitly disabled
-    if (token && config.withAuth !== false) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
+  (config) => config,
   (error) => Promise.reject(error)
 );
 
-// ✅ RESPONSE INTERCEPTOR
+// ✅ Response interceptor
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      console.warn('Unauthorized - token may be expired or invalid.');
-      // Optional: handle redirect to login
-      // window.location.href = '/login';
-      // forces login window to reload after failed attempt, bad UX
-    }
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default apiClient;

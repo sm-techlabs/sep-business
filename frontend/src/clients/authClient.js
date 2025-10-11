@@ -1,48 +1,32 @@
 import apiClient from './apiClient';
 
 const authClient = {
-  // --- 🧩 API calls ---
-  
   /**
    * Log in with username and password.
-   * Returns { token, user } if successful.
+   * Backend sets an HTTP-only cookie.
    */
   login: async ({ username, password }) => {
-      const { data } = await apiClient.post('/api/authentication/login', { username, password }, { withAuth: false });
-      // Won't set token if login fails (throws)
-      setToken(data.token);
-      return data;
+    const response = await apiClient.post('/api/authentication/login', { username, password });
+    return response.data;
   },
 
   /**
-   * Validate current JWT (optional, if backend supports it).
-   * Returns { valid: true, user: {...} }
+   * Validate current session.
+   * Cookie is automatically sent with the request.
+   * Returns { name, jobTitle } if valid.
    */
   validateToken: async () => {
-      const { data } = await apiClient.get('/api/authentication/validate', { withAuth: true }, );
-      return data;
+    const response = await apiClient.get('/api/authentication/validate');
+    return response.data;
   },
 
-  // --- 🧠 Local helpers (no API calls) ---
-
   /**
-   * Returns true if a JWT is stored locally.
+   * Log out the user (backend clears the cookie).
    */
-  isAuthenticated: () => !!localStorage.getItem('jwt'),
-
-  /**
-   * Removes JWT from localStorage (logout).
-   */
-  logout: () => {
-    localStorage.removeItem('jwt');
+  logout: async () => {
+    const response = await apiClient.post('/api/authentication/logout');
+    return response.data;
   },
 };
-
-  /**
-   * Stores a JWT in localStorage.
-   */
-  const setToken = (token) => {
-    localStorage.setItem('jwt', token);
-  }
 
 export default authClient;

@@ -6,18 +6,20 @@ const AppContext = createContext(null);
 
 // Provider component
 export const AppProvider = ({ children }) => {
-  const [user, setUser] = useState(null);       // { name, jobTitle }
+  const [user, setUser] = useState(null); // { name, jobTitle }
   const [tokenValid, setTokenValid] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const validate = async () => {
       try {
+        // 🚀 ask server to validate cookie
         const result = await authClient.validateToken();
         setUser({ name: result.name, jobTitle: result.jobTitle });
         setTokenValid(true);
       } catch (err) {
         console.warn('Token invalid or missing:', err);
+        setUser(null);
         setTokenValid(false);
       } finally {
         setLoading(false);
@@ -27,10 +29,16 @@ export const AppProvider = ({ children }) => {
     validate();
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem('jwt');
-    setUser(null);
-    setTokenValid(false);
+  // 🔁 Updated logout
+  const logout = async () => {
+    try {
+      await authClient.logout(); // 🚀 tell server to clear cookie
+    } catch (err) {
+      console.warn('Logout failed:', err);
+    } finally {
+      setUser(null);
+      setTokenValid(false);
+    }
   };
 
   return (
