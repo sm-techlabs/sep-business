@@ -18,7 +18,6 @@ function App() {
   return (
     <>
       <Header />
-
         <Routes>
           {routes.map(({ path, element, protected: isProtected }) => (
             <Route
@@ -30,7 +29,6 @@ function App() {
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-
       <Footer />
     </>
   );

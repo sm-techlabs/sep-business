@@ -13,10 +13,10 @@ apiClient.interceptors.request.use(
     const token = localStorage.getItem('jwt');
 
     // Attach Authorization header unless auth is explicitly disabled
-    if (token && config.auth !== false) {
+    if (token && config.withAuth !== false) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
+    console.log('Request config:', config);
     return config;
   },
   (error) => Promise.reject(error)
@@ -30,6 +30,7 @@ apiClient.interceptors.response.use(
       console.warn('Unauthorized - token may be expired or invalid.');
       // Optional: handle redirect to login
       // window.location.href = '/login';
+      // forces login window to reload after failed attempt, bad UX
     }
     return Promise.reject(error);
   }

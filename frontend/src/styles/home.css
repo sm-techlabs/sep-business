@@ -1,4 +1,4 @@
-.health-container {
+.home-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,13 +7,13 @@
   gap: 1.5rem; /* balanced breathing room */
 }
 
-.health-container h1 {
+.home-container h1 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
   letter-spacing: 0.5px;
 }
 
-.health-container button {
+.home-container button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   border: none;
@@ -26,17 +26,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.health-container button:hover {
+.home-container button:hover {
   /* background-color: #005fa3; */
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.health-container p {
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.4;
-  color: #333;
-  font-family: monospace;
-  color: #555;
 }

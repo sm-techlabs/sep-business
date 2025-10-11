@@ -1,4 +1,5 @@
 import sequelize from '../db/sequelize.js';
+import bcrypt from 'bcrypt';
 import Department from './Department.js';
 import Team from './Team.js';
 import Employee from './Employee.js';
@@ -59,17 +60,22 @@ HiringOrOutsourcingRequest.belongsTo(Department, { as: 'requestingDepartment' })
 BudgetAdjustmentRequest.belongsTo(Department, { as: 'requestingDepartment' });
 BudgetAdjustmentRequest.belongsTo(Application, { as: 'applicationReference' });
 
+const passwordHash = await bcrypt.hash('test', await bcrypt.genSalt());
 // Sample data initialization function
 const initSampleData = async () => {
     // Employees
     const alice = await Employee.create({
         name: 'Alice',
-        email: 'alice@example.com',
+        username: 'alice',
+        password: passwordHash,
+        email: 'alice@sep.com',
         jobTitle: 'Manager'
     });
     const bob = await Employee.create({
         name: 'Bob',
-        email: 'bob@example.com',
+        username: 'bob',
+        password: passwordHash,
+        email: 'bob@sep.com',
         jobTitle: 'Staff'
     });
 
