@@ -1,3 +1,4 @@
+// src/app.js
 import express from 'express';
 import cors from 'cors';
 import health from './routes/health.js';
@@ -7,17 +8,24 @@ import { sequelize, initSampleData } from './models/index.js';
 const app = express();
 const port = process.env.PORT || 3000;
 
+// --- 🧩 Middleware ---
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
+// --- 🧩 Routes ---
 app.use('/api/health', health);
 app.use('/api/authentication', authentication);
 
-// 🧩 Reusable async initializer
-export async function initServer() {
+// --- 🚀 Server startup (for local / prod only) ---
+const startServer = async () => {
   try {
-    await sequelize.sync();
-    console.log('✅ DB synced');
+    await sequelize.sync({ force: false });
+    console.log('✅ Database synced');
 
     await initSampleData();
     console.log('✅ Sample data initialized');
@@ -26,16 +34,29 @@ export async function initServer() {
       console.log(`🚀 Backend server listening at http://localhost:${port}`);
     });
 
+    // 🧹 Graceful shutdown (useful for CI/CD)
+    const shutdown = () => {
+      console.log('🛑 Server shutting down...');
+      server.close(() => {
+        console.log('✅ Server closed.');
+        process.exit(0);
+      });
+    };
+
+    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', shutdown);
+
     return server;
   } catch (err) {
-    console.error('❌ Database sync error:', err);
-    throw err;
+    console.error('❌ Failed to start server:', err);
+    process.exit(1);
   }
-}
+};
 
-// ✅ Only auto-start if not running tests
+// --- 🧪 Only start server outside of tests ---
 if (process.env.NODE_ENV !== 'test') {
-  initServer();
+  startServer();
 }
 
-export { app };
+// --- ✅ Export app and starter for CI tests ---
+export { app, startServer };
