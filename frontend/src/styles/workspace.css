@@ -1,4 +1,4 @@
-.home-container {
+.workspace-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,13 +7,13 @@
   gap: 1.5rem; /* balanced breathing room */
 }
 
-.home-container h1 {
+.workspace-container h1 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
   letter-spacing: 0.5px;
 }
 
-.home-container button {
+.workspace-container button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   border: none;
@@ -26,7 +26,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.home-container button:hover {
+.workspace-container button:hover {
   /* background-color: #005fa3; */
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
