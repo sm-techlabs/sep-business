@@ -31,6 +31,9 @@ function setAuthCookie(res, payload) {
  */
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Invalid request; Username and password are required' });
+  }
 
   // 1️⃣ Find user
   const user = await Employee.findOne({ where: { username } });

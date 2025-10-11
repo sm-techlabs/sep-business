@@ -1,8 +1,16 @@
 import request from 'supertest';
-import { app, server } from '../src/app.js';
+import { app, initServer } from '../src/app.js';
 
-afterAll((done) => {
-  server.close(done);
+let server;
+
+beforeAll(async () => {
+  // Start server and DB before tests
+  server = await initServer();
+});
+
+afterAll(async () => {
+  // Clean shutdown after tests
+  if (server) await server.close();
 });
 
 describe('GET /api/health', () => {
