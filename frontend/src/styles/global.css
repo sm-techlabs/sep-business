@@ -128,7 +128,9 @@ pre {
   background-color: #181a1f;
   padding: 1rem;
   border-radius: 8px;
-  overflow-x: auto;
+  overflow-x: hidden;
+  white-space: pre-wrap;   /* ✅ allows line wrapping */
+  word-break: break-word;  /* ✅ breaks long strings */
   font-family: monospace;
   color: #b0b3b8;
   margin-top: 1rem;

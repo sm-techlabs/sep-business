@@ -20,7 +20,7 @@ const Health = () => {
   };
 
   return (
-    <div className="home-container">
+    <div className="health-container">
       <h1>Do you hear a pulse?</h1>
       <button onClick={healthCheck}>Check API health</button>
       {message && <p>{message}</p>}
