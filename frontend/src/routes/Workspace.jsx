@@ -8,7 +8,7 @@ const Workspace = () => {
   const authorizedJobTitles = ['Manager', 'Admin'];
 
   // 🕓 Wait while token is being validated
-  if (loading) return null;
+  if (loading) return <Loader />;
 
   // 🚫 Not authorized → render nothing
   if (!tokenValid || !authorizedJobTitles.includes(user?.jobTitle)) return null;
