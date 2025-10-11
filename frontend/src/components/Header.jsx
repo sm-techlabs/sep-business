@@ -21,7 +21,7 @@ const Header = () => {
         SEP Business
         {tokenValid && user && (
           <span className="navbar-welcome">
-            &nbsp;|&nbsp; {user.name} - {user.jobTitle}
+            &nbsp; | &nbsp;{user.name} - {user.jobTitle}
           </span>
         )}
       </div>

@@ -59,33 +59,6 @@
   justify-content: flex-start;
 }
 
-/* ---------- Buttons ---------- */
-.workspace-card button {
-  flex: 1 1 20%; /* Take ~20% of card width */
-  aspect-ratio: 1 / 1; /* Keep square shape */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 191, 166, 0.4);
-  background: rgba(0, 191, 166, 0.15);
-  color: #009b87;
-  font-size: 1.2rem; /* Make icons larger */
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 60px; /* Safety for smaller cards */
-  max-width: 120px; /* Keep balanced on large screens */
-}
-
-.workspace-card button:hover {
-  background: #00bfa6;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 191, 166, 0.25);
-}
-
-
-
 /* ---------- Dark Mode ---------- */
 @media (prefers-color-scheme: dark) {
   .workspace-card {

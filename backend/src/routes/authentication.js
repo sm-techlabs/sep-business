@@ -6,6 +6,7 @@ import { Employee } from '../models/index.js';
 
 const router = express.Router();
 router.use(cookieParser()); // ✅ enables req.cookies access
+const isProduction = process.env.NODE_ENV === 'production';
 
 const SECRET_KEY = process.env.JWT_SECRET || 'default-dev-key';
 if (!SECRET_KEY) {
@@ -19,10 +20,10 @@ function setAuthCookie(res, payload) {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
 
   res.cookie('token', token, {
-    httpOnly: true,       // ❌ not accessible by JavaScript
-    secure: true,         // ✅ only sent over HTTPS
-    sameSite: 'strict',   // prevents CSRF
-    maxAge: 60 * 60 * 1000, // 1 hour
+    httpOnly: true,
+    secure: isProduction,            // only use Secure over HTTPS
+    sameSite: isProduction ? 'none' : 'lax',
+    maxAge: 60 * 60 * 1000,
   });
 }
 
@@ -79,8 +80,8 @@ router.get('/validate', (req, res) => {
 router.post('/logout', (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
   });
   res.json({ message: 'Logged out successfully' });
 });

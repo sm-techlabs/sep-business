@@ -10,7 +10,7 @@
 
 /* ---------- Button Styles ---------- */
 .action-button button {
-  flex: 1 1 20%;
+  flex: 1 1 calc(25% - 0.5rem);
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
@@ -22,14 +22,14 @@
   font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 60px;
-  max-width: 120px;
+  min-width: 80px;
+  max-width: 140px;
 }
 
 .action-button button:hover {
   background: #00bfa6;
   color: white;
-  transform: translateY(-2px);
+  transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 191, 166, 0.25);
 }
 
@@ -45,7 +45,8 @@
   bottom: -2.2rem;
   background: rgba(17, 24, 39, 0.9); /* gray-900 */
   color: white;
-  font-size: 0.75rem;
+  /* font-size: 0.75rem; */
+  font-size: 0.85rem;
   padding: 0.35rem 0.6rem;
   border-radius: 6px;
   white-space: nowrap;
