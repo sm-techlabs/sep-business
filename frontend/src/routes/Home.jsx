@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/home.css';
 import { getApiBaseUrl } from '../config';
 
@@ -28,6 +29,9 @@ const Home = () => {
       {message && <p>{message}</p>}
       {time && <p>{new Date(time).toLocaleString()}</p>}
       {uptime && <p>Uptime: {uptime}</p>}
+      <Link to="/event-request">
+      <button>Open Event Request Form</button>
+      </Link>
     </div>
   );
 };
