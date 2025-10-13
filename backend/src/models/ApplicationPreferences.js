@@ -3,12 +3,12 @@ import sequelize from '../db/sequelize.js';
 
 class ApplicationPreferences extends Model {}
 ApplicationPreferences.init({
-	decorations: DataTypes.STRING,
-	foodAndDrinks: DataTypes.STRING,
-	photosOrFilming: DataTypes.STRING,
-	music: DataTypes.STRING,
-	postersArtWork: DataTypes.STRING,
-	computerRelatedIssues: DataTypes.STRING,
+	decorations: DataTypes.TEXT,
+	foodAndDrinks: DataTypes.TEXT,
+	photosOrFilming: DataTypes.TEXT,
+	music: DataTypes.TEXT,
+	postersArtWork: DataTypes.TEXT,
+	computerRelatedIssues: DataTypes.TEXT,
 }, {
 	sequelize,
 	modelName: 'ApplicationPreferences',

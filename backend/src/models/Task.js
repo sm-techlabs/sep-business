@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../db/sequelize.js';
+import { TASK_PRIORITIES, TASK_STATUSES } from '../constants/enums.js';
 
 class Task extends Model {}
 Task.init({
@@ -7,8 +8,8 @@ Task.init({
 	endsOn: DataTypes.DATE,
 	description: DataTypes.STRING,
 	comments: DataTypes.STRING,
-	priority: DataTypes.ENUM('low', 'medium', 'high'),
-	status: DataTypes.ENUM('pending', 'in_progress', 'completed'),
+	priority: DataTypes.ENUM(...TASK_PRIORITIES),
+	status: DataTypes.ENUM(...TASK_STATUSES),
 }, {
 	sequelize,
 	modelName: 'Task',

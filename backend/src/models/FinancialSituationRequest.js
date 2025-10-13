@@ -3,7 +3,7 @@ import sequelize from '../db/sequelize.js';
 
 class FinancialSituationRequest extends Model {}
 FinancialSituationRequest.init({
-	financialReport: DataTypes.BLOB, // external blob
+	financialReport: DataTypes.BLOB,
 }, {
 	sequelize,
 	modelName: 'FinancialSituationRequest',

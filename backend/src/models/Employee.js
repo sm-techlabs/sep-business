@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../db/sequelize.js';
+import { EMPLOYEE_JOB_TITLES } from '../constants/enums.js';
 
 class Employee extends Model {}
 Employee.init({
@@ -13,7 +14,7 @@ Employee.init({
 		unique: true,
 	},
 	jobTitle: {
-		type: DataTypes.ENUM('Manager', 'Staff', 'Intern', 'Other'), // Add your enum values
+		type: DataTypes.ENUM(...EMPLOYEE_JOB_TITLES),
 		allowNull: false,
 	}
 }, {

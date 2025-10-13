@@ -6,7 +6,7 @@ Event.init({
 	date: DataTypes.DATE,
 	finalBudget: DataTypes.FLOAT,
 	attendees: DataTypes.INTEGER,
-	details: DataTypes.STRING,
+	details: DataTypes.TEXT,
 }, {
 	sequelize,
 	modelName: 'Event',

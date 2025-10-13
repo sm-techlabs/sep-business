@@ -29,9 +29,6 @@ Employee.belongsTo(Team, { as: 'memberOfTeam' });
 Employee.hasMany(Task, { as: 'tasks', foreignKey: 'assignedToId' });
 Employee.hasMany(Task, { as: 'assignmentHistory', foreignKey: 'authorId' });
 
-// Client associations
-Client.hasMany(Application, { as: 'applications' });
-
 // Task associations
 Task.belongsTo(Employee, { as: 'author', foreignKey: 'authorId' });
 Task.belongsTo(Employee, { as: 'assignedTo', foreignKey: 'assignedToId' });
@@ -41,12 +38,16 @@ Task.belongsTo(Application, { as: 'applicationReference' });
 // Application.belongsTo(Client, { as: 'client' });
 Application.hasMany(Task, { as: 'tasks' });
 Application.belongsTo(ApplicationPreferences, { as: 'preferences' });
+Application.belongsTo(Client, { as: 'client' });
+
+RequestTemplate.belongsTo(RequestPreferences, { as: 'preferences' });
+RequestTemplate.belongsTo(Client, { as: 'client' });
 
 // Event associations
 Event.belongsTo(Client, { as: 'client' });
 
 // RegisteredClientRequest associations
-RegisteredClientRequest.belongsTo(Client, { as: 'client' });
+// (inherits client association from base RequestTemplate)
 
 // NonRegisteredClientRequest associations
 // (fields are embedded, no association)
@@ -74,12 +75,16 @@ const initSampleData = async () => {
     });
 
     // Department with manager
-    const itDept = await Department.create({ name: 'IT' });
+    const itDept = await Department.create({ name: 'Services' });
     await itDept.setManager(alice);
 
     // Team under department (use hasMany side magic method since Team.belongsTo is commented out)
     const teamA = await Team.create({ name: 'Team A' });
     await itDept.addTeam(teamA);
+    // console.log((await Department.findAll({ include: 'teams' })).forEach(dept => {
+    //     console.log(dept.name);
+    //     dept.teams.forEach(team => console.log(` - ${team.name}`));
+    // }));
 
     // Assign employees to team (Employee.belongsTo Team is active)
     await alice.setMemberOfTeam(teamA);
@@ -93,6 +98,13 @@ const initSampleData = async () => {
         address: '123 Main St',
         eligibleForDiscount: true
     });
+    const client2 = await Client.create({
+        name: 'Acme Corp',
+        email: 'contacwt@acme.com',
+        businessCode: 'AC123',
+        address: '123 Main St',
+        eligibleForDiscount: true
+    });
     const app = await Application.create({
         eventType: 'Conference',
         description: 'Annual IT Conference',
@@ -101,21 +113,101 @@ const initSampleData = async () => {
         startsOn: new Date(),
         endsOn: new Date(),
         otherNeeds: 'Projector',
-        status: 'planning'
+        status: 'Open',
+        clientId: client2.id
     });
-    await client.addApplication(app);
+    // Application.findAll().then(apps => console.log(apps));
 
     // Task authored by Alice, assigned to Bob, linked to the application
     const task = await Task.create({
         description: 'Setup venue',
         startsOn: new Date(),
         endsOn: new Date(),
-        priority: 'high',
-        status: 'pending'
+        priority: 'High',
+        status: 'Pending'
     });
     await task.setAuthor(alice);
     await task.setAssignedTo(bob);
     await task.setApplicationReference(app);
+
+    // Request preferences
+    const prefsRegistered = await RequestPreferences.create({
+        decorations: true,
+        parties: false,
+        photosOrFilming: true,
+        breakfastLunchDinner: true,
+        softHotDrinks: true
+    });
+
+    const prefsNonRegistered = await RequestPreferences.create({
+        decorations: false,
+        parties: true,
+        photosOrFilming: false,
+        breakfastLunchDinner: false,
+        softHotDrinks: true
+    });
+
+    // Registered client request via subclass (scoped model)
+    const registeredRequest = await RegisteredClientRequest.create({
+        type: 'registered',
+        recordNumber: 2001,
+        eventType: 'Corporate Event',
+        startsOn: new Date(),
+        endsOn: new Date(),
+        status: 'Submitted',
+        estimatedBudget: 10000
+    });
+    await registeredRequest.setPreferences(prefsRegistered);
+    await registeredRequest.setClient(client);
+
+    // Non-registered client request via subclass (scoped model)
+    const nonRegisteredRequest = await NonRegisteredClientRequest.create({
+        type: 'non_registered',
+        recordNumber: 2002,
+        eventType: 'Private Party',
+        startsOn: new Date(),
+        endsOn: new Date(),
+        status: 'Draft',
+        estimatedBudget: 3000,
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        businessCode: 'JD-001',
+        address: '42 Example Rd'
+    });
+    await nonRegisteredRequest.setPreferences(prefsNonRegistered);
+
+    // Event for an existing client
+    const event = await Event.create({
+        date: new Date(),
+        finalBudget: 4800,
+        attendees: 95,
+        details: 'Finalized event details after planning phase.'
+    });
+    await event.setClient(client2);
+
+    // Hiring or outsourcing request linked to a job advertisement and department
+    const jobAd = await JobAdvertisement.create({
+        jobTitle: 'Frontend Engineer',
+        description: 'React + Vite experience required',
+        startsOn: new Date(),
+        endsOn: new Date(),
+        contractType: 'Full-time',
+        yearsOfExperience: 3,
+        status: 'Published'
+    });
+    const hiringReq = await HiringOrOutsourcingRequest.create({
+        status: 'Approved'
+    });
+    await hiringReq.setJobAdvertisement(jobAd);
+    await hiringReq.setRequestingDepartment(itDept);
+
+    // Budget adjustment request associated to department and application
+    const budgetAdj = await BudgetAdjustmentRequest.create({
+        requiredAmount: 1500,
+        reason: 'Unexpected vendor surcharge'
+    });
+    await budgetAdj.setRequestingDepartment(itDept);
+    await budgetAdj.setApplicationReference(app);
 }
 
 export {

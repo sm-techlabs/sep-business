@@ -4,7 +4,7 @@ import sequelize from '../db/sequelize.js';
 class BudgetAdjustmentRequest extends Model {}
 BudgetAdjustmentRequest.init({
 	requiredAmount: DataTypes.FLOAT,
-	reason: DataTypes.STRING,
+	reason: DataTypes.TEXT,
 }, {
 	sequelize,
 	modelName: 'BudgetAdjustmentRequest',
