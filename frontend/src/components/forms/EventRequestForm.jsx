@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./form.css";
 
 const EventRequestForm = () => {
   const [formData, setFormData] = useState({
@@ -19,10 +20,11 @@ const EventRequestForm = () => {
   };
 
   return (
-    <div>
-      <h1>Event Request Form</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="modal-form-container">
+      <form className="modal-form" onSubmit={handleSubmit}>
+        <h1 className="modal-form__title">Event Request Form</h1>
         <input
+          className="modal-form__input"
           name="eventName"
           type="text"
           placeholder="Event name"
@@ -31,6 +33,7 @@ const EventRequestForm = () => {
           required
         />
         <input
+          className="modal-form__input"
           name="date"
           type="date"
           value={formData.date}
@@ -38,6 +41,7 @@ const EventRequestForm = () => {
           required
         />
         <input
+          className="modal-form__input"
           name="location"
           type="text"
           placeholder="Location"
@@ -46,13 +50,16 @@ const EventRequestForm = () => {
           required
         />
         <textarea
+          className="modal-form__textarea"
           name="description"
           placeholder="Description"
           value={formData.description}
           onChange={handleChange}
           rows={4}
         />
-        <button type="submit">Submit</button>
+        <button className="modal-form__button" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );

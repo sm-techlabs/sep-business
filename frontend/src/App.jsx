@@ -6,6 +6,7 @@ import ProtectedRoute from './utils/ProtectedRoute';
 import Login from './routes/Login';
 import Health from './routes/Health';
 import Workspace from './routes/Workspace';
+import Modal from './components/Modal';
 
 const routes = [
   { path: '/login', element: <Login />, protected: false },
@@ -17,6 +18,7 @@ function App() {
   return (
     <>
       <Header />
+      <Modal />
         <Routes>
           {routes.map(({ path, element, protected: isProtected, allowedRoles }) => (
             <Route
