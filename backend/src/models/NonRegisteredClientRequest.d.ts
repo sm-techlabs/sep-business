@@ -1,0 +1,11 @@
+import type { Model, InferAttributes, InferCreationAttributes } from 'sequelize';
+import type RequestTemplate from './RequestTemplate';
+
+// Scoped view of RequestTemplate; expose the same shape for IntelliSense
+export default interface NonRegisteredClientRequest
+  extends Model<InferAttributes<RequestTemplate>, InferCreationAttributes<RequestTemplate>> {}
+
+declare module '../models/NonRegisteredClientRequest.js' {
+  import NonRegisteredClientRequest from './NonRegisteredClientRequest';
+  export default NonRegisteredClientRequest;
+}
