@@ -25,8 +25,3 @@ export default class Event extends Model<
   declare getClient: BelongsToGetAssociationMixin<Client>;
   declare setClient: BelongsToSetAssociationMixin<Client, number>;
 }
-
-declare module '../models/Event.js' {
-  import Event from './Event';
-  export default Event;
-}

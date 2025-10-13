@@ -47,9 +47,3 @@ export default class Employee extends Model<
   declare countAssignmentHistory: HasManyCountAssociationsMixin;
   declare createAssignmentHistory: HasManyCreateAssociationMixin<Task>;
 }
-
-// // Map ESM import specifiers to this declaration for IntelliSense
-// declare module '../models/Employee.js' {
-//   import Employee from './Employee';
-//   export default Employee;
-// }

@@ -35,8 +35,3 @@ export default class Team extends Model<
   declare getDepartment: BelongsToGetAssociationMixin<Department>;
   declare setDepartment: BelongsToSetAssociationMixin<Department, number>;
 }
-
-declare module '../models/Team.js' {
-  import Team from './Team';
-  export default Team;
-}

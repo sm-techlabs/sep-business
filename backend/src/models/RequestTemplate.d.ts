@@ -42,8 +42,3 @@ export default class RequestTemplate extends Model<
   declare getClient: BelongsToGetAssociationMixin<Client>;
   declare setClient: BelongsToSetAssociationMixin<Client, number>;
 }
-
-declare module '../models/RequestTemplate.js' {
-  import RequestTemplate from './RequestTemplate';
-  export default RequestTemplate;
-}

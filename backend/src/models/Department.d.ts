@@ -35,8 +35,3 @@ export default class Department extends Model<
   declare countTeams: HasManyCountAssociationsMixin;
   declare createTeam: HasManyCreateAssociationMixin<Team>;
 }
-
-declare module '../models/Department.js' {
-  import Department from './Department';
-  export default Department;
-}

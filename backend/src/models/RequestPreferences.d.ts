@@ -13,8 +13,3 @@ export default class RequestPreferences extends Model<
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
-
-declare module '../models/RequestPreferences.js' {
-  import RequestPreferences from './RequestPreferences';
-  export default RequestPreferences;
-}

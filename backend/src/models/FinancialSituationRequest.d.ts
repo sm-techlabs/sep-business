@@ -9,8 +9,3 @@ export default class FinancialSituationRequest extends Model<
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
-
-declare module '../models/FinancialSituationRequest.js' {
-  import FinancialSituationRequest from './FinancialSituationRequest';
-  export default FinancialSituationRequest;
-}

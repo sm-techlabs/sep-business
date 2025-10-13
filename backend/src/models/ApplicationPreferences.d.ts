@@ -14,8 +14,3 @@ export default class ApplicationPreferences extends Model<
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
-
-declare module '../models/ApplicationPreferences.js' {
-  import ApplicationPreferences from './ApplicationPreferences';
-  export default ApplicationPreferences;
-}

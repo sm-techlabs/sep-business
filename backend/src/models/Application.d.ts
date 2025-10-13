@@ -47,8 +47,3 @@ export default class Application extends Model<
   declare countTasks: HasManyCountAssociationsMixin;
   declare createTask: HasManyCreateAssociationMixin<Task>;
 }
-
-declare module '../models/Application.js' {
-  import Application from './Application';
-  export default Application;
-}

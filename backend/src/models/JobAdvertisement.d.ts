@@ -15,8 +15,3 @@ export default class JobAdvertisement extends Model<
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
-
-declare module '../models/JobAdvertisement.js' {
-  import JobAdvertisement from './JobAdvertisement';
-  export default JobAdvertisement;
-}

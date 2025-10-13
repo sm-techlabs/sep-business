@@ -26,8 +26,3 @@ export default class BudgetAdjustmentRequest extends Model<
   declare getApplicationReference: BelongsToGetAssociationMixin<Application>;
   declare setApplicationReference: BelongsToSetAssociationMixin<Application, number>;
 }
-
-declare module '../models/BudgetAdjustmentRequest.js' {
-  import BudgetAdjustmentRequest from './BudgetAdjustmentRequest';
-  export default BudgetAdjustmentRequest;
-}

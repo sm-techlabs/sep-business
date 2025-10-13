@@ -36,8 +36,3 @@ export default class Task extends Model<
   declare getApplicationReference: BelongsToGetAssociationMixin<Application>;
   declare setApplicationReference: BelongsToSetAssociationMixin<Application, number>;
 }
-
-declare module '../models/Task.js' {
-  import Task from './Task';
-  export default Task;
-}

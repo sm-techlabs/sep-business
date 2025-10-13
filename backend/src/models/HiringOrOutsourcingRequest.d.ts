@@ -25,8 +25,3 @@ export default class HiringOrOutsourcingRequest extends Model<
   declare getRequestingDepartment: BelongsToGetAssociationMixin<Department>;
   declare setRequestingDepartment: BelongsToSetAssociationMixin<Department, number>;
 }
-
-declare module '../models/HiringOrOutsourcingRequest.js' {
-  import HiringOrOutsourcingRequest from './HiringOrOutsourcingRequest';
-  export default HiringOrOutsourcingRequest;
-}
