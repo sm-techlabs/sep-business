@@ -1,8 +1,13 @@
 import request from 'supertest';
-import { app, server } from '../src/app.js';
+import { app } from '../src/app.js';
+import { sequelize } from '../src/models/index.js';
 
-afterAll((done) => {
-  server.close(done);
+beforeAll(async () => {
+  await sequelize.sync({ force: true });
+});
+
+afterAll(async () => {
+  await sequelize.close();
 });
 
 describe('GET /api/health', () => {

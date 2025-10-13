@@ -1,0 +1,81 @@
+/* src/styles/workspace-card.css */
+
+.workspace-card {
+  background: var(--card-bg, rgba(255, 255, 255, 0.9));
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.workspace-card:hover {
+  background: rgba(255, 255, 255, 0.95); /* slightly brighter */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); /* keep soft shadow */
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* ---------- Header ---------- */
+.workspace-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 0.5rem;
+}
+
+/* ---------- Title ---------- */
+.workspace-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937; /* gray-800 */
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Body ---------- */
+.workspace-card-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151; /* gray-700 */
+  font-size: 0.95rem;
+}
+
+/* ---------- Action Group ---------- */
+.workspace-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  justify-content: flex-start;
+}
+
+/* ---------- Dark Mode ---------- */
+@media (prefers-color-scheme: dark) {
+  .workspace-card {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .workspace-card:hover {
+    background: rgba(45, 55, 72, 0.7); /* slightly lighter gray-blue */
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+  }
+
+  .workspace-card-title {
+    color: #e2e8f0;
+  }
+
+  .workspace-card-body {
+    color: #cbd5e1;
+  }
+}

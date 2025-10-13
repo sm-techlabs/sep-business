@@ -1,19 +1,19 @@
-.home-container {
+.health-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 70vh; /* fills the whole screen nicely */
-  gap: 1.5rem; /* balanced breathing room */
+  gap: 1rem; /* balanced breathing room */
 }
 
-.home-container h1 {
+.health-container h1 {
   font-size: 2rem;
-  margin-bottom: 0.5rem;
+  /* margin-bottom: 0.5rem; */
   letter-spacing: 0.5px;
 }
 
-.home-container button {
+.health-container button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   border: none;
@@ -26,23 +26,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.home-container button:hover {
+.health-container button:hover {
   /* background-color: #005fa3; */
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.home-container p {
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.4;
-  color: #333;
-}
-
-/* Optional: make time and uptime visually distinct */
-.home-container p:nth-of-type(1),
-.home-container p:nth-of-type(2),
-.home-container p:nth-of-type(3) {
-  font-family: monospace;
-  color: #555;
 }

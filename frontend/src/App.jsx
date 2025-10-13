@@ -1,26 +1,43 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import './styles/global.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Home from './routes/Home';
+import ProtectedRoute from './utils/ProtectedRoute';
 import Login from './routes/Login';
-import EventRequestForm from './routes/EventRequestForm';
-import './styles/global.css';
+import Health from './routes/Health';
+import Workspace from './routes/Workspace';
 
-const App = () => {
+const routes = [
+  { path: '/login', element: <Login />, protected: false },
+  { path: '/health', element: <Health />, protected: false },
+  { path: '/workspace', element: <Workspace />, protected: true },
+];
+
+function App() {
   return (
-    <div className="app-container">
+    <>
       <Header />
-      <main>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/event-request" element={<EventRequestForm />} />
+          {routes.map(({ path, element, protected: isProtected, allowedRoles }) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                isProtected ? (
+                  <ProtectedRoute allowedRoles={allowedRoles}>
+                    {element}
+                  </ProtectedRoute>
+                ) : (
+                  element
+                )
+              }
+            />
+          ))}
+          <Route path="*" element={<Navigate to="/workspace" replace />} />
         </Routes>
-      </main>
       <Footer />
-    </div>
+    </>
   );
-};
+}
 
 export default App;
