@@ -1,4 +1,60 @@
-/* Reset & base styling */
+/* ===============================
+   🎨 Global Styles & Color Palette
+   =============================== */
+
+:root {
+  /* 🎨 Core Backgrounds */
+  --color-bg: #0f1115;          /* Page background */
+  --color-surface: #1a1d23;     /* Headers, footers, elevated surfaces */
+  --color-surface-alt: #181a1f; /* Inputs, code blocks */
+  --color-border: #2b2f36;      /* Divider & border color */
+
+  /* 🖋️ Text Colors */
+  --color-text: #e4e6eb;        /* Main text */
+  --color-text-strong: #f5f6fa; /* Headings, emphasis */
+  --color-text-muted: #b0b3b8;  /* Secondary text */
+  --color-text-subtle: #888;    /* Footer and less important text */
+
+  /* 💚 Accent / Brand */
+  --color-accent: #00bfa6;      /* Primary accent (buttons, active links) */
+  --color-accent-blue: #4f9cff; /* Secondary accent (links, highlights) */
+  --color-accent-hover: #03dac5;/* Hover accent */
+
+  /* 🪟 Modals & Overlays */
+  --color-modal-bg: #1a1d23;            /* Matches surface for cohesion */
+  --color-modal-border: #2b2f36;        /* Subtle boundary */
+  --color-modal-text: #e4e6eb;          /* Inherits normal text tone */
+  --color-modal-icon: #b0b3b8;          /* Muted by default */
+  --color-modal-icon-hover: #00bfa6;    /* Accent hover */
+  --color-overlay-bg: rgba(15, 17, 21, 0.75); /* Translucent backdrop */
+
+  /* --- Cards --- */
+  --color-card-bg: rgba(255, 255, 255, 0.9);
+  --color-card-hover: rgba(255, 255, 255, 0.95);
+  --color-card-border: rgba(255, 255, 255, 0.3);
+  --color-shadow-soft: rgba(0, 0, 0, 0.06);
+
+  /* --- Dark mode --- */
+  --color-card-bg-dark: rgba(30, 41, 59, 0.8);
+  --color-card-hover-dark: rgba(45, 55, 72, 0.7);
+  --color-card-border-dark: rgba(255, 255, 255, 0.08);
+  --color-shadow-strong: rgba(0, 0, 0, 0.6);
+  --color-heading-dark: #e2e8f0;
+  --color-text-dark: #cbd5e1;
+
+  /* 🧱 Structural Tokens */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --transition-fast: 0.2s ease;
+}
+
+/* ===============================
+   🔧 Reset & Base
+   =============================== */
+
 * {
   margin: 0;
   padding: 0;
@@ -12,36 +68,32 @@ html, body, #root {
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  background-color: #0f1115;
-  color: #e4e6eb;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Ensure React root takes full height for sticky footer layout */
 #root {
   display: flex;
   flex-direction: column;
 }
-/* App layout wrapper */
 
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* ensures full height of viewport */
+  min-height: 100vh;
 }
 
-/* Smooth transitions for links and buttons */
-a, button {
-  transition: all 0.2s ease;
-}
+/* ===============================
+   🧭 Header / Navigation
+   =============================== */
 
-/* Header / Nav */
 header {
-  background-color: #1a1d23;
+  background-color: var(--color-surface);
   padding: 1rem 2rem;
-  border-bottom: 1px solid #2b2f36;
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,7 +101,7 @@ header {
 
 header h1 {
   font-size: 1.4rem;
-  color: #f5f6fa;
+  color: var(--color-text-strong);
   letter-spacing: 0.5px;
 }
 
@@ -60,17 +112,21 @@ header h1 {
 
 .navbar a {
   text-decoration: none;
-  color: #b0b3b8;
+  color: var(--color-text-muted);
   font-weight: 500;
   position: relative;
+  transition: color var(--transition-fast);
 }
 
 .navbar a:hover,
 .navbar a.active {
-  color: #00bfa6;
+  color: var(--color-accent);
 }
 
-/* Main content */
+/* ===============================
+   🧱 Layout & Main
+   =============================== */
+
 main {
   flex: 1;
   padding: 2rem;
@@ -79,64 +135,75 @@ main {
   width: 100%;
 }
 
-/* Footer */
-footer {
-  background-color: #1a1d23;
-  padding: 1rem;
-  text-align: center;
-  color: #888;
-  border-top: 1px solid #2b2f36;
-  font-size: 0.9rem;
-  margin-top: auto; /* Key to push footer to bottom */
-  width: 100%;
-}
+/* ===============================
+   🔘 Buttons
+   =============================== */
 
-/* Buttons */
 button {
-  background-color: #00bfa6;
-  color: #0f1115;
+  background-color: var(--color-accent);
+  color: var(--color-bg);
   border: none;
   padding: 0.6rem 1.2rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-weight: 600;
   letter-spacing: 0.3px;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
 button:hover {
-  background-color: #03dac5;
+  background-color: var(--color-accent-hover);
 }
 
-/* Form elements */
-input {
-  background-color: #181a1f;
-  color: #e4e6eb;
-  border: 1px solid #2b2f36;
-  border-radius: 6px;
+/* ===============================
+   ✏️ Form Elements
+   =============================== */
+
+input,
+textarea,
+select {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   padding: 0.6rem;
   width: 100%;
   font-size: 1rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-input:focus {
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
-  border-color: #00bfa6;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(0, 191, 166, 0.2);
 }
 
-/* Utility */
-pre {
-  background-color: #181a1f;
-  padding: 1rem;
-  border-radius: 8px;
-  overflow-x: hidden;
-  white-space: pre-wrap;   /* ✅ allows line wrapping */
-  word-break: break-word;  /* ✅ breaks long strings */
-  font-family: monospace;
-  color: #b0b3b8;
-  /* margin-top: 1rem; */
-  font-size: 0.9rem;
+textarea {
+  resize: vertical;
 }
+
+/* ===============================
+   💡 Utilities & Typography
+   =============================== */
 
 h1, h2, h3 {
-  color: #f5f6fa;
+  color: var(--color-text-strong);
+}
+
+a, button {
+  transition: all var(--transition-fast);
+}
+
+pre {
+  background-color: var(--color-surface-alt);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: monospace;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
 }

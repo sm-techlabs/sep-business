@@ -11,6 +11,7 @@
   font-size: 2rem;
   margin-bottom: 0.5rem;
   letter-spacing: 0.5px;
+  color: var(--color-text-strong);
 }
 
 .login-container form {
@@ -24,15 +25,17 @@
 .login-container input {
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  /* border: 1px solid #ccc; */
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .login-container input:focus {
-  /* border-color: #0078d7; */
-  box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.2);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(0, 191, 166, 0.25);
 }
 
 .login-container button {
@@ -40,7 +43,8 @@
   font-size: 1rem;
   border: none;
   border-radius: 8px;
-  /* color: white; */
+  background-color: var(--color-accent);
+  color: var(--color-bg);
   cursor: pointer;
   font-weight: 500;
   transition: all 0.25s ease;
@@ -48,9 +52,11 @@
 }
 
 .login-container button:hover {
+  background-color: var(--color-accent-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
+
 .login-result {
   margin-top: 1rem;
   padding: 1rem;
@@ -58,12 +64,13 @@
   max-width: 320px;
   border-radius: 8px;
   font-family: monospace;
-  color: #555;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-alt);
   font-size: 1rem;
-  /* ✅ allow line wrapping */
-  white-space: pre-wrap;  /* preserves line breaks but allows wrapping */
-  word-break: break-word; /* breaks long strings if needed */
-  overflow-x: hidden;     /* no horizontal scroll */
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: hidden;
+  border: 1px solid var(--color-border);
 }
 
 button[disabled],
@@ -71,4 +78,3 @@ input[disabled] {
   opacity: 0.4;
   cursor: not-allowed;
 }
-

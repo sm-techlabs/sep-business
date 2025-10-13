@@ -1,4 +1,6 @@
-/* src/styles/ActionButton.css */
+/* =========================================
+   Action Button
+   ========================================= */
 
 /* ---------- Base Container ---------- */
 .action-button {
@@ -15,45 +17,46 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 191, 166, 0.4);
-  background: rgba(0, 191, 166, 0.15);
-  color: #009b87;
+
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  color: color-mix(in srgb, var(--color-accent) 80%, var(--color-text));
   font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+
+  transition: all var(--transition-fast);
   min-width: 80px;
   max-width: 140px;
 }
 
 .action-button button:hover {
-  background: #00bfa6;
-  color: white;
+  background: var(--color-accent);
+  color: var(--color-text-strong);
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 191, 166, 0.25);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-accent) 25%, black);
 }
 
-/* Optional subtle focus ring for accessibility */
+/* ---------- Focus Ring ---------- */
 .action-button button:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 191, 166, 0.4);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
 
 /* ---------- Tooltip Styles ---------- */
 .action-button .tooltip {
   position: absolute;
   bottom: -2.2rem;
-  background: rgba(17, 24, 39, 0.9); /* gray-900 */
-  color: white;
-  /* font-size: 0.75rem; */
+  background: var(--color-surface-alt);
+  color: var(--color-text);
   font-size: 0.85rem;
   padding: 0.35rem 0.6rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transform: translateY(4px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
 /* Show tooltip on hover */
@@ -71,21 +74,21 @@
   transform: translateX(-50%);
   border-width: 4px;
   border-style: solid;
-  border-color: transparent transparent rgba(17, 24, 39, 0.9) transparent;
+  border-color: transparent transparent var(--color-surface-alt) transparent;
 }
 
 /* ---------- Dark Mode ---------- */
 @media (prefers-color-scheme: dark) {
   .action-button button {
-    border: 1px solid rgba(0, 191, 166, 0.3);
-    background: rgba(0, 191, 166, 0.1);
-    color: #4ef1d2;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    color: var(--color-accent-hover);
   }
 
   .action-button button:hover {
-    background: #00bfa6;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 191, 166, 0.3);
+    background: var(--color-accent);
+    color: var(--color-text-strong);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-accent) 30%, black);
   }
 
   .action-button .tooltip {

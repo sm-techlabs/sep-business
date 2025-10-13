@@ -1,59 +1,78 @@
+/* =========================================
+   Navbar (header container)
+   ========================================= */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #121417;
-  color: #ffffff;
-  border-bottom: 1px solid #2a2d33;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 2px 6px var(--color-shadow-strong);
+
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
+/* =========================================
+   Logo / Branding
+   ========================================= */
 .navbar-logo {
   font-size: 1.4rem;
   font-weight: 600;
   letter-spacing: 0.5px;
-  color: #ffffff;
+  color: var(--color-text-strong);
+  user-select: none;
 }
 
+/* =========================================
+   Navigation links
+   ========================================= */
 .navbar-links {
   display: flex;
   gap: 1.5rem;
 }
 
 .navbar-links a {
-  color: #b0b3b8;
+  color: var(--color-text-muted);
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease;
-}
+  transition:
+    color var(--transition-fast),
+    border-bottom-color var(--transition-fast);
 
-.navbar-links a:hover {
-  color: #ffffff;
-}
-
-.navbar-links .active {
-  color: #4f9cff;
-  border-bottom: 2px solid #4f9cff;
+  border-bottom: 2px solid transparent;
   padding-bottom: 2px;
 }
 
+.navbar-links a:hover {
+  color: var(--color-text);
+}
+
+.navbar-links .active {
+  color: var(--color-accent-blue);
+  border-bottom-color: var(--color-accent-blue);
+}
+
+/* =========================================
+   Logout button
+   ========================================= */
 .logout-btn {
   background: none;
   border: none;
-  color: #b0b3b8;
+  color: var(--color-text-muted);
   font-weight: 500;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--transition-fast);
   font-size: 1rem;
   padding: 0;
 }
 
 .logout-btn:hover {
-  color: #ffffff;
+  color: var(--color-accent-hover);
 }
 
 .logout-btn:focus {

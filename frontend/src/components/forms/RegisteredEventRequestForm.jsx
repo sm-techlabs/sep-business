@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import "./form.css";
+import "./modal-form.css";
+import "./datepicker-dark.css";
 import DatePicker from "react-datepicker";
 
 const RegisteredEventRequestForm = () => {
   const [formData, setFormData] = useState({
     eventName: "",
-    date: "",
+    date: new Date(),
     location: "",
     description: "",
   });

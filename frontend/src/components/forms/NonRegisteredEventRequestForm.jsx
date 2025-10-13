@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import "./form.css";
+import "./modal-form.css";
+import "./datepicker-dark.css";
 import DatePicker from "react-datepicker";
 
 const NonRegisteredEventRequestForm = () => {
@@ -40,7 +41,7 @@ const NonRegisteredEventRequestForm = () => {
           className="modal-form__input"
           calendarClassName="dark-datepicker"
           popperPlacement="bottom"
-          dateFormat="yyyy-MM-dd"
+          dateFormat="yyyy-mm-dd"
           placeholderText="Select a date"
         />
         <input
