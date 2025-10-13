@@ -1,35 +1,61 @@
-import React, { useState } from 'react';
-import '../styles/home.css';
-import { getApiBaseUrl } from '../config';
+import React, { useState } from "react";
 
-const Home = () => {
+const EventRequestForm = () => {
+  const [formData, setFormData] = useState({
+    eventName: "",
+    date: "",
+    location: "",
+    description: "",
+  });
 
-  const [message, setMessage] = useState('');
-  const [time, setTime] = useState('');
-  const [uptime, setUptime] = useState('');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const healthCheck = async () => {
-    try {
-      const response = await fetch(getApiBaseUrl('/api/health'));
-      const data = await response.json();
-      setMessage(data.message);
-      setTime(data.time);
-      setUptime(data.uptime);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setMessage('Error fetching data');
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Form submitted:\n${JSON.stringify(formData, null, 2)}`);
   };
 
   return (
-    <div className="home-container">
-      <h1>Home</h1>
-      <button onClick={healthCheck}>Check API health</button>
-      {message && <p>{message}</p>}
-      {time && <p>{new Date(time).toLocaleString()}</p>}
-      {uptime && <p>Uptime: {uptime}</p>}
+    <div>
+      <h1>Event Request Form</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          name="eventName"
+          type="text"
+          placeholder="Event name"
+          value={formData.eventName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="date"
+          type="date"
+          value={formData.date}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="location"
+          type="text"
+          placeholder="Location"
+          value={formData.location}
+          onChange={handleChange}
+          required
+        />
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={formData.description}
+          onChange={handleChange}
+          rows={4}
+        />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 };
 
-export default Home;
+export default EventRequestForm;
