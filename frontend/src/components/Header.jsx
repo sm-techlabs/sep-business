@@ -1,14 +1,17 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../utils/AppContext';
+import { useModalContext } from '../utils/ModalContext';
 import './Header.css';
 
 const Header = () => {
   const { tokenValid, user, loading, logout } = useAppContext();
+  const { closeModal } = useModalContext();
   const navigate = useNavigate();
 
   const handleLogout = (e) => {
     e.preventDefault(); // ✅ prevent navigation
+    closeModal(); // Close any open modal
     logout();
     navigate('/login');
   };

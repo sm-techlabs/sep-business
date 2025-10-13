@@ -25,6 +25,7 @@ export default class Employee extends Model<
   declare id: CreationOptional<number>;
   declare name: string;
   declare email: string;
+  declare password: string;
   declare jobTitle: 'Manager' | 'Coordinator' | 'Staff' | 'Intern';
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;

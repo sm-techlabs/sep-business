@@ -45,7 +45,7 @@ jobs:
           # Inject API_BASE_URL into frontend config
           echo "🔧 Injecting API base URL..."
           cd frontend
-          sed -i "s#__API_BASE_URL__#${{ vars.API_BASE_URL }}#" src/config.js
+          sed -i "0,/__API_BASE_URL__/s#__API_BASE_URL__#${{ vars.API_BASE_URL }}#" src/config.js
           echo "✅ Using API URL:" && cat src/config.js
 
           # Build frontend
