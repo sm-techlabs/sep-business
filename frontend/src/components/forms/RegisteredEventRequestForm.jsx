@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import "react-datepicker/dist/react-datepicker.css";
 import "./form.css";
+import DatePicker from "react-datepicker";
 
-const EventRequestForm = () => {
+const RegisteredEventRequestForm = () => {
   const [formData, setFormData] = useState({
     eventName: "",
     date: "",
@@ -22,7 +24,7 @@ const EventRequestForm = () => {
   return (
     <div className="modal-form-container">
       <form className="modal-form" onSubmit={handleSubmit}>
-        <h1 className="modal-form__title">Event Request Form</h1>
+        <h1 className="modal-form__title">Event Request Form For Existing Clients</h1>
         <input
           className="modal-form__input"
           name="eventName"
@@ -32,14 +34,15 @@ const EventRequestForm = () => {
           onChange={handleChange}
           required
         />
-        <input
-          className="modal-form__input"
-          name="date"
-          type="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
-        />
+        <DatePicker
+                  selected={formData.date}
+                  onChange={(date) => setFormData((prev) => ({ ...prev, date }))}
+                  className="modal-form__input"
+                  calendarClassName="dark-datepicker"
+                  popperPlacement="bottom"
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="Select a date"
+                />
         <input
           className="modal-form__input"
           name="location"
@@ -65,4 +68,4 @@ const EventRequestForm = () => {
   );
 };
 
-export default EventRequestForm;
+export default RegisteredEventRequestForm;

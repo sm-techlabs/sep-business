@@ -3,7 +3,8 @@ import { UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
-import EventRequestForm from '../forms/EventRequestForm';
+import RegisteredEventRequestForm from '../forms/RegisteredEventRequestForm';
+import NonRegisteredEventRequestForm from '../forms/NonRegisteredEventRequestForm';
 import { useModalContext } from '../../utils/ModalContext';
 
 const NewEventRequest = () => {
@@ -16,12 +17,12 @@ const NewEventRequest = () => {
         <ActionButton
           icon={UserCheck}
           label="For Registered Clients"
-          onClick={() => openModalWithContent(<EventRequestForm />)}
+          onClick={() => openModalWithContent(<RegisteredEventRequestForm />)}
         />
         <ActionButton
           icon={UserPlus}
           label="For New Clients"
-          onClick={() => openModalWithContent(<EventRequestForm />)}
+          onClick={() => openModalWithContent(<NonRegisteredEventRequestForm />)}
         />
       </div>
 
