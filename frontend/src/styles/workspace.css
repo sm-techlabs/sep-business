@@ -69,10 +69,11 @@
 /* =============== Scrollbar =============== */
 .workspace-grid::-webkit-scrollbar {
   width: 8px;
+  display: none; /* hide by default */
 }
 .workspace-grid::-webkit-scrollbar-thumb {
   /* subtle, dark-mode friendly thumb using translucency */
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--color-surface);
   border-radius: 4px;
 }
 .workspace-grid::-webkit-scrollbar-thumb:hover {
