@@ -25,7 +25,7 @@ const RegisteredEventRequestForm = () => {
   return (
     <div className="modal-form-container">
       <form className="modal-form" onSubmit={handleSubmit}>
-        <h1 className="modal-form__title">Event Request Form For Existing Clients</h1>
+        <h1 className="modal-form__title">New Event Request - Registered Client</h1>
         <input
           className="modal-form__input"
           name="eventName"
