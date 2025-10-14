@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import '../styles/health.css';
 import healthClient from '../clients/healthClient';
 import authClient from '../clients/authClient';
-import Loader from '../components/Loader';
 import ActionButton from '../components/ActionButton';
-import { Heart, HeartPulse, KeyRound } from 'lucide-react';
+import { HeartPulse, KeyRound } from 'lucide-react';
 
 const Health = () => {
   const [healthInfo, setHealthInfo] = useState(null);

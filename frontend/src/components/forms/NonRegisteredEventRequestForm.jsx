@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import "./form.css";
+import "react-datepicker/dist/react-datepicker.css";
+import "./modal-form.css";
+import "./datepicker-dark.css";
+import DatePicker from "react-datepicker";
 
-const EventRequestForm = () => {
+const NonRegisteredEventRequestForm = () => {
   const [formData, setFormData] = useState({
     eventName: "",
-    date: "",
+    date: new Date(),
     location: "",
     description: "",
   });
@@ -22,7 +25,7 @@ const EventRequestForm = () => {
   return (
     <div className="modal-form-container">
       <form className="modal-form" onSubmit={handleSubmit}>
-        <h1 className="modal-form__title">Event Request Form</h1>
+        <h1 className="modal-form__title">New Event Request - New Client</h1>
         <input
           className="modal-form__input"
           name="eventName"
@@ -32,13 +35,14 @@ const EventRequestForm = () => {
           onChange={handleChange}
           required
         />
-        <input
+        <DatePicker
+          selected={formData.date}
+          onChange={(date) => setFormData((prev) => ({ ...prev, date }))}
           className="modal-form__input"
-          name="date"
-          type="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
+          calendarClassName="dark-datepicker"
+          popperPlacement="bottom"
+          dateFormat="yyyy-mm-dd"
+          placeholderText="Select a date"
         />
         <input
           className="modal-form__input"
@@ -65,4 +69,4 @@ const EventRequestForm = () => {
   );
 };
 
-export default EventRequestForm;
+export default NonRegisteredEventRequestForm;
