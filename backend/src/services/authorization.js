@@ -1,19 +1,7 @@
 // services/authorization.js
 import { verifyToken } from "../utils/jwt.js";
 import inferAction from "../utils/inferAction.js";
-
-// Centralized RBAC rules
-const rules = {
-  admin: {
-    can: ["*"], // full access
-  },
-  manager: {
-    can: ["view:*", "update:team"], // can view all, update team only
-  },
-  staff: {
-    can: ["edit:own_profile"],
-  },
-};
+import rules from "./rules.js";
 
 /**
  * 🧩 Check if a user is authorized for an inferred action.
