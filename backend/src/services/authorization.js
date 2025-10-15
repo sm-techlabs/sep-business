@@ -5,12 +5,16 @@ import rules from "./rules.js";
 
 /**
  * 🧩 Check if a user is authorized for an inferred action.
+ * Returns:
+ *  - "unauthenticated" if no/invalid token
+ *  - true if authorized
+ *  - false if authenticated but forbidden
  */
 export function isAuthorized(cookie, req) {
-  if (!cookie?.token) return false;
+  if (!cookie?.token) return "unauthenticated";
 
   const payload = verifyToken(cookie.token);
-  if (!payload) return false;
+  if (!payload) return "unauthenticated";
 
   const role = payload.jobTitle?.toLowerCase();
   const roleRules = rules[role];
@@ -26,20 +30,30 @@ export function isAuthorized(cookie, req) {
   if (roleRules.can.includes(action)) return true;
 
   // 3️⃣ Partial wildcard: e.g., "view:*" or "*:health"
-  if (roleRules.can.includes(`${verb}:*`) || roleRules.can.includes(`*:${resource}`)) return true;
+  if (
+    roleRules.can.includes(`${verb}:*`) ||
+    roleRules.can.includes(`*:${resource}`)
+  ) {
+    return true;
+  }
 
   return false;
 }
 
 /**
  * Express middleware that enforces RBAC authorization.
- * Automatically infers the action (e.g., "view:health")
- * and sends a 403 if unauthorized.
+ * - 401 if unauthenticated
+ * - 403 if forbidden
  */
 export function authorize(req, res, next) {
-  const allowed = isAuthorized(req.cookies, req);
-  if (!allowed) {
-    return res.status(403).json({ message: 'Forbidden: insufficient permissions' });
+  const result = isAuthorized(req.cookies, req);
+
+  if (result === "unauthenticated") {
+    return res.status(401).json({ message: "Unauthorized: please log in." });
+  }
+
+  if (result === false) {
+    return res.status(403).json({ message: "Forbidden: insufficient permissions." });
   }
 
   // ✅ Authorized — allow the request to continue

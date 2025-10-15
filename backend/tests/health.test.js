@@ -16,7 +16,7 @@ describe('GET /api/health', () => {
 
     const token = generateToken({
       name: 'alice',
-      jobTitle: 'Manager', // This must match your RBAC rule names
+      jobTitle: 'Manager',
     });
 
     const res = await request(app)
@@ -32,12 +32,31 @@ describe('GET /api/health', () => {
 });
 
 describe('GET /api/health', () => {
-  it('should return an insufficient permissions error', async () => {
+  it('should return a 403 forbidden error', async () => {
 
-    const res = await request(app).get('/api/health'); // request without a cookie
+    const token = generateToken({
+      name: 'bob',
+      jobTitle: 'Staff',
+    });
+
+    const res = await request(app)
+      .get('/api/health')
+      .set('Cookie', [`token=${token}`]); // manufacture a valid cookie for a role without access
 
     expect(res.statusCode).toEqual(403);
     expect(res.body.error || res.body.message).toMatch(/forbidden/i);
   });
 });
+
+describe('GET /api/health', () => {
+  it('should return a 401 unauthorized error', async () => {
+
+    const res = await request(app).get('/api/health'); // request without a cookie
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.error || res.body.message).toMatch(/unauthorized/i);
+  });
+});
+
+
 
