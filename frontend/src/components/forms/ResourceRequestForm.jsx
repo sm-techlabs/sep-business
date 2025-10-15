@@ -4,11 +4,11 @@ import "./modal-form.css";
 import "./datepicker-dark.css";
 import DatePicker from "react-datepicker";
 
-const NonRegisteredEventRequestForm = () => {
+const ResourceRequestForm = () => {
   const [formData, setFormData] = useState({
     eventName: "",
     date: new Date(),
-    location: "",
+    client: "",
     description: "",
   });
 
@@ -25,7 +25,7 @@ const NonRegisteredEventRequestForm = () => {
   return (
     <div className="modal-form-container">
       <form className="modal-form" onSubmit={handleSubmit}>
-        <h1 className="modal-form__title">New Event Request - New Client</h1>
+        <h1 className="modal-form__title">New Resource Request</h1>
         <input
           className="modal-form__input"
           name="eventName"
@@ -36,20 +36,20 @@ const NonRegisteredEventRequestForm = () => {
           required
         />
         <DatePicker
-          selected={formData.date}
-          onChange={(date) => setFormData((prev) => ({ ...prev, date }))}
-          className="modal-form__input"
-          calendarClassName="dark-datepicker"
-          popperPlacement="bottom"
-          dateFormat="yyyy-MM-dd"
-          placeholderText="Select a date"
-        />
+                  selected={formData.date}
+                  onChange={(date) => setFormData((prev) => ({ ...prev, date }))}
+                  className="modal-form__input"
+                  calendarClassName="dark-datepicker"
+                  popperPlacement="bottom"
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="Select a date"
+                />
         <input
           className="modal-form__input"
-          name="location"
+          name="client"
           type="text"
-          placeholder="Location"
-          value={formData.location}
+          placeholder="Client"
+          value={formData.client}
           onChange={handleChange}
           required
         />
@@ -69,4 +69,4 @@ const NonRegisteredEventRequestForm = () => {
   );
 };
 
-export default NonRegisteredEventRequestForm;
+export default ResourceRequestForm;
