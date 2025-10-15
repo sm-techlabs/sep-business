@@ -1,15 +1,17 @@
 // src/app.js
 import express from 'express';
 import cors from 'cors';
+import cookieParser from "cookie-parser";
+import { sequelize, initSampleData } from './models/index.js';
 import health from './routes/health.js';
 import authentication from './routes/authentication.js';
-import { sequelize, initSampleData } from './models/index.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // --- 🧩 Middleware ---
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: true,

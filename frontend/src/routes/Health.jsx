@@ -21,7 +21,6 @@ Uptime  : ${data.uptime}
 `;
       setHealthInfo(formatted);
     } catch (error) {
-      console.error('Error fetching health:', error);
       setHealthInfo('❌ Error fetching health data. Please try again later.');
     }
   };
