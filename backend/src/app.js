@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import { sequelize, initSampleData } from './models/index.js';
 import health from './routes/health.js';
+import request from './routes/request.js';
 import authentication from './routes/authentication.js';
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(
 // --- 🧩 Routes ---
 app.use('/api/health', health);
 app.use('/api/authentication', authentication);
+app.use('/api/request', request);
 
 // --- 🚀 Server startup (for local / prod only) ---
 const startServer = async () => {
