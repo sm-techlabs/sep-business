@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 
 const RegisteredEventRequestForm = () => {
   const [formData, setFormData] = useState({
-    eventType: "",
+    recordNumber: "",
     date: new Date(),
     location: "",
     description: "",
@@ -28,10 +28,10 @@ const RegisteredEventRequestForm = () => {
         <h1 className="modal-form__title">New Event Request - Registered Client</h1>
         <input
           className="modal-form__input"
-          name="eventType"
+          name="recordNumber"
           type="text"
-          placeholder="Event type"
-          value={formData.eventName}
+          placeholder="Record number"
+          value={formData.recordNumber}
           onChange={handleChange}
           required
         />
