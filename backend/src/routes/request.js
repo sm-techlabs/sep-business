@@ -4,7 +4,7 @@ import { sequelize } from '../models';
 import RequestPreferences from '../models/RequestPreferences.js';
 import RegisteredClientRequest from '../models/RegisteredClientRequest.js';
 import Client from '../models/Client.js';
-import { validateMiddleware } from '../services/validation.js';
+import { validate } from '../services/validation.js';
 import { nonRegisteredRequestSchema, registeredRequestSchema } from '../schemas/request.js';
 
 const router = express.Router();
@@ -13,7 +13,7 @@ const router = express.Router();
  * 🧩 Create new Event Request route
  */
 router.post(
-    '/unregistered', validateMiddleware(nonRegisteredRequestSchema),
+    '/unregistered', validate(nonRegisteredRequestSchema),
     async (req, res) => {
         try {
             const id = await sequelize.transaction(async t => {
@@ -51,7 +51,7 @@ router.post(
 
 router.post(
     '/registered',
-    validateMiddleware(registeredRequestSchema),
+    validate(registeredRequestSchema),
     async (req, res) => {
         const clientRecordNumber = req.body.recordNumber;
         const client = await Client.findOne({ where: { id: clientRecordNumber } });

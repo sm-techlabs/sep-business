@@ -51,7 +51,7 @@ function formatZodError(err) {
  *
  * @param {z.ZodSchema<any>} schema
  */
-export function validateMiddleware(schema) {
+export function validate(schema) {
 	return (req, res, next) => {
 		if (validateRequest(req, schema)) return next();
 		return res.status(400).json({
