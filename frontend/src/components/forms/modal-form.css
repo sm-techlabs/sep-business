@@ -148,66 +148,6 @@
 }
 
 
-/* === Popup Notification (Contained & Sticky) === */
-.popup-notification {
-  position: sticky;
-  top: 1rem;
-  right: 1.25rem;
-  background-color: var(--color-surface-alt);
-  color: var(--color-text-strong);
-  border: 1px solid color-mix(in srgb, var(--color-accent) 60%, transparent);
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
-  font-weight: 500;
-  box-shadow: 0 4px 12px var(--color-shadow-soft);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  animation: fadeInOut 1.5s ease-in-out;
-  z-index: 50; /* sits above form but below site header */
-}
-
-.popup-notification.success::before {
-  content: "✓";
-  color: var(--color-accent);
-  font-weight: bold;
-  margin-right: 0.5rem;
-}
-
-.popup-notification.error::before {
-  content: "⚠️";
-  color: #ff5252;
-  font-weight: bold;
-  margin-right: 0.5rem;
-}
-
-.popup-notification.success {
-  border-color: color-mix(in srgb, var(--color-accent) 60%, transparent);
-  color: var(--color-accent);
-}
-
-.popup-notification.error {
-  border-color: color-mix(in srgb, var(--color-error, #ff4d4f) 60%, transparent);
-  color: var(--color-error, #ff4d4f);
-}
-
-/* === Popup Animation === */
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-  10%, 90% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-}
-
 /* === Modal Animation === */
 @keyframes modalFadeIn {
   from {
