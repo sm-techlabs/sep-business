@@ -10,5 +10,9 @@ const formClient = {
     return response.data;
   },
 
+  submitEventRequestForRegistered: async (data) => {
+    const response = await apiClient.post('/api/request/registered', data);
+    return response.data;
+  }
 }
 export default formClient;
