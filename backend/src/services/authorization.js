@@ -10,7 +10,7 @@ import rules from "./rules.js";
  *  - true if authorized
  *  - false if authenticated but forbidden
  */
-export function isAuthorized(cookie, req) {
+function isAuthorized(cookie, req) {
   if (!cookie?.token) return "unauthenticated";
 
   const payload = verifyToken(cookie.token);
