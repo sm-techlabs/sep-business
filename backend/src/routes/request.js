@@ -4,7 +4,7 @@ import { sequelize } from '../models';
 import RequestPreferences from '../models/RequestPreferences.js';
 import RegisteredClientRequest from '../models/RegisteredClientRequest.js';
 import Client from '../models/Client.js';
-import { validateMiddleware } from './validation.js';
+import { validateMiddleware } from '../services/validation.js';
 import { nonRegisteredRequestSchema, registeredRequestSchema } from '../schemas/request.js';
 
 const router = express.Router();
