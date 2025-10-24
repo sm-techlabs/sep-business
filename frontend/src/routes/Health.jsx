@@ -13,16 +13,15 @@ const Health = () => {
     try {
       const data = await healthClient.getHealth();
       const formatted = `
-📡 Health Check Successful
---------------------------
+📡 Health Check Successful ✅
+----------------------------
 Message : ${data.message}
 Time    : ${new Date(data.time).toLocaleString()}
 Uptime  : ${data.uptime}
 `;
       setHealthInfo(formatted);
     } catch (error) {
-      console.error('Error fetching health:', error);
-      setHealthInfo('❌ Error fetching health data. Please try again later.');
+      setHealthInfo(error.response?.data?.message || 'Error fetching health data. Please try again later.');
     }
   };
 
@@ -30,13 +29,13 @@ Uptime  : ${data.uptime}
     try {
       const result = await authClient.validateToken();
       const message = `
-✅ Token Validation Successful
+🔑 Token Validation Successful ✅
 ------------------------------
 Welcome ${result.name} (${result.jobTitle})
 `;
       setValidationResult(message);
     } catch (err) {
-      const msg = err.response?.data?.message || '❌ Token validation failed.';
+      const msg = err.response?.data?.message || 'Token validation failed.';
       setValidationResult(msg);
     }
   };
