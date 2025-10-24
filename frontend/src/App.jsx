@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './styles/global.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -7,6 +7,8 @@ import Login from './routes/Login';
 import Health from './routes/Health';
 import Workspace from './routes/Workspace';
 import Modal from './components/Modal';
+import { useModalContext } from './utils/ModalContext';
+import { useEffect } from 'react';
 
 const routes = [
   { path: '/login', element: <Login />, protected: false },
@@ -15,6 +17,15 @@ const routes = [
 ];
 
 function App() {
+
+  const location = useLocation();
+  const { closeModal } = useModalContext();
+
+  useEffect(() => {
+    closeModal(); // close modal on any route change
+  }, [location.pathname]);
+
+
   return (
     <>
       <Header />
