@@ -80,3 +80,28 @@
     transform: scale(1);
   }
 }
+
+/* =========================================
+   Moa's playground
+   ========================================= */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;      /* space between label and options */
+}
+
+.form-label {
+  width: 160px;      /* left column width, tweak as you like */
+}
+
+.inline-option {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.options-wrap {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap; /* bryter hela alternativet till ny rad om det tar slut på plats */
+}

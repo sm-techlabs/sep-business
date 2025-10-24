@@ -4,7 +4,7 @@ import Departments from '../components/cards/Departments';
 import Employees from '../components/cards/Employees';
 import Tasks from '../components/cards/Tasks';
 import NewEventRequest from '../components/cards/EventRequests';
-import NewResourceRequest from '../components/cards/ResourceRequests';
+import NewRecruitmentRequest from '../components/cards/RecruitmentRequests';
 import Applications from '../components/cards/Applications';
 import HR from '../components/cards/HR';
 import Teams from '../components/cards/Teams';
@@ -30,7 +30,7 @@ const Workspace = () => {
         <Departments />
         <Tasks />
         <NewEventRequest />
-        <NewResourceRequest />
+        <NewRecruitmentRequest />
         <Applications />
         <HR />
         <Teams />
