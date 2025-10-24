@@ -2,10 +2,24 @@ import request from 'supertest';
 import { app } from '../src/app.js';
 import { initSampleData } from '../src/models/index.js';
 import { sequelize } from '../src/models/index.js';
+import { generateToken } from '../src/utils/jwt.js';
+
+let managerToken;
+let staffToken;
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
   await initSampleData();
+
+  managerToken = generateToken({
+    name: 'alice',
+    jobTitle: 'Manager',
+  });
+
+  staffToken = generateToken({
+    name: 'bob',
+    jobTitle: 'Staff',
+  });
 });
 
 afterAll(async () => {
@@ -15,7 +29,8 @@ afterAll(async () => {
 describe('🧪 Event Request API', () => {
   test('creates a new non-registered event request', async () => {
     const res = await request(app)
-      .post('/api/request/unregistered')
+      .post('/api/requests/unregistered')
+      .set('Cookie', [`token=${managerToken}`])
       .send({
         eventType: 'some_event',
         startsOn: new Date(),
@@ -42,7 +57,8 @@ describe('🧪 Event Request API', () => {
 describe('🧪 Event Request API', () => {
   test('creates a new registered event request', async () => {
     const res = await request(app)
-      .post('/api/request/registered')
+      .post('/api/requests/registered')
+      .set('Cookie', [`token=${managerToken}`])
       .send({
         eventType: 'some_event',
         startsOn: new Date(),
@@ -64,7 +80,8 @@ describe('🧪 Event Request API', () => {
   
   test('creates a new registered event request with invalid Client Record number', async () => {
     const res = await request(app)
-      .post('/api/request/registered')
+      .post('/api/requests/registered')
+      .set('Cookie', [`token=${managerToken}`])
       .send({
         eventType: 'some_event',
         startsOn: new Date(),
@@ -87,7 +104,8 @@ describe('🧪 Event Request API', () => {
   
   test('creates a new registered event request with invalid body', async () => {
     const res = await request(app)
-      .post('/api/request/registered')
+      .post('/api/requests/registered')
+      .set('Cookie', [`token=${managerToken}`])
       .send({});
 
     expect(res.statusCode).toBe(400);
