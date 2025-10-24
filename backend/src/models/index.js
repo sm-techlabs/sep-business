@@ -161,7 +161,8 @@ const initSampleData = async () => {
         startsOn: new Date(),
         endsOn: new Date(),
         status: 'Submitted',
-        estimatedBudget: 10000
+        estimatedBudget: 10000,
+        expectedNumberOfAttendees: 100,
     });
     await registeredRequest.setPreferences(prefsRegistered);
     await registeredRequest.setClient(client);
@@ -178,7 +179,8 @@ const initSampleData = async () => {
         name: 'John Doe',
         email: 'john.doe@example.com',
         businessCode: 'JD-001',
-        address: '42 Example Rd'
+        address: '42 Example Rd',
+        expectedNumberOfAttendees: 100,
     });
     await nonRegisteredRequest.setPreferences(prefsNonRegistered);
 

@@ -21,7 +21,8 @@ RequestTemplate.init({
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     businessCode: DataTypes.STRING,
-    address: DataTypes.STRING
+    address: DataTypes.STRING,
+	expectedNumberOfAttendees: DataTypes.INTEGER,
 }, {
 	sequelize,
 	modelName: 'RequestTemplate',

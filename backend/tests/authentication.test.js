@@ -5,7 +5,7 @@ import { sequelize } from '../src/models/index.js';
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
-  initSampleData();
+  await initSampleData();
 });
 
 afterAll(async () => {
