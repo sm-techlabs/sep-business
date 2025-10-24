@@ -1,6 +1,6 @@
 import express from 'express';
 import NonRegisteredClientRequest from '../models/NonRegisteredClientRequest.js';
-import { sequelize } from '../models';
+import { sequelize } from '../models/index.js';
 import RequestPreferences from '../models/RequestPreferences.js';
 import RegisteredClientRequest from '../models/RegisteredClientRequest.js';
 import Client from '../models/Client.js';
