@@ -4,7 +4,12 @@ export default {
     can: ["*"], // full access
   },
   manager: {
-    can: ["view:health", "update:team"], // can view all, update team only
+    can: [
+      "view:health", 
+      "view:clients",
+      "create:requests",
+      "update:team",
+    ], // can view all, update team only
   },
   staff: {
     can: ["edit:own_profile"],

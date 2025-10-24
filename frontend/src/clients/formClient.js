@@ -10,8 +10,13 @@ const formClient = {
     return response.data;
   },
 
-  submitEventRequestForRegistered: async (data) => {
-    const response = await apiClient.post('/api/request/registered', data);
+  submitEventRequestForRegistered: async ( data ) => {
+    const response = await apiClient.post('/api/requests/registered', data);
+    return response.data;
+  },
+
+  submitEventRequestForNonRegistered: async ( data ) => {
+    const response = await apiClient.post('/api/requests/unregistered', data);
     return response.data;
   }
 }

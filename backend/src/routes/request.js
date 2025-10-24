@@ -6,6 +6,7 @@ import RegisteredClientRequest from '../models/RegisteredClientRequest.js';
 import Client from '../models/Client.js';
 import { validate } from '../services/validation.js';
 import { nonRegisteredRequestSchema, registeredRequestSchema } from '../schemas/request.js';
+import { authorize } from '../services/authorization.js';
 
 const router = express.Router();
 
@@ -13,7 +14,9 @@ const router = express.Router();
  * 🧩 Create new Event Request route
  */
 router.post(
-    '/unregistered', validate(nonRegisteredRequestSchema),
+    '/unregistered', 
+    authorize, 
+    validate(nonRegisteredRequestSchema),
     async (req, res) => {
         try {
             const id = await sequelize.transaction(async t => {
@@ -51,6 +54,7 @@ router.post(
 
 router.post(
     '/registered',
+    authorize,
     validate(registeredRequestSchema),
     async (req, res) => {
         const clientRecordNumber = req.body.recordNumber;

@@ -49,11 +49,11 @@ export function authorize(req, res, next) {
   const result = isAuthorized(req.cookies, req);
 
   if (result === "unauthenticated") {
-    return res.status(401).json({ message: "Unauthorized: please log in." });
+    return res.status(401).json({ error: "Unauthorized: please log in." });
   }
 
   if (result === false) {
-    return res.status(403).json({ message: "Forbidden: insufficient permissions." });
+    return res.status(403).json({ error: "Forbidden: insufficient permissions." });
   }
 
   // ✅ Authorized — allow the request to continue

@@ -101,16 +101,34 @@ const initSampleData = async () => {
         name: 'Acme Corp',
         email: 'contact@acme.com',
         businessCode: 'AC123',
-        address: '123 Main St',
-        eligibleForDiscount: true
+        address: '123 Main St, New York, NY',
+        eligibleForDiscount: true,
     });
+
     const client2 = await Client.create({
-        name: 'Acme Corp',
-        email: 'contacwt@acme.com',
-        businessCode: 'AC123',
-        address: '123 Main St',
-        eligibleForDiscount: true
+        name: 'Luna Events',
+        email: 'hello@lunaevents.co',
+        businessCode: 'LN567',
+        address: '42 Crescent Road, London, UK',
+        eligibleForDiscount: false,
     });
+
+    const client3 = await Client.create({
+        name: 'Nordic Tech AB',
+        email: 'info@nordictech.se',
+        businessCode: 'NT890',
+        address: 'Sveavägen 10, Stockholm, Sweden',
+        eligibleForDiscount: true,
+    });
+
+    const client4 = await Client.create({
+        name: 'Sunset Catering',
+        email: 'bookings@sunsetcatering.com',
+        businessCode: 'SC432',
+        address: '500 Ocean Drive, Miami, FL',
+        eligibleForDiscount: false,
+    });
+
     const app = await Application.create({
         eventType: 'Conference',
         description: 'Annual IT Conference',

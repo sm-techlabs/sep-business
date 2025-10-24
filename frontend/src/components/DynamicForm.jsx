@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./datepicker-dark.css";
-import PopupNotification from "../PopupNotification";
+import "./DynamicForm.css";
+import PopupNotification from "./PopupNotification";
+import Dropdown from "./Dropdown";
 
 const DynamicForm = ({ title, onSubmit, fields }) => {
   // Build initial state to match Zod expectations
@@ -14,11 +15,14 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
       }, {});
     } else if (f.type === "date") {
       acc[f.name] = new Date();
+    } else if (f.type === "dropdown") {
+      acc[f.name] = "";
     } else {
       acc[f.name] = "";
     }
     return acc;
   }, {});
+
 
   const [formData, setFormData] = useState(initialState);
   const [notification, setNotification] = useState({
@@ -46,6 +50,16 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
       ...prev,
       [name]: type === "number" ? Number(value) : value,
     }));
+    setFormData((prev) => ({
+        ...prev,
+        [name]:
+          // convert dropdowns with numeric-looking values into numbers
+          field.type === "dropdown" && !isNaN(value)
+            ? Number(value)
+            : type === "number"
+            ? Number(value)
+            : value,
+      }));
   };
 
   const handleDateChange = (date, fieldName) => {
@@ -109,6 +123,15 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
               className="modal-form__input"
               calendarClassName="dark-datepicker"
             />
+          ) : field.type === "dropdown" ? (
+              <Dropdown
+                label={field.label}
+                name={field.name}
+                value={formData[field.name]}
+                onChange={(e) => handleChange(e, field)}
+                options={field.options || []}
+                placeholder={field.placeholder || `Select ${field.label}`}
+              />
           ) : (
             <input
               id={field.name}

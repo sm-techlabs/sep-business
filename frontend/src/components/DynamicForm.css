@@ -171,3 +171,90 @@
     font-size: 1.4rem;
   }
 }
+
+/* ===========================================================
+   DatePicker Dark Theme — aligned with global color palette
+   =========================================================== */
+
+/* === Root Theme Wrapper === */
+.dark-datepicker,
+.dark-datepicker * {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+  border: none !important;
+}
+
+/* === Header === */
+.dark-datepicker .react-datepicker__header {
+  background-color: var(--color-bg-secondary) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+/* === Day Names, Days, and Months === */
+.dark-datepicker .react-datepicker__day-name,
+.dark-datepicker .react-datepicker__day,
+.dark-datepicker .react-datepicker__month-text,
+.dark-datepicker .react-datepicker__quarter-text,
+.dark-datepicker .react-datepicker__year-text {
+  color: var(--color-text-secondary) !important;
+}
+
+.dark-datepicker .react-datepicker__day:hover,
+.dark-datepicker .react-datepicker__month-text:hover,
+.dark-datepicker .react-datepicker__quarter-text:hover,
+.dark-datepicker .react-datepicker__year-text:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 15%, transparent) !important;
+  color: var(--color-accent) !important;
+  border-radius: 6px !important;
+}
+
+/* === Selected Day === */
+.dark-datepicker .react-datepicker__day--selected,
+.dark-datepicker .react-datepicker__day--keyboard-selected {
+  background-color: var(--color-accent) !important;
+  color: var(--color-bg-primary) !important;
+  border-radius: 6px !important;
+}
+
+/* === Today Indicator === */
+.dark-datepicker .react-datepicker__day--today {
+  border: 1px solid var(--color-accent) !important;
+}
+
+/* === Outside Month Days === */
+.dark-datepicker .react-datepicker__day--outside-month {
+  color: #555 !important;
+}
+
+/* === Navigation Arrows === */
+.dark-datepicker .react-datepicker__navigation-icon::before {
+  border-color: var(--color-text-secondary) !important;
+}
+
+/* === Input Field === */
+.react-datepicker__input-container input {
+  border-radius: 6px !important;
+  padding: 0.8rem 0.9rem !important;
+  font-size: 1rem !important;
+  width: 100% !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.react-datepicker__input-container input:focus {
+  outline: none !important;
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 25%, transparent) !important;
+}
+
+/* === Month / Year Dropdowns === */
+.dark-datepicker .react-datepicker__month-dropdown,
+.dark-datepicker .react-datepicker__year-dropdown {
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+.dark-datepicker .react-datepicker__month-option:hover,
+.dark-datepicker .react-datepicker__year-option:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 15%, transparent) !important;
+  color: var(--color-accent) !important;
+}
