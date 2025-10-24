@@ -25,7 +25,7 @@ const RecruitmentRequestForm = () => {
   return (
     <div className="modal-form-container">
       <form className="modal-form" onSubmit={handleSubmit}>
-        <h1 className="modal-form__title">New Resource Request</h1>
+        <h1 className="modal-form__title">New Recruitment Request</h1>
         <div className="form-row">
           <span className="form-label">Contract type:</span>
 
@@ -126,7 +126,7 @@ const RecruitmentRequestForm = () => {
           className="modal-form__textarea"
           name="jobDescription"
           placeholder="Job description"
-          value={formData.jobDdescription}
+          value={formData.jobDescription}
           onChange={handleChange}
           rows={4}
         />
