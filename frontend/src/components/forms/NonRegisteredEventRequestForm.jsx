@@ -41,7 +41,7 @@ const NonRegisteredEventRequestForm = () => {
           className="modal-form__input"
           calendarClassName="dark-datepicker"
           popperPlacement="bottom"
-          dateFormat="yyyy-mm-dd"
+          dateFormat="yyyy-MM-dd"
           placeholderText="Select a date"
         />
         <input
