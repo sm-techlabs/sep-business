@@ -5,24 +5,44 @@ import "./DynamicForm.css";
 import PopupNotification from "./PopupNotification";
 import Dropdown from "./Dropdown";
 
-const DynamicForm = ({ title, onSubmit, fields }) => {
+const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
   // Build initial state to match Zod expectations
   const initialState = fields.reduce((acc, f) => {
+    // Determine base value depending on field type
+    let baseValue;
+
     if (f.type === "checkbox-group") {
-      acc[f.name] = f.options.reduce((optAcc, opt) => {
+      baseValue = f.options.reduce((optAcc, opt) => {
         optAcc[opt.name] = false;
         return optAcc;
       }, {});
     } else if (f.type === "date") {
-      acc[f.name] = new Date();
-    } else if (f.type === "dropdown") {
-      acc[f.name] = "";
+      baseValue = new Date();
     } else {
-      acc[f.name] = "";
+      baseValue = "";
     }
+
+    // If initialValues provides a value, override it
+    if (initialValues.hasOwnProperty(f.name)) {
+      if (f.type === "checkbox-group" && typeof initialValues[f.name] === "object") {
+        // Merge provided checkbox values
+        acc[f.name] = { ...baseValue, ...initialValues[f.name] };
+      } else if (f.type === "date") {
+        // Support both Date objects and ISO strings
+        const providedValue = initialValues[f.name];
+        acc[f.name] =
+          providedValue instanceof Date
+            ? providedValue
+            : new Date(providedValue);
+      } else {
+        acc[f.name] = initialValues[f.name];
+      }
+    } else {
+      acc[f.name] = baseValue;
+    }
+
     return acc;
   }, {});
-
 
   const [formData, setFormData] = useState(initialState);
   const [notification, setNotification] = useState({
@@ -30,7 +50,6 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
     type: "success",
     message: "",
   });
-
 
   const handleChange = (e, field, optionName) => {
     const { name, value, checked, type } = e.target;
@@ -48,18 +67,13 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "number" ? Number(value) : value,
+      [name]:
+        field.type === "dropdown" && !isNaN(value)
+          ? Number(value)
+          : type === "number"
+          ? Number(value)
+          : value,
     }));
-    setFormData((prev) => ({
-        ...prev,
-        [name]:
-          // convert dropdowns with numeric-looking values into numbers
-          field.type === "dropdown" && !isNaN(value)
-            ? Number(value)
-            : type === "number"
-            ? Number(value)
-            : value,
-      }));
   };
 
   const handleDateChange = (date, fieldName) => {
@@ -75,21 +89,22 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
         type: "success",
         message: response?.message || "Submission successful!",
       });
-      setFormData(initialState)
+      setFormData(initialState);
     } catch (err) {
-        const error = err?.response?.data?.error;
-        const issues = error?.details?.issues;
+      // debugger
+      const error = err?.response?.data?.error;
+      const issues = error?.details?.issues;
 
-        const message = Array.isArray(issues)
-          ? issues.map(i => i.message).join("; ")
-          : error || "Submission failed.";
+      const message = Array.isArray(issues)
+        ? issues.map((i) => i.message).join("; ")
+        : error || "Submission failed.";
 
-        setNotification({
-                visible: true,
-                type: "error",
-                message,
-              });
-            }
+      setNotification({
+        visible: true,
+        type: "error",
+        message,
+      });
+    }
   };
 
   return (
@@ -124,14 +139,14 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
               calendarClassName="dark-datepicker"
             />
           ) : field.type === "dropdown" ? (
-              <Dropdown
-                label={field.label}
-                name={field.name}
-                value={formData[field.name]}
-                onChange={(e) => handleChange(e, field)}
-                options={field.options || []}
-                placeholder={field.placeholder || `Select ${field.label}`}
-              />
+            <Dropdown
+              label={field.label}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={(e) => handleChange(e, field)}
+              options={field.options || []}
+              placeholder={field.placeholder || `Select ${field.label}`}
+            />
           ) : (
             <input
               id={field.name}
@@ -147,18 +162,18 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
         </div>
       ))}
 
-        <PopupNotification
-          type={notification.type}
-          message={notification.message}
-          visible={notification.visible}
-          // duration={2000}
-          onClose={() => setNotification(prev => ({ ...prev, visible: false }))}
-        />
+      <PopupNotification
+        type={notification.type}
+        message={notification.message}
+        visible={notification.visible}
+        onClose={() =>
+          setNotification((prev) => ({ ...prev, visible: false }))
+        }
+      />
+
       <button type="submit" className="modal-form__button">
         Submit
       </button>
-        
-
     </form>
   );
 };

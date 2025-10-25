@@ -1,11 +1,12 @@
 // src/cards/NewEventRequest.jsx
-import { UserCheck, UserPlus } from 'lucide-react';
+import { Pen, UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
 import RegisteredEventRequestForm from '../forms/RegisteredEventRequestForm';
 import NonRegisteredEventRequestForm from '../forms/NonRegisteredEventRequestForm';
 import { useModalContext } from '../../utils/ModalContext';
+import EditEventRequestForm from '../forms/EditEventRequestForm';
 
 const NewEventRequest = () => {
 
@@ -23,6 +24,11 @@ const NewEventRequest = () => {
           icon={UserPlus}
           label="For New Clients"
           onClick={() => openModalWithContent(<NonRegisteredEventRequestForm />)}
+        />
+        <ActionButton
+          icon={Pen}
+          label="Edit Event Request"
+          onClick={() => openModalWithContent(<EditEventRequestForm />)}
         />
       </div>
 

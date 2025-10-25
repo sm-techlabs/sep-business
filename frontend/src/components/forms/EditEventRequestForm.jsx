@@ -1,11 +1,32 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 import customerClient from "../../clients/customerClient";
 
-const RegisteredEventRequestForm = () => {
+const EditEventRequestForm = (id) => {
 
   const [clientOptions, setClientOptions] = useState([])
+  const [initialValues, setInitialValues] = useState({
+    // Placeholder values for visual confirmation
+    recordNumber: 3,
+    eventType: "Corporate Conference",
+    startsOn: new Date("2025-11-05"),
+    endsOn: new Date("2025-11-07"),
+    estimatedBudget: 8500,
+    expectedNumberOfAttendees: 120,
+    preferences: {
+      decorations: true,
+      parties: false,
+      photosOrFilming: true,
+      breakfastLunchDinner: true,
+      softHotDrinks: false,
+    },
+  })
+
+  useEffect(() => {
+    // Add logic to read target event request (id),
+    // map values to initialValues fields
+  }, []);
 
   useEffect(() => {
   const fetchClients = async () => {
@@ -39,7 +60,6 @@ const RegisteredEventRequestForm = () => {
   fetchClients();
 }, []);
 
-  
   const form = {
     title: "New Event Request - Registered Client",
     fields: [
@@ -96,19 +116,22 @@ const RegisteredEventRequestForm = () => {
         { name: "softHotDrinks", description: "Soft or Hot Drinks" },
       ],
     }
+  ]}
 
-  ]
-  }
+  const handleEditSubmit = async (formData) => {
+    return await formClient.updateEventRequest(id, formData);
+  };
 
   return (
     <div className="modal-form-container">
       <DynamicForm
         title={form.title}
-        onSubmit={formClient.createEventRequestForRegistered}
         fields={form.fields}
+        initialValues={initialValues}
+        onSubmit={handleEditSubmit}
       />
     </div>
   );
 };
 
-export default RegisteredEventRequestForm;
+export default EditEventRequestForm;

@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 
-const RecruitmentRequestForm = () => {
+const EditRecruitmentRequestForm = (id) => {
+
+  const [initialValues, setInitialValues] = useState({
+    contractType: "Full Time Contract",
+    requestingDepartment: "Service",
+    yearsOfExperience: 15,
+    jobTitle: "Senior Procrastinator",
+    jobDescription: "Procrastinates a lot..."
+  })
+
+  useEffect(() => {
+    // Add logic to read target recruitment request (id),
+    // map values to initialValues fields
+    // setInitialValues = {newly-acquired-values}
+  }, []);
+
   const form = {
     title: "Recruitment Request",
     fields: [
@@ -41,17 +56,23 @@ const RecruitmentRequestForm = () => {
       placeholder: "e.g. This job requires proficiency in...",
       required: true,
     },
-  ]};
+  ]
+};
+
+ const handleEditSubmit = async (formData) => {
+    return await formClient.updateRecruitmentRequest(id, formData);
+  };
 
   return (
     <div className="modal-form-container">
       <DynamicForm
         title={form.title}
         fields={form.fields}
-        onSubmit={formClient.createRecruitmentRequest}
+        initialValues={initialValues}
+        onSubmit={handleEditSubmit}
       />
     </div>
   );
 };
 
-export default RecruitmentRequestForm;
+export default EditRecruitmentRequestForm;
