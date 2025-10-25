@@ -3,10 +3,10 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import { sequelize, initSampleData } from './models/index.js';
-import health from './routes/health.js';
-import request from './routes/request.js';
 import authentication from './routes/authentication.js';
-import client from './routes/client.js'
+import health from './routes/health.js';
+import request from './routes/requests.js';
+import client from './routes/clients.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
