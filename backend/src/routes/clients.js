@@ -25,7 +25,7 @@ router.get('/',
       where,
       limit: limit ? parseInt(limit) : undefined,
       offset: offset ? parseInt(offset) : undefined,
-      order: [['createdAt', 'DESC']],
+      order: [['id', 'DESC']],
     });
 
     res.status(200).json(clients);

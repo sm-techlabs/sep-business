@@ -44,7 +44,7 @@ router.post(
                 await newReq.setPreferences(pref, { transaction: t });
                 return newReq.id
             });
-            res.status(200).json({ id });
+            res.status(200).json({ id, message: `Event Request #${id} created successfully!` });
         } catch (error) {
             console.error('Error creating non-registered client request:', error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -85,7 +85,7 @@ router.post(
                 await newReq.setPreferences(pref, { transaction: t });
                 return newReq.id
             });
-            res.status(200).json({ id });
+            res.status(200).json({ id, message: `Event Request #${id} created successfully!` });
         } catch (error) {
             console.error('Error creating registered client request:', error);
             res.status(500).json({ error: 'Internal Server Error' });

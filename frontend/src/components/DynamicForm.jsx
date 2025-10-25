@@ -73,7 +73,7 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
       setNotification({
         visible: true,
         type: "success",
-        message: response?.id || "Submission successful!",
+        message: response?.message || "Submission successful!",
       });
       setFormData(initialState)
     } catch (err) {
@@ -151,7 +151,7 @@ const DynamicForm = ({ title, onSubmit, fields }) => {
           type={notification.type}
           message={notification.message}
           visible={notification.visible}
-          duration={2000}
+          // duration={2000}
           onClose={() => setNotification(prev => ({ ...prev, visible: false }))}
         />
       <button type="submit" className="modal-form__button">
