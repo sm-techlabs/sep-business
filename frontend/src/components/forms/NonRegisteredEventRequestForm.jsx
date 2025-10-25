@@ -87,7 +87,7 @@ const NonRegisteredEventRequestForm = () => {
       <DynamicForm
         title={form.title}
         fields={form.fields}
-        onSubmit={formClient.submitEventRequestForNonRegistered}
+        onSubmit={formClient.createEventRequestForNonRegistered}
       />
     </div>
   );

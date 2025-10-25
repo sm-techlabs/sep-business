@@ -48,7 +48,7 @@ const RecruitmentRequestForm = () => {
       <DynamicForm
         title={form.title}
         fields={form.fields}
-        onSubmit={formClient.submitRecruitmentForm}
+        onSubmit={formClient.createRecruitmentRequest}
       />
     </div>
   );

@@ -91,7 +91,7 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
       });
       setFormData(initialState);
     } catch (err) {
-      debugger
+      // debugger
       const error = err?.response?.data?.error;
       const issues = error?.details?.issues;
 

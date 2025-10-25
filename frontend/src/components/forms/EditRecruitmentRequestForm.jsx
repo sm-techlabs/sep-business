@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 
-const EditRecruitmentRequestForm = () => {
+const EditRecruitmentRequestForm = (id) => {
+
+  const [initialValues, setInitialValues] = useState({
+    contractType: "Full Time Contract",
+    requestingDepartment: "Service",
+    yearsOfExperience: 15,
+    jobTitle: "Senior Procrastinator",
+    jobDescription: "Procrastinates a lot..."
+  })
+
+  useEffect(() => {
+    // Add logic to read target recruitment request (id),
+    // map values to initialValues fields
+    // setInitialValues = {newly-acquired-values}
+  }, []);
+
   const form = {
     title: "Recruitment Request",
     fields: [
@@ -41,19 +56,11 @@ const EditRecruitmentRequestForm = () => {
       placeholder: "e.g. This job requires proficiency in...",
       required: true,
     },
-  ],
-  initialValues: {
-    contractType: "Full Time Contract",
-    requestingDepartment: "Service",
-    yearsOfExperience: 15,
-    jobTitle: "Senior Procrastinator",
-    jobDescription: "Procrastinates a lot..."
-  }
+  ]
 };
 
  const handleEditSubmit = async (formData) => {
-    // Now you can pass both id and formData
-    return await formClient.editRecruitmentForm('1', formData);
+    return await formClient.updateRecruitmentRequest(id, formData);
   };
 
   return (
@@ -61,7 +68,7 @@ const EditRecruitmentRequestForm = () => {
       <DynamicForm
         title={form.title}
         fields={form.fields}
-        initialValues={form.initialValues}
+        initialValues={initialValues}
         onSubmit={handleEditSubmit}
       />
     </div>
