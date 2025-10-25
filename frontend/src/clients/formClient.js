@@ -10,6 +10,10 @@ const formClient = {
     const response = await apiClient.post('/api/forms/recruitment', data);
     return response;
   },
+  editRecruitmentForm: async ( id, data ) => {
+    const response = await apiClient.put(`/api/forms/recruitment/${id}`, data);
+    return response;
+  },
 
   submitEventRequestForRegistered: async ( data ) => {
     const response = await apiClient.post('/api/requests/registered', data);
