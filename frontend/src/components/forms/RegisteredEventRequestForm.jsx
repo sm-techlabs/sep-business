@@ -40,8 +40,9 @@ const RegisteredEventRequestForm = () => {
 }, []);
 
   
-
-  const fields = [
+  const form = {
+    title: "New Event Request - Registered Client",
+    fields: [
     {
       name: "recordNumber",
       label: "Client Record",
@@ -83,13 +84,6 @@ const RegisteredEventRequestForm = () => {
       placeholder: "e.g. 50",
       required: true
     },
-    // {
-    //   name: "recordNumber",
-    //   label: "Client Record Number",
-    //   type: "number",
-    //   placeholder: "Enter your assigned record number",
-    //   required: true,
-    // },
     {
       name: "preferences",
       label: "Preferences",
@@ -103,14 +97,15 @@ const RegisteredEventRequestForm = () => {
       ],
     }
 
-  ];
+  ]
+  }
 
   return (
     <div className="modal-form-container">
       <DynamicForm
-        title="New Event Request - Registered Client"
+        title={form.title}
         onSubmit={formClient.submitEventRequestForRegistered}
-        fields={fields}
+        fields={form.fields}
       />
     </div>
   );

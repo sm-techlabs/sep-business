@@ -3,7 +3,9 @@ import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 
 const RecruitmentRequestForm = () => {
-  const fields = [
+  const form = {
+    title: "Recruitment Request",
+    fields: [
     {
       name: "contractType",
       label: "Contract Type",
@@ -39,14 +41,14 @@ const RecruitmentRequestForm = () => {
       placeholder: "e.g. This job requires proficiency in...",
       required: true,
     },
-  ];
+  ]};
 
   return (
     <div className="modal-form-container">
       <DynamicForm
-        title="Recruitment Request"
+        title={form.title}
+        fields={form.fields}
         onSubmit={formClient.submitRecruitmentForm}
-        fields={fields}
       />
     </div>
   );

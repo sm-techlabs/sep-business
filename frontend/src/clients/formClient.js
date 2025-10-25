@@ -2,8 +2,9 @@ import apiClient from './apiClient';
 
 const formClient = {
   /**
-   * Log in with username and password.
-   * Backend sets an HTTP-only cookie.
+   * Form Submission Handlers
+   * Typically includes create, edit and delete handlers
+   * for each type of form
    */
   submitRecruitmentForm: async ( data ) => {
     const response = await apiClient.post('/api/forms/recruitment', data);
