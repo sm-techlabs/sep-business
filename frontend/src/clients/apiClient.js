@@ -16,7 +16,7 @@ apiClient.interceptors.request.use(
 
 // ✅ Response interceptor
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => response.data,
   (error) => Promise.reject(error)
 );
 

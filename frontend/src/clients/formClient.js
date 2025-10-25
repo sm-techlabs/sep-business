@@ -7,17 +7,17 @@ const formClient = {
    */
   submitRecruitmentForm: async ( data ) => {
     const response = await apiClient.post('/api/forms/recruitment', data);
-    return response.data;
+    return response;
   },
 
   submitEventRequestForRegistered: async ( data ) => {
     const response = await apiClient.post('/api/requests/registered', data);
-    return response.data;
+    return response;
   },
 
   submitEventRequestForNonRegistered: async ( data ) => {
     const response = await apiClient.post('/api/requests/unregistered', data);
-    return response.data;
+    return response;
   }
 }
 export default formClient;

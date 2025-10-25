@@ -7,7 +7,7 @@ const authClient = {
    */
   login: async ({ username, password }) => {
     const response = await apiClient.post('/api/authentication/login', { username, password });
-    return response.data;
+    return response;
   },
 
   /**
@@ -17,7 +17,7 @@ const authClient = {
    */
   validateToken: async () => {
     const response = await apiClient.get('/api/authentication/validate');
-    return response.data;
+    return response;
   },
 
   /**
@@ -25,7 +25,7 @@ const authClient = {
    */
   logout: async () => {
     const response = await apiClient.post('/api/authentication/logout');
-    return response.data;
+    return response;
   },
 };
 
