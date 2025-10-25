@@ -1,61 +1,65 @@
 // routes/auth.js
 import express from 'express';
 import bcrypt from 'bcrypt';
-import cookieParser from 'cookie-parser';
 import { Employee } from '../models/index.js';
 import { setAuthCookie, verifyToken, clearAuthCookie } from '../utils/jwt.js';
+import createHandlerWrapper from '../utils/createHandlerWrapper.js';
+import { BadRequestError, UnauthorizedError } from '../utils/errors.js';
 
 const router = express.Router();
-router.use(cookieParser());
 
 /**
  * 🧩 Login route
  */
-router.post('/login', async (req, res) => {
+router.post('/login', 
+  createHandlerWrapper(
+  async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    return res.status(400).json({ error: 'Invalid request; Username and password are required' });
+    throw new BadRequestError('Invalid request; Username and password are required')
   }
 
   const user = await Employee.findOne({ where: { username } });
   if (!user) {
-    return res.status(401).json({ error: 'Invalid credentials' });
+    throw new UnauthorizedError('Invalid credentials')
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    return res.status(401).json({ error: 'Invalid credentials' });
+    throw new UnauthorizedError('Invalid credentials')
   }
 
   const payload = { name: user.name, jobTitle: user.jobTitle };
   setAuthCookie(res, payload);
 
-  res.json({ message: 'Login successful' });
-});
+  return {message: "Login successful"}
+}));
 
 /**
  * 🧩 Validate route (for frontend to check session)
  */
-router.get('/validate', (req, res) => {
+router.get('/validate', 
+  createHandlerWrapper((req) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.status(401).json({ message: 'Missing authentication token. Please log in again.' });
+    throw new UnauthorizedError('Missing authentication token. Please log in again.');
   }
 
   const decoded = verifyToken(token);
   if (!decoded) {
-    return res.status(401).json({ message: 'Invalid or expired token' });
+    throw new UnauthorizedError('Invalid or expired token.');
   }
 
-  res.json({ name: decoded.name, jobTitle: decoded.jobTitle });
-});
+  return {name: decoded.name, jobTitle: decoded.jobTitle};
+}));
 
 /**
  * 🧩 Logout route
  */
-router.post('/logout', (req, res) => {
+router.post('/logout', 
+  createHandlerWrapper((req, res) => {
   clearAuthCookie(res);
-  res.json({ message: 'Logged out successfully' });
-});
+  return {message: 'Logged out successfully'}
+}));
 
 export default router;

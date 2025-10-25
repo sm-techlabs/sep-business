@@ -2,6 +2,7 @@ import express from 'express';
 import Client from '../models/Client.js';
 import { Op } from 'sequelize';
 import { authorize } from '../services/authorization.js';
+import createHandlerWrapper from '../utils/createHandlerWrapper.js';
 
 const router = express.Router();
 
@@ -12,8 +13,8 @@ const router = express.Router();
  */
 router.get('/',
   authorize,
-  async (req, res) => {
-  try {
+  createHandlerWrapper(
+  async (req) => {
     const { limit, offset, name, email } = req.query;
 
     // Build a flexible where clause
@@ -27,12 +28,7 @@ router.get('/',
       offset: offset ? parseInt(offset) : undefined,
       order: [['id', 'DESC']],
     });
-
-    res.status(200).json(clients);
-  } catch (error) {
-    console.error('Error fetching clients:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+    return clients;
+}));
 
 export default router;

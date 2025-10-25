@@ -98,8 +98,8 @@ describe('🧪 Event Request API', () => {
         expectedNumberOfAttendees: 75,
       });
 
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toMatch(/Invalid Client Record Number/i);
+    expect(res.statusCode).toBe(404);
+    expect(res.body.message).toMatch(/Invalid Client Record Number/i);
   });
   
   test('creates a new registered event request with invalid body', async () => {
