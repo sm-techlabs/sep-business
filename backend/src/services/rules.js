@@ -13,7 +13,9 @@ export default {
   },
   "senior customer service officer": {
     can: [
+      "view:clients",
       "view:event-requests",
+      "create:event-requests",
       "update:event-requests",
     ]
   },

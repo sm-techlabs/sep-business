@@ -13,6 +13,7 @@ import EventArchive from '../components/cards/EventArchive';
 import Clients from '../components/cards/Clients';
 import NewFinancialRequest from '../components/cards/FinancialRequests';
 import RewiewFinancialRequest from '../components/cards/FinancialRequestsFM';
+import EventRequestAdmin from '../components/cards/EventRequestsAdmin';
 
 const Workspace = () => {
   const { tokenValid, loading } = useAppContext();
@@ -34,6 +35,7 @@ const Workspace = () => {
         <Tasks />
         <NewEventRequest />
         <NewEventRequestCS />
+        <EventRequestAdmin />
         <NewRecruitmentRequest />
         <NewFinancialRequest />
         <RewiewFinancialRequest />

@@ -1,6 +1,7 @@
 import React from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
+import eventRequestClient from "../../clients/eventRequestClient";
 
 const CreateNonRegisteredEventRequestForm = () => {
 
@@ -87,7 +88,7 @@ const CreateNonRegisteredEventRequestForm = () => {
       <DynamicForm
         title={form.title}
         fields={form.fields}
-        onSubmit={formClient.createEventRequestForNonRegistered}
+        onSubmit={eventRequestClient.createUnregistered}
       />
     </div>
   );
