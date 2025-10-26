@@ -191,6 +191,29 @@ router.get(
     })
 )
 
+router.get(
+  '/:id',
+  authorize,
+  createHandlerWrapper(async (req) => {
+    const requestId = req.params.id;
+
+    const request = await RequestTemplate.findByPk(requestId, {
+      include: [
+        { model: RequestPreferences, as: 'preferences', attributes: { exclude: ['createdAt', 'updatedAt'] } },
+        { model: Client, as: 'client', attributes: ['id', 'name', 'email', 'businessCode', 'address'] },
+        { model: Employee, as: 'createdBy', attributes: ['id', 'name', 'email', 'jobTitle'] },
+      ],
+    });
+
+    if (!request) {
+      throw new NotFoundError('Event Request not found');
+    }
+
+    return request;
+  })
+);
+
+
 router.put(
     '/:id',
     authorize,

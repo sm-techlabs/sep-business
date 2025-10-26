@@ -1,55 +1,74 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./DynamicForm.css";
 import PopupNotification from "./PopupNotification";
 import Dropdown from "./Dropdown";
 
+const propsAreEqual = (prev, next) => {
+  return (
+    prev.title === next.title &&
+    prev.onSubmit === next.onSubmit &&
+    prev.initialValues === next.initialValues &&
+    prev.fields === next.fields
+  );
+};
+
 const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
-  // Build initial state to match Zod expectations
-  const initialState = fields.reduce((acc, f) => {
-    // Determine base value depending on field type
-    let baseValue;
+  // Helper to build state from fields and initialValues
+  const buildFormState = (values = {}) => {
+    return fields.reduce((acc, f) => {
+      let baseValue;
 
-    if (f.type === "checkbox-group") {
-      baseValue = f.options.reduce((optAcc, opt) => {
-        optAcc[opt.name] = false;
-        return optAcc;
-      }, {});
-    } else if (f.type === "date") {
-      baseValue = new Date();
-    } else {
-      baseValue = "";
-    }
-
-    // If initialValues provides a value, override it
-    if (initialValues.hasOwnProperty(f.name)) {
-      if (f.type === "checkbox-group" && typeof initialValues[f.name] === "object") {
-        // Merge provided checkbox values
-        acc[f.name] = { ...baseValue, ...initialValues[f.name] };
+      if (f.type === "checkbox-group") {
+        baseValue = f.options.reduce((optAcc, opt) => {
+          optAcc[opt.name] = false;
+          return optAcc;
+        }, {});
       } else if (f.type === "date") {
-        // Support both Date objects and ISO strings
-        const providedValue = initialValues[f.name];
-        acc[f.name] =
-          providedValue instanceof Date
-            ? providedValue
-            : new Date(providedValue);
+        baseValue = null; // safer default
       } else {
-        acc[f.name] = initialValues[f.name];
+        baseValue = "";
       }
-    } else {
-      acc[f.name] = baseValue;
-    }
 
-    return acc;
-  }, {});
+      if (values.hasOwnProperty(f.name)) {
+        if (f.type === "checkbox-group" && typeof values[f.name] === "object") {
+          acc[f.name] = { ...baseValue, ...values[f.name] };
+        } else if (f.type === "date") {
+          const providedValue = values[f.name];
+          acc[f.name] =
+            providedValue instanceof Date
+              ? providedValue
+              : providedValue
+              ? new Date(providedValue)
+              : null;
+        } else {
+          acc[f.name] = values[f.name];
+        }
+      } else {
+        acc[f.name] = baseValue;
+      }
 
-  const [formData, setFormData] = useState(initialState);
+      return acc;
+    }, {});
+  };
+
+  // Initialize state once
+  const [formData, setFormData] = useState(() => buildFormState(initialValues));
   const [notification, setNotification] = useState({
     visible: false,
     type: "success",
     message: "",
   });
+
+  useEffect(() => {
+  // Only rebuild if there are actual initial values (e.g., editing mode)
+  if (initialValues && Object.keys(initialValues).length > 0) {
+    setFormData(buildFormState(initialValues));
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [JSON.stringify(initialValues)]);
+
 
   const handleChange = (e, field, optionName) => {
     const { name, value, checked, type } = e.target;
@@ -89,9 +108,9 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
         type: "success",
         message: response?.message || "Submission successful!",
       });
-      setFormData(initialState);
+      // Reset cleanly (no new Date() instances)
+      setFormData(buildFormState({}));
     } catch (err) {
-      // debugger
       const error = err?.response?.data?.error;
       const issues = error?.details?.issues;
 
@@ -122,7 +141,7 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
                   <input
                     type="checkbox"
                     name={field.name}
-                    checked={formData[field.name][opt.name]}
+                    checked={formData[field.name]?.[opt.name] || false}
                     onChange={(e) => handleChange(e, field, opt.name)}
                   />
                   {opt.description}
@@ -132,7 +151,11 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
           ) : field.type === "date" ? (
             <DatePicker
               id={field.name}
-              selected={formData[field.name]}
+              selected={
+                formData[field.name]
+                  ? new Date(formData[field.name])
+                  : null
+              }
               onChange={(date) => handleDateChange(date, field.name)}
               dateFormat="yyyy-MM-dd"
               className="modal-form__input"
@@ -153,7 +176,7 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
               name={field.name}
               type={field.type}
               required={field.required}
-              value={formData[field.name]}
+              value={formData[field.name] ?? ""}
               onChange={(e) => handleChange(e, field)}
               className="modal-form__input"
               placeholder={field.placeholder || ""}
@@ -178,4 +201,5 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
   );
 };
 
-export default DynamicForm;
+export default React.memo(DynamicForm, propsAreEqual);
+
