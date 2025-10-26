@@ -76,14 +76,21 @@ const initSampleData = async () => {
         username: 'alice',
         password: passwordHash,
         email: 'alice@sep.com',
-        jobTitle: 'Manager'
+        jobTitle: 'Customer Service Officer'
     });
     const bob = await Employee.create({
         name: 'Bob',
         username: 'bob',
         password: passwordHash,
         email: 'bob@sep.com',
-        jobTitle: 'Staff'
+        jobTitle: 'Customer Service Officer'
+    });
+    const admin = await Employee.create({
+        name: 'Admin',
+        username: 'admin',
+        password: passwordHash,
+        email: 'admin@sep.com',
+        jobTitle: 'Admin'
     });
 
     // Department with manager
@@ -146,7 +153,6 @@ const initSampleData = async () => {
         status: 'Open',
         clientId: client2.id
     });
-    // Application.findAll().then(apps => console.log(apps));
 
     // Task authored by Alice, assigned to Bob, linked to the application
     const task = await Task.create({

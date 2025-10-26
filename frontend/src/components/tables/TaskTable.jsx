@@ -4,7 +4,7 @@ import eventRequestClient from "../../clients/eventRequestClient";
 import { useModalContext } from "../../utils/ModalContext";
 import EditEventRequestForm from "../forms/EditEventRequestForm";
 
-const EventRequestTable = ({ createdById, mode }) => {
+const TaskTable = ({ createdById }) => {
   const [records, setRecords] = useState([]);
   const { openModalWithContent } = useModalContext();
 
@@ -27,16 +27,15 @@ const EventRequestTable = ({ createdById, mode }) => {
   return (
     <div>
       <TableView
-        mode={mode}
         header={"Event Requests"}
         records={records}
         onDelete={(id) => eventRequestClient.delete(id)}
         onEdit={(id) => {
-          openModalWithContent(<EditEventRequestForm id={id}/>);
+          openModalWithContent(<EditEventRequestForm id={id} />);
         }}
       />
     </div>
   );
 };
 
-export default EventRequestTable;
+export default TaskTable;

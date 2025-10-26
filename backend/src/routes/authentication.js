@@ -29,7 +29,7 @@ router.post('/login',
     throw new UnauthorizedError('Invalid credentials')
   }
 
-  const payload = { name: user.name, jobTitle: user.jobTitle };
+  const payload = { id: user.id, name: user.name, jobTitle: user.jobTitle };
   setAuthCookie(res, payload);
 
   return {message: "Login successful"}
@@ -50,8 +50,32 @@ router.get('/validate',
     throw new UnauthorizedError('Invalid or expired token.');
   }
 
-  return {name: decoded.name, jobTitle: decoded.jobTitle};
+  return {id: decoded.id, name: decoded.name, jobTitle: decoded.jobTitle};
 }));
+
+/**
+ * 🧩 Self route — returns the authenticated user's info
+ */
+router.get(
+  '/self',
+  createHandlerWrapper((req) => {
+    const token = req.cookies.token;
+    if (!token) {
+      throw new UnauthorizedError('Missing authentication token.');
+    }
+
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      throw new UnauthorizedError('Invalid or expired token.');
+    }
+
+    return {
+      id: decoded.id,
+      name: decoded.name,
+      jobTitle: decoded.jobTitle,
+    };
+  })
+);
 
 /**
  * 🧩 Logout route
