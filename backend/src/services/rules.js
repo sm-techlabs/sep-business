@@ -11,6 +11,12 @@ export default {
       "update:team",
     ], // can view all, update team only
   },
+  "senior customer service officer": {
+    can: [
+      "view:requests",
+      "update:requests",
+    ]
+  },
   staff: {
     can: ["edit:own_profile"],
   },
