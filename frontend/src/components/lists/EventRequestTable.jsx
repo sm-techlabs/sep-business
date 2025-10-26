@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import ListView from "../ListView";
+import TableView from "../TableView";
 import eventRequestClient from "../../clients/eventRequestClient";
 
-const EventRequestList = () => {
+const EventRequestTable = () => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
@@ -15,11 +15,11 @@ const EventRequestList = () => {
 
   return (
     <div>
-      <ListView 
-      title={"Event Requests"}
-      data={records} />
+      <TableView 
+      header={"Event Requests"}
+      records={records} />
     </div>
   );
 };
 
-export default EventRequestList;
+export default EventRequestTable;
