@@ -49,6 +49,8 @@ RequestTemplate.hasOne(RequestPreferences, {
 });
 RequestTemplate.belongsTo(Employee, { as: 'createdBy' });
 RequestTemplate.belongsTo(Client, { as: 'client' });
+RequestTemplate.belongsTo(Employee, { as: 'approvedBy', foreignKey: 'approvedById' });
+RequestTemplate.belongsTo(Employee, { as: 'rejectedBy', foreignKey: 'rejectedById' });
 
 // Event associations
 Event.belongsTo(Client, { as: 'client' });
@@ -203,7 +205,7 @@ const initSampleData = async () => {
         eventType: 'Private Party',
         startsOn: new Date(),
         endsOn: new Date(),
-        status: 'Draft',
+        status: 'Submitted',
         estimatedBudget: 3000,
         name: 'John Doe',
         email: 'john.doe@example.com',

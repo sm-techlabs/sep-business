@@ -7,17 +7,26 @@ const eventRequestClient = {
     return await apiClient.get(url);
   },
 
-  getById: async (id) => apiClient.get(`/api/event-requests/${id}`),
+  getById: async (id) => 
+    apiClient.get(`/api/event-requests/${id}`),
 
-  createRegistered: async (data) =>
+  createRegistered: async (data) => 
     apiClient.post('/api/event-requests/registered', data),
 
-  createUnregistered: async (data) =>
+  createUnregistered: async (data) => 
     apiClient.post('/api/event-requests/unregistered', data),
 
-  update: async (id, data) => apiClient.put(`/api/event-requests/${id}`, data),
+  update: async (id, data) => 
+    apiClient.put(`/api/event-requests/${id}`, data),
 
-  delete: async (id) => apiClient.delete(`/api/event-requests/${id}`),
+  delete: async (id) => 
+    apiClient.delete(`/api/event-requests/${id}`),
+
+  approve: async (id) => 
+    apiClient.patch(`/api/event-requests/${id}/approve`),
+
+  reject: async (id, data = {}) => 
+    apiClient.patch(`/api/event-requests/${id}/reject`, data),
 };
 
 export default eventRequestClient;
