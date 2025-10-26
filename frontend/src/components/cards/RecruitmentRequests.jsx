@@ -1,10 +1,11 @@
 // src/cards/NewEventRequest.jsx
-import { Plus, UserCheck, UserPlus } from 'lucide-react';
+import { Pen, Plus, UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
 import RecruitmentRequestForm from '../forms/RecruitmentRequestForm';
 import { useModalContext } from '../../utils/ModalContext';
+import EditRecruitmentRequestForm from '../forms/EditRecruitmentRequestForm';
 
 const NewRecruitmentRequest = () => {
 
@@ -17,6 +18,11 @@ const NewRecruitmentRequest = () => {
           icon={Plus}
           label="New Recruitment Request"
           onClick={() => openModalWithContent(<RecruitmentRequestForm />)}
+        />
+        <ActionButton
+          icon={Pen}
+          label="Edit Recruitment Request"
+          onClick={() => openModalWithContent(<EditRecruitmentRequestForm />)}
         />
       </div>
 

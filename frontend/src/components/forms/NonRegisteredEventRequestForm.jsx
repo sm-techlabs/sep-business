@@ -3,7 +3,10 @@ import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 
 const NonRegisteredEventRequestForm = () => {
-  const fields = [
+
+  const form = {
+    title: "New Event Request - Non Registered Client",
+    fields: [
     {
       name: "name",
       label: "Name",
@@ -77,14 +80,14 @@ const NonRegisteredEventRequestForm = () => {
         { name: "softHotDrinks", description: "Soft or Hot Drinks" },
       ],
     }
-  ];
+  ]};
 
   return (
     <div className="modal-form-container">
       <DynamicForm
-        title="New Event Request - Non Registered Client"
-        onSubmit={formClient.submitEventRequestForNonRegistered}
-        fields={fields}
+        title={form.title}
+        fields={form.fields}
+        onSubmit={formClient.createEventRequestForNonRegistered}
       />
     </div>
   );
