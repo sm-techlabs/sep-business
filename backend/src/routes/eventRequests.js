@@ -11,7 +11,7 @@ import { validate } from '../services/validation.js';
 import { nonRegisteredRequestSchema, registeredRequestSchema } from '../schemas/request.js';
 import { authorize } from '../services/authorization.js';
 import createHandlerWrapper from '../utils/createHandlerWrapper.js';
-import { NotFoundError } from '../utils/errors.js';
+import { BadRequestError, NotFoundError } from '../utils/errors.js';
 import { verifyToken } from '../utils/jwt.js';
 
 const router = express.Router();
@@ -284,6 +284,68 @@ router.delete(
         });
         return { message: `Event Request #${requestId} deleted successfully!` };
     })
+);
+
+router.patch(
+  '/:id/approve',
+  authorize,
+  createHandlerWrapper(async (req) => {
+    const requestId = req.params.id;
+    const { id: reviewerId, name, jobTitle } = verifyToken(req.cookies.token);
+
+    const request = await RequestTemplate.findByPk(requestId);
+    if (!request) throw new NotFoundError('Event Request not found');
+
+    if (request.status !== 'Submitted') {
+      throw new BadRequestError('Only submitted requests can be approved.');
+    }
+
+    await sequelize.transaction(async (t) => {
+      await request.update(
+        {
+          status: 'Approved',
+          approvedById: reviewerId,
+          approvedByRole: jobTitle,
+          approvedAt: new Date(),
+        },
+        { transaction: t }
+      );
+    });
+
+    return { message: `Event Request #${requestId} approved successfully by ${name}!` };
+  })
+);
+
+router.patch(
+  '/:id/reject',
+  authorize,
+  createHandlerWrapper(async (req) => {
+    const requestId = req.params.id;
+    const { reason } = req.body;
+    const { id: reviewerId, name, jobTitle } = verifyToken(req.cookies.token);
+
+    const request = await RequestTemplate.findByPk(requestId);
+    if (!request) throw new NotFoundError('Event Request not found');
+
+    if (request.status !== 'Submitted') {
+      throw new BadRequestError('Only submitted requests can be rejected.');
+    }
+
+    await sequelize.transaction(async (t) => {
+      await request.update(
+        {
+          status: 'Rejected',
+          rejectedById: reviewerId,
+          rejectedByRole: jobTitle,
+          rejectedAt: new Date(),
+          rejectionReason: reason || null,
+        },
+        { transaction: t }
+      );
+    });
+
+    return { message: `Event Request #${requestId} rejected by ${name}.` };
+  })
 );
 
 export default router;
