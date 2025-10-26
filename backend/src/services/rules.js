@@ -7,14 +7,14 @@ export default {
     can: [
       "view:health", 
       "view:clients",
-      "create:requests",
+      "create:event-requests",
       "update:team",
     ], // can view all, update team only
   },
   "senior customer service officer": {
     can: [
-      "view:requests",
-      "update:requests",
+      "view:event-requests",
+      "update:event-requests",
     ]
   },
   staff: {
