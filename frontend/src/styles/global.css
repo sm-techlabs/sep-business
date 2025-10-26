@@ -26,7 +26,7 @@
   --color-modal-border: #2b2f36;        /* Subtle boundary */
   --color-modal-text: #e4e6eb;          /* Inherits normal text tone */
   --color-modal-icon: #b0b3b8;          /* Muted by default */
-  --color-modal-icon-hover: #00bfa6;    /* Accent hover */
+  --color-modal-icon-hover: #03dac5;    /* Accent hover */
   --color-overlay-bg: rgba(15, 17, 21, 0.75); /* Translucent backdrop */
 
   /* --- Cards --- */
