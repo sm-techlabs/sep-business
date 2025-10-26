@@ -42,6 +42,7 @@ Application.belongsTo(ApplicationPreferences, { as: 'preferences' });
 Application.belongsTo(Client, { as: 'client' });
 
 RequestTemplate.belongsTo(RequestPreferences, { as: 'preferences' });
+RequestTemplate.belongsTo(Employee, { as: 'createdBy' });
 RequestTemplate.belongsTo(Client, { as: 'client' });
 
 // Event associations
@@ -184,6 +185,7 @@ const initSampleData = async () => {
     });
     await registeredRequest.setPreferences(prefsRegistered);
     await registeredRequest.setClient(client);
+    await registeredRequest.setCreatedBy(alice);
 
     // Non-registered client request via subclass (scoped model)
     const nonRegisteredRequest = await NonRegisteredClientRequest.create({
@@ -201,6 +203,7 @@ const initSampleData = async () => {
         expectedNumberOfAttendees: 100,
     });
     await nonRegisteredRequest.setPreferences(prefsNonRegistered);
+    await nonRegisteredRequest.setCreatedBy(bob);
 
     // Event for an existing client
     const event = await Event.create({
@@ -234,6 +237,16 @@ const initSampleData = async () => {
     });
     await budgetAdj.setRequestingDepartment(itDept);
     await budgetAdj.setApplicationReference(app);
+
+    // create a new senior customer service officer
+    const charlie = await Employee.create({
+        name: 'Charlie',
+        username: 'charlie',
+        password: passwordHash,
+        email: 'charlie@example.com',
+        jobTitle: 'Senior Customer Service Officer'
+    });
+
 }
 
 export {
