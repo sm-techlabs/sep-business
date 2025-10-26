@@ -15,7 +15,6 @@ const EventRequestAdmin = () => {
   return (
     <WorkspaceCard title="New Event Requests" authorizedRoles={[
       'Senior Customer Service Officer',
-      'Manager',
       ]}>
       <div className="workspace-card-actions">
         <ActionButton
@@ -24,9 +23,9 @@ const EventRequestAdmin = () => {
           onClick={() => openModalWithContent(<RegisteredEventRequestForm />)}
         />
         <ActionButton
-          icon={FileText}
+          icon={Eye}
           label="View Event Requests"
-          onClick={() => openModalWithContent(<EventRequestTable />)}
+          onClick={() => openModalWithContent(<EventRequestTable mode="review"/>)}
         />
       </div>
 

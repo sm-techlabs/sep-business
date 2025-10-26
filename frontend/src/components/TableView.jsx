@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./TableView.css";
 import TableTooltip from "./TableTooltip";
-import { Pen, Trash } from "lucide-react";
+import { Check, Pen, Trash, X } from "lucide-react";
 import ActionButton from "./ActionButton";
 
 const formatValue = (value) => {
@@ -32,7 +32,7 @@ const flattenRecord = (record) => {
   return flat;
 };
 
-const TableView = ({ header, records, onEdit, onDelete }) => {
+const TableView = ({ header, records, onEdit, onDelete, onApprove, onReject, mode = "edit" }) => {
   const data = records?.data || records || [];
   const [tooltip, setTooltip] = useState({
     visible: false,
@@ -101,16 +101,33 @@ const TableView = ({ header, records, onEdit, onDelete }) => {
         content={
           tooltip.index !== null && (
             <div className="tooltip-actions">
-              <ActionButton
-                icon={Pen}
-                label="Edit"
-                onClick={() => onEdit?.(flattened[tooltip.index]?.id)}
-              />
-              <ActionButton
-                icon={Trash}
-                label="Delete"
-                onClick={() => onDelete?.(flattened[tooltip.index]?.id)}
-              />            
+              {mode === "edit" ? (
+                <>
+                  <ActionButton
+                    icon={Pen}
+                    label="Edit"
+                    onClick={() => onEdit?.(flattened[tooltip.index]?.id)}
+                  />
+                  <ActionButton
+                    icon={Trash}
+                    label="Delete"
+                    onClick={() => onDelete?.(flattened[tooltip.index]?.id)}
+                  />
+                </>
+              ) : mode === "review" ? (
+                <>
+                  <ActionButton
+                    icon={Check}
+                    label="Approve"
+                    onClick={() => onApprove?.(flattened[tooltip.index]?.id)}
+                  />
+                  <ActionButton
+                    icon={X}
+                    label="Reject"
+                    onClick={() => onReject?.(flattened[tooltip.index]?.id)}
+                  />
+                </>
+              ) : null}
             </div>
           )
         }

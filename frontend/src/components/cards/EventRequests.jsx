@@ -1,5 +1,5 @@
 // src/cards/NewEventRequest.jsx
-import { Eye, MessageCirclePlus, Pen, UserCheck, UserPlus } from 'lucide-react';
+import { Eye, Pen, MessageCirclePlus, UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
@@ -10,13 +10,27 @@ import EditEventRequestForm from '../forms/EditEventRequestForm';
 import ReviewSCSOEventRequestForm from '../forms/ReviewSCSOEventRequestForm';
 import ReviewFMEventRequestForm from '../forms/ReviewFMEventRequestForm';
 import ReviewAMEventRequestForm from '../forms/ReviewAMEventRequestForm';
+import EventRequestTable from '../tables/EventRequestTable';
+import { useEffect, useState } from 'react';
+import authClient from '../../clients/authClient';
 
 const NewEventRequest = () => {
 
   const { openModalWithContent } = useModalContext();
+  const [self, setSelf] = useState();
+
+  useEffect(() => {
+    const getSelfInfo = async () => {
+      const response = await authClient.self();
+      setSelf(response)
+    } 
+    getSelfInfo()
+  }, [])
 
   return (
-    <WorkspaceCard title="New Event Requests" authorizedRoles={['Manager']}>
+    <WorkspaceCard title="New Event Requests" authorizedRoles={[
+      'Customer Service Officer',
+      ]}>
       <div className="workspace-card-actions">
         <ActionButton
           icon={UserCheck}
@@ -29,9 +43,9 @@ const NewEventRequest = () => {
           onClick={() => openModalWithContent(<CreateNonRegisteredEventRequestForm />)}
         />
         <ActionButton
-          icon={Pen}
-          label="Edit Event Request"
-          onClick={() => openModalWithContent(<EditEventRequestForm />)}
+          icon={Eye}
+          label="View My Event Requests"
+          onClick={() => openModalWithContent(<EventRequestTable createdById={self.id} />)}
         />
         <ActionButton
           icon={Eye}
