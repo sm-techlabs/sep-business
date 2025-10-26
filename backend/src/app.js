@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import { sequelize, initSampleData } from './models/index.js';
 import authentication from './routes/authentication.js';
 import health from './routes/health.js';
-import request from './routes/requests.js';
+import eventRequest from './routes/eventRequests.js';
 import client from './routes/clients.js';
 
 const app = express();
@@ -24,7 +24,7 @@ app.use(
 // --- 🧩 Routes ---
 app.use('/api/health', health);
 app.use('/api/authentication', authentication);
-app.use('/api/requests', request);
+app.use('/api/event-requests', eventRequest);
 app.use('/api/clients', client);
 
 // --- 🚀 Server startup (for local / prod only) ---
