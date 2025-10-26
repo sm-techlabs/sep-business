@@ -99,20 +99,23 @@ const TableView = ({ header, records, onEdit, onDelete }) => {
         position={tooltip.position}
         onClose={() => setTooltip((t) => ({ ...t, visible: false }))}
         content={
-          <div className="tooltip-actions">
-            <ActionButton
-            icon={Pen}
-            label="Edit"
-            onClick={onEdit}
-            />
-            <ActionButton
-            icon={Trash}
-            label="Delete"
-            onClick={onDelete}
-            />            
-          </div>
+          tooltip.index !== null && (
+            <div className="tooltip-actions">
+              <ActionButton
+                icon={Pen}
+                label="Edit"
+                onClick={() => onEdit?.(flattened[tooltip.index]?.id)}
+              />
+              <ActionButton
+                icon={Trash}
+                label="Delete"
+                onClick={() => onDelete?.(flattened[tooltip.index]?.id)}
+              />            
+            </div>
+          )
         }
       />
+
     </div>
   );
 };

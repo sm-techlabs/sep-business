@@ -5,6 +5,12 @@ const eventRequestClient = {
     const response = await apiClient.get('/api/event-requests');
     return response;
   },
+  
+  getById: async ( id ) => {
+    const response = await apiClient.get(`/api/event-requests/${id}`);
+    return response;
+  },
+
   getAllCreatedBy: async ( createdById ) => {
     const response = await apiClient.get(`/api/event-requests?createdBy=${createdById}`);
     return response;

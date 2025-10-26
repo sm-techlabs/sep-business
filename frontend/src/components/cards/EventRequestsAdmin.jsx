@@ -1,12 +1,12 @@
 // src/cards/NewEventRequest.jsx
-import { Eye, Pen, UserCheck, UserPlus } from 'lucide-react';
+import { Eye, FileText, Pen, UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
 import { useModalContext } from '../../utils/ModalContext';
 import RegisteredEventRequestForm from '../forms/RegisteredEventRequestForm';
 import EditEventRequestForm from '../forms/EditEventRequestForm';
-import EventRequestTable from '../lists/EventRequestTable';
+import EventRequestTable from '../tables/EventRequestTable';
 
 const EventRequestAdmin = () => {
 
@@ -24,12 +24,7 @@ const EventRequestAdmin = () => {
           onClick={() => openModalWithContent(<RegisteredEventRequestForm />)}
         />
         <ActionButton
-          icon={Pen}
-          label="Edit Event Request"
-          onClick={() => openModalWithContent(<EditEventRequestForm />)}
-        />
-        <ActionButton
-          icon={Eye}
+          icon={FileText}
           label="View Event Requests"
           onClick={() => openModalWithContent(<EventRequestTable />)}
         />

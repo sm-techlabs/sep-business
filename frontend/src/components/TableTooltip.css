@@ -1,8 +1,7 @@
 .table-tooltip {
   position: fixed;
   z-index: 9999;
-  background: var(--color-card-hover); /* Clean black background */
-  color: #fff; /* Crisp white text */
+  background: var(--color-card-hover);
   font-size: 0.85rem;
   padding: 0.45rem 0.75rem;
   border-radius: var(--radius-sm);
