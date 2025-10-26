@@ -41,7 +41,12 @@ Application.hasMany(Task, { as: 'tasks' });
 Application.belongsTo(ApplicationPreferences, { as: 'preferences' });
 Application.belongsTo(Client, { as: 'client' });
 
-RequestTemplate.belongsTo(RequestPreferences, { as: 'preferences' });
+RequestTemplate.hasOne(RequestPreferences, {
+    as: 'preferences',
+    foreignKey: 'requestTemplateId',
+    onDelete: 'CASCADE',
+    hooks: true
+});
 RequestTemplate.belongsTo(Employee, { as: 'createdBy' });
 RequestTemplate.belongsTo(Client, { as: 'client' });
 
@@ -175,7 +180,6 @@ const initSampleData = async () => {
     // Registered client request via subclass (scoped model)
     const registeredRequest = await RegisteredClientRequest.create({
         type: 'registered',
-        recordNumber: 2001,
         eventType: 'Corporate Event',
         startsOn: new Date(),
         endsOn: new Date(),
@@ -190,7 +194,6 @@ const initSampleData = async () => {
     // Non-registered client request via subclass (scoped model)
     const nonRegisteredRequest = await NonRegisteredClientRequest.create({
         type: 'non_registered',
-        recordNumber: 2002,
         eventType: 'Private Party',
         startsOn: new Date(),
         endsOn: new Date(),

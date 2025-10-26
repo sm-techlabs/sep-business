@@ -12,12 +12,12 @@ beforeAll(async () => {
   await initSampleData();
 
   managerToken = generateToken({
-    name: 'alice',
+    name: 'Alice',
     jobTitle: 'Manager',
   });
 
   staffToken = generateToken({
-    name: 'bob',
+    name: 'Bob',
     jobTitle: 'Staff',
   });
 });
@@ -29,7 +29,7 @@ afterAll(async () => {
 describe('🧪 Event Request API', () => {
   test('creates a new non-registered event request', async () => {
     const res = await request(app)
-      .post('/api/requests/unregistered')
+      .post('/api/event-requests/unregistered')
       .set('Cookie', [`token=${managerToken}`])
       .send({
         eventType: 'some_event',
@@ -57,7 +57,7 @@ describe('🧪 Event Request API', () => {
 describe('🧪 Event Request API', () => {
   test('creates a new registered event request', async () => {
     const res = await request(app)
-      .post('/api/requests/registered')
+      .post('/api/event-requests/registered')
       .set('Cookie', [`token=${managerToken}`])
       .send({
         eventType: 'some_event',
@@ -80,7 +80,7 @@ describe('🧪 Event Request API', () => {
   
   test('creates a new registered event request with invalid Client Record number', async () => {
     const res = await request(app)
-      .post('/api/requests/registered')
+      .post('/api/event-requests/registered')
       .set('Cookie', [`token=${managerToken}`])
       .send({
         eventType: 'some_event',
@@ -104,7 +104,7 @@ describe('🧪 Event Request API', () => {
   
   test('creates a new registered event request with invalid body', async () => {
     const res = await request(app)
-      .post('/api/requests/registered')
+      .post('/api/event-requests/registered')
       .set('Cookie', [`token=${managerToken}`])
       .send({});
 
