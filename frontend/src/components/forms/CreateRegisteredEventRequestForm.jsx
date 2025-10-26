@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 import customerClient from "../../clients/customerClient";
+import eventRequestClient from "../../clients/eventRequestClient";
 
 const CreateRegisteredEventRequestForm = () => {
 
@@ -104,7 +105,7 @@ const CreateRegisteredEventRequestForm = () => {
     <div className="modal-form-container">
       <DynamicForm
         title={form.title}
-        onSubmit={formClient.createEventRequestForRegistered}
+        onSubmit={eventRequestClient.createRegistered}
         fields={form.fields}
       />
     </div>
