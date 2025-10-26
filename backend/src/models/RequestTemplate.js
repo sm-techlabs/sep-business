@@ -4,7 +4,6 @@ import { REQUEST_TEMPLATE_STATUSES, REQUEST_TEMPLATE_TYPES } from '../constants/
 
 class RequestTemplate extends Model {}
 RequestTemplate.init({
-	recordNumber: DataTypes.INTEGER,
 	eventType: DataTypes.STRING,
 	startsOn: DataTypes.DATE,
 	endsOn: DataTypes.DATE,

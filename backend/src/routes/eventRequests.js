@@ -11,7 +11,7 @@ import { validate } from '../services/validation.js';
 import { nonRegisteredRequestSchema, registeredRequestSchema } from '../schemas/request.js';
 import { authorize } from '../services/authorization.js';
 import createHandlerWrapper from '../utils/createHandlerWrapper.js';
-import { NotFoundError, UnauthorizedError } from '../utils/errors.js';
+import { NotFoundError } from '../utils/errors.js';
 import { verifyToken } from '../utils/jwt.js';
 
 const router = express.Router();
@@ -90,11 +90,11 @@ router.post(
                     endsOn: req.body.endsOn,
                     status: 'Submitted',
                     estimatedBudget: req.body.estimatedBudget,
-                    recordNumber: client.id,
                     expectedNumberOfAttendees: req.body.expectedNumberOfAttendees,
                 }, { transaction: t });
                 await newReq.setPreferences(pref, { transaction: t });
                 await newReq.setCreatedBy(createdBy.id, { transaction: t });
+                await newReq.setClient(client.id, { transaction: t });
                 return newReq.id
             });
             return { id, message: `Event Request #${id} created successfully!` }
@@ -190,5 +190,77 @@ router.get(
         };
     })
 )
+
+router.put(
+    '/:id',
+    authorize,
+    createHandlerWrapper(async (req) => {
+        const requestId = req.params.id;
+        const request = await RequestTemplate.findByPk(requestId);
+        if (!request) {
+            throw new NotFoundError('Event Request not found');
+        }
+        await sequelize.transaction(async (t) => {
+            await request.update({
+                eventType: req.body.eventType,
+                startsOn: req.body.startsOn,
+                endsOn: req.body.endsOn,
+                status: req.body.status,
+                estimatedBudget: req.body.estimatedBudget,
+            }, { transaction: t });
+
+            // If preferences are provided, update them
+            const preferences = req.body.preferences;
+            if (preferences) {
+                let pref = await request.getPreferences({ transaction: t });
+                if (!pref) {
+                    pref = await RequestPreferences.create({}, { transaction: t });
+                    await request.setPreferences(pref, { transaction: t });
+                }
+                await pref.update({
+                    decorations: preferences.decorations,
+                    parties: preferences.parties,
+                    photosOrFilming: preferences.photosOrFilming,
+                    breakfastLunchDinner: preferences.breakfastLunchDinner,
+                    softHotDrinks: preferences.softHotDrinks,
+                }, { transaction: t });
+            }
+
+            // If clientId is provided (for registered requests), update the association
+            if (req.body.clientId && request.type === 'registered') {
+                const client = await Client.findByPk(req.body.clientId, { transaction: t });
+                if (!client) {
+                    throw new NotFoundError('Client not found');
+                }
+                await request.setClient(client, { transaction: t });
+            }
+        });
+
+        return { message: `Event Request #${requestId} updated successfully!` };
+    })
+);
+
+// DELETE /eventRequests/:id
+router.delete(
+    '/:id',
+    authorize,
+    createHandlerWrapper(async (req) => {
+        const requestId = req.params.id;
+        const request = await RequestTemplate.findByPk(requestId);
+        if (!request) {
+            throw new NotFoundError('Event Request not found');
+        }
+        await sequelize.transaction(async (t) => {
+            // // Delete associated preferences first
+            // const pref = await request.getPreferences({ transaction: t });
+            // if (pref) {
+            //     await pref.destroy({ transaction: t });
+            // }
+            // Then delete the request itself
+            await request.destroy({ transaction: t });
+        });
+        return { message: `Event Request #${requestId} deleted successfully!` };
+    })
+);
 
 export default router;

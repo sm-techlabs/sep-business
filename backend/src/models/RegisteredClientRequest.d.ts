@@ -16,7 +16,6 @@ export default class RegisteredClientRequest extends Model<
   InferCreationAttributes<RegisteredClientRequest>
 > {
   declare id: CreationOptional<number>;
-  declare recordNumber: number | null;
   declare eventType: string | null;
   declare startsOn: Date | null;
   declare endsOn: Date | null;
