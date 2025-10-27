@@ -4,6 +4,7 @@ import { authorize } from '../services/authorization.js';
 import createHandlerWrapper from '../utils/createHandlerWrapper.js';
 import { NotFoundError } from '../utils/errors.js';
 import { verifyToken } from '../utils/jwt.js';
+import Department from '../models/Department.js';
 
 const router = express.Router();
 
@@ -15,11 +16,11 @@ router.get(
 
     const employee = await Employee.findByPk(requesterId);
     if (!employee) throw new NotFoundError('Employee not found');
-
-    const team = await employee.getMemberOfTeam();
-    if (!team) throw new NotFoundError('Team not found for employee');
-    const department = await team.getDepartment();
-    if (!department) throw new NotFoundError('Department not found for team');
+    
+    const department = await Department.findOne({
+      where: { managerId: employee.id },
+    });
+    if (!department) throw new NotFoundError('Department not found for manager');
     
     const subteams = await department.getTeams();
     if (!subteams) throw new NotFoundError('No subteams found for department');
