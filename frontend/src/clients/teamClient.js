@@ -7,8 +7,11 @@ const teamClient = {
   //   return await apiClient.get(url);
   // },
 
-  getSubteams: async (id) => 
+  getSubteams: async () => 
     apiClient.get(`/api/teams/my-subteams`),
+  
+  getTeamMembers: async () => 
+    apiClient.get(`/api/teams/my-team-members`),
 
   // create: async (data) => 
   //   apiClient.post('/api/teams/', data),

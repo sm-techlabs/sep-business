@@ -33,6 +33,7 @@ export default {
   },
   "production manager": {
     can: [
+      "create:tasks",
       "view:tasks",
       "view:applications",
       "view:teams",
@@ -41,11 +42,56 @@ export default {
   },
   "service manager": {
     can: [
+      "create:tasks",
       "view:tasks",
       "view:applications",
       "view:teams",
       "update:tasks",
     ]
   },
+  "decorating architect": {
+    can: [
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "decorating assistant": {
+    can: [
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "audio engineer": {
+    can: [
+      "view:health",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "network engineer": {
+    can: [
+      "view:health",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "graphic designer": {
+    can: [
+      "view:health",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+
 
 };

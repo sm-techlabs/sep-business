@@ -15,6 +15,9 @@ const taskClient = {
 
   update: async (id, data) => 
     apiClient.put(`/api/tasks/${id}`, data),
+  
+  partialUpdate: async (id, data) => 
+    apiClient.patch(`/api/tasks/${id}`, data),
 
   delete: async (id) => 
     apiClient.delete(`/api/tasks/${id}`),
