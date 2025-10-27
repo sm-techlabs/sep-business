@@ -31,4 +31,21 @@ export default {
       "update:event-requests",
     ]
   },
+  "production manager": {
+    can: [
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "service manager": {
+    can: [
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+
 };

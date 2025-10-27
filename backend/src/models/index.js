@@ -130,6 +130,20 @@ const initSampleData = async () => {
         email: 'magy@sep.com',
         jobTitle: 'Decorating Architect'
     });
+    const angelina = await Employee.create({
+        name: 'Angelina',
+        username: 'angelina',
+        password: passwordHash,
+        email: 'angelina@sep.com',
+        jobTitle: 'Decorating Architect'
+    });
+    const don = await Employee.create({
+        name: 'Don',
+        username: 'don',
+        password: passwordHash,
+        email: 'don@sep.com',
+        jobTitle: 'Decorating Architect'
+    });
     
     // Services Dept
     const natalie = await Employee.create({
@@ -170,21 +184,21 @@ const initSampleData = async () => {
         jobTitle: 'Administration Manager'
     });
 
-    // // Department with manager
-    // const itDept = await Department.create({ name: 'Services' });
-    // await itDept.setManager(alice);
+    // Department with manager
+    const productionDept = await Department.create({ name: 'Production' });
+    const serviceDept = await Department.create({ name: 'Service' });
+    await productionDept.setManager(jack);
+    await serviceDept.setManager(natalie);
+    
 
-    // // Team under department (use hasMany side magic method since Team.belongsTo is commented out)
-    // const teamA = await Team.create({ name: 'Team A' });
-    // await itDept.addTeam(teamA);
-    // // console.log((await Department.findAll({ include: 'teams' })).forEach(dept => {
-    // //     console.log(dept.name);
-    // //     dept.teams.forEach(team => console.log(` - ${team.name}`));
-    // // }));
+    // Team under department (use hasMany side magic method since Team.belongsTo is commented out)
+    const decoration = await Team.create({ name: 'Decoration' });
+    await productionDept.addTeam(decoration);
 
-    // // Assign employees to team (Employee.belongsTo Team is active)
-    // await alice.setMemberOfTeam(teamA);
-    // await bob.setMemberOfTeam(teamA);
+    // Assign employees to team (Employee.belongsTo Team is active)
+    await magy.setMemberOfTeam(decoration);
+    await angelina.setMemberOfTeam(decoration);
+    await don.setMemberOfTeam(decoration);
 
     // Client and application (use hasMany side magic method since Application.belongsTo Client is commented out)
     const client = await Client.create({
@@ -230,18 +244,6 @@ const initSampleData = async () => {
         status: 'Open',
         clientId: client2.id
     });
-
-    // Task authored by Alice, assigned to Bob, linked to the application
-    const task = await Task.create({
-        description: 'Setup venue',
-        startsOn: new Date(),
-        endsOn: new Date(),
-        priority: 'High',
-        status: 'Pending'
-    });
-    // await task.setAuthor(alice);
-    // await task.setAssignedTo(bob);
-    // await task.setApplicationReference(app);
 
     // Request preferences
     const prefsRegistered = await RequestPreferences.create({
