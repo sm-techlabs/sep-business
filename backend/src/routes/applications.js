@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/',
   authorize,
-  createHandlerWrapper(async () => (await Application.findAll()).map(a => a.id))
-);
+  createHandlerWrapper(async () => (await Application.findAll()).map(a => ({id: a.id}))
+));
 
 export default router;
