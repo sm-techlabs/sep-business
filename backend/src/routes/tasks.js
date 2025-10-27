@@ -185,6 +185,29 @@ router.put(
     })
 );
 
+router.patch(
+  '/:id',
+  authorize,
+  createHandlerWrapper(async (req) => {
+    const taskId = req.params.id;
+    const task = await Task.findByPk(taskId);
+    if (!task) {
+      throw new NotFoundError('Task not found');
+    }
+
+    const updatableFields = ['assignedToId', 'status', 'priority', 'comments'];
+
+    // Filter out disallowed fields
+    const updates = Object.fromEntries(
+      Object.entries(req.body).filter(([key]) => updatableFields.includes(key))
+    );
+
+    await task.update(updates);
+    return task;
+  })
+);
+
+
 // DELETE /tasks/:id
 router.delete(
     '/:id',

@@ -22,11 +22,11 @@ Department.belongsTo(Employee, { as: 'manager' });
 Department.hasMany(Team, { as: 'teams' });
 
 // Team associations
-Team.hasMany(Employee, { as: 'employees' });
+Team.hasMany(Employee, { as: 'employees', foreignKey: 'TeamId' });
 // Team.belongsTo(Department, { as: 'department' });
 
 // Employee associations
-Employee.belongsTo(Team, { as: 'memberOfTeam' });
+Employee.belongsTo(Team, { as: 'memberOfTeam', foreignKey: 'TeamId' });
 Employee.hasMany(Task, { as: 'tasks', foreignKey: 'assignedToId' });
 Employee.hasMany(Task, { as: 'assignmentHistory', foreignKey: 'authorId' });
 
@@ -135,15 +135,44 @@ const initSampleData = async () => {
         username: 'angelina',
         password: passwordHash,
         email: 'angelina@sep.com',
-        jobTitle: 'Decorating Architect'
+        jobTitle: 'Decorating Assistant'
     });
     const don = await Employee.create({
         name: 'Don',
         username: 'don',
         password: passwordHash,
         email: 'don@sep.com',
-        jobTitle: 'Decorating Architect'
+        jobTitle: 'Decorating Assistant'
     });
+    const tobias = await Employee.create({
+        name: 'Tobias',
+        username: 'tobias',
+        password: passwordHash,
+        email: 'tobias@sep.com',
+        jobTitle: 'Photographer'
+    });
+    const christian = await Employee.create({
+        name: 'Christian',
+        username: 'christian',
+        password: passwordHash,
+        email: 'christian@sep.com',
+        jobTitle: 'Network Engineer'
+    });
+    const julia = await Employee.create({
+        name: 'Julia',
+        username: 'julia',
+        password: passwordHash,
+        email: 'julia@sep.com',
+        jobTitle: 'Graphic Designer'
+    });
+    const antony = await Employee.create({
+        name: 'Antony',
+        username: 'antony',
+        password: passwordHash,
+        email: 'antony@sep.com',
+        jobTitle: 'Audio Engineer'
+    });
+    
     
     // Services Dept
     const natalie = await Employee.create({
@@ -193,13 +222,27 @@ const initSampleData = async () => {
 
     // Team under department (use hasMany side magic method since Team.belongsTo is commented out)
     const decoration = await Team.create({ name: 'Decoration' });
+    const photography = await Team.create({ name: 'Photography' });
+    const audio = await Team.create({ name: 'Audio' });
+    const graphicDesign = await Team.create({ name: 'Graphic Design' });
+    const network = await Team.create({ name: 'Network' });
+    
     await productionDept.addTeam(decoration);
+    await productionDept.addTeam(photography);
+    await productionDept.addTeam(audio);
+    await productionDept.addTeam(graphicDesign);
+    await productionDept.addTeam(network);
 
     // Assign employees to team (Employee.belongsTo Team is active)
     await magy.setMemberOfTeam(decoration);
     await angelina.setMemberOfTeam(decoration);
     await don.setMemberOfTeam(decoration);
-
+    // Assign employees to team (Employee.belongsTo Team is active)
+    await christian.setMemberOfTeam(network);
+    await tobias.setMemberOfTeam(photography);
+    await julia.setMemberOfTeam(graphicDesign);
+    await antony.setMemberOfTeam(audio);
+    
     // Client and application (use hasMany side magic method since Application.belongsTo Client is commented out)
     const client = await Client.create({
         name: 'Acme Corp',

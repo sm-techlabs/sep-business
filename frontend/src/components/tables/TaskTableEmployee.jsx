@@ -6,8 +6,9 @@ import { useModalContext } from "../../utils/ModalContext";
 // import EditNonRegisteredEventRequestForm from "../forms/EditNonRegisteredEventRequestForm";
 import Loader from "../Loader";
 import taskClient from "../../clients/taskClient";
+import EditTaskFormEmployee from "../forms/EditTaskFormEmployee";
 
-const TaskTable = ({ filter = {}, mode }) => {
+const TaskTableEmployee = ({ filter = {}, mode }) => {
   const [records, setRecords] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const { openModalWithContent } = useModalContext();
@@ -33,24 +34,6 @@ const TaskTable = ({ filter = {}, mode }) => {
     }, 500);
   };
 
-  // const handleApprove = async (id) => {
-  //   try {
-  //     await eventRequestClient.approve(id);
-  //     delayedRefresh();
-  //   } catch (err) {
-  //     console.error("Approve failed", err);
-  //   }
-  // };
-
-  // const handleReject = async (id) => {
-  //   try {
-  //     await eventRequestClient.reject(id);
-  //     delayedRefresh();
-  //   } catch (err) {
-  //     console.error("Reject failed", err);
-  //   }
-  // };
-
   const handleDelete = async (id) => {
     try {
       await taskClient.delete(id);
@@ -62,9 +45,7 @@ const TaskTable = ({ filter = {}, mode }) => {
 
   const handleEdit = async (id) => {
     try {
-      const response = await taskClient.getById(id);
-      openModalWithContent(<EditNonRegisteredEventRequestForm id={id} />);
-      openModalWithContent()
+      openModalWithContent(<EditTaskFormEmployee id={id} />);
     } catch (err) {
       console.error("Failed to open edit form", err);
     }
@@ -89,4 +70,4 @@ const TaskTable = ({ filter = {}, mode }) => {
   );
 };
 
-export default TaskTable;
+export default TaskTableEmployee;

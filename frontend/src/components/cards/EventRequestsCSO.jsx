@@ -17,7 +17,7 @@ const EventRequestCSO = () => {
 
   useEffect(() => {
     const getSelfInfo = async () => {
-      const response = await authClient.self();
+      const response = await authClient.validateToken();
       setSelf(response)
     } 
     getSelfInfo()

@@ -5,10 +5,12 @@ import applicationClient from "../../clients/applicationClient";
 import { useState, useEffect } from "react";
 
 
-const CreateTaskForm = () => {
+const EditTaskFormManager = ({ id }) => {
 
   const [applicationOptions, setApplicationOptions] = useState([]);
   const [subteamOptions, setSubteamOptions] = useState([]);
+  const [initialValues, setInitialValues] = useState([]);
+
 
   useEffect(() => {
   const fetchApplications = async () => {
@@ -72,6 +74,35 @@ const CreateTaskForm = () => {
 }, []);
 
 
+// Fetch task initial values (edit mode)
+  useEffect(() => {
+    if (!id) return;
+
+    const getInitialValues = async () => {
+      try {
+        const response = await taskClient.getById(id);
+
+        // Map API structure → form structure
+        const mapped = {
+          title: response.title || "",
+          applicationId: response.applicationId || "",
+          subteamId: response.subteamId || "",
+          priority: response.priority || "Medium",
+          startsOn: response.startsOn ? new Date(response.startsOn) : null,
+          endsOn: response.endsOn ? new Date(response.endsOn) : null,
+          comments: response.comments || "",
+          description: response.description || "",
+        };
+
+        setInitialValues(mapped);
+      } catch (err) {
+        console.error("Failed to fetch task:", err);
+      }
+    };
+
+    getInitialValues();
+  }, [id]);
+
   const form = {
     title: "New Task",
     fields: [
@@ -84,7 +115,7 @@ const CreateTaskForm = () => {
     },
     {
       name: "applicationId",
-      label: "Relevant Application",
+      label: "Application",
       type: "dropdown",
       options: applicationOptions,
       required: true,
@@ -136,15 +167,21 @@ const CreateTaskForm = () => {
     },
   ]};
 
+  const handleEditSubmit = async (formData) => {
+    return await taskClient.update(id, formData);
+  };
+
+
   return (
     <div className="modal-form-container">
       <DynamicForm
         title={form.title}
         fields={form.fields}
-        onSubmit={taskClient.create}
+        initialValues={initialValues}
+        onSubmit={handleEditSubmit}
       />
     </div>
   );
 };
 
-export default CreateTaskForm;
+export default EditTaskFormManager;
