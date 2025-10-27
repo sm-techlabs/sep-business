@@ -15,7 +15,6 @@ const propsAreEqual = (prev, next) => {
 };
 
 const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
-  // Helper to build state from fields and initialValues
   const buildFormState = (values = {}) => {
     return fields.reduce((acc, f) => {
       let baseValue;
@@ -26,7 +25,7 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
           return optAcc;
         }, {});
       } else if (f.type === "date") {
-        baseValue = null; // safer default
+        baseValue = null;
       } else {
         baseValue = "";
       }
@@ -53,7 +52,6 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
     }, {});
   };
 
-  // Initialize state once
   const [formData, setFormData] = useState(() => buildFormState(initialValues));
   const [notification, setNotification] = useState({
     visible: false,
@@ -62,15 +60,15 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
   });
 
   useEffect(() => {
-  // Only rebuild if there are actual initial values (e.g., editing mode)
-  if (initialValues && Object.keys(initialValues).length > 0) {
-    setFormData(buildFormState(initialValues));
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [JSON.stringify(initialValues)]);
-
+    if (initialValues && Object.keys(initialValues).length > 0) {
+      setFormData(buildFormState(initialValues));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]);
 
   const handleChange = (e, field, optionName) => {
+    if (field.readOnly) return; // Prevent editing if readOnly
+
     const { name, value, checked, type } = e.target;
 
     if (field.type === "checkbox-group") {
@@ -95,7 +93,8 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
     }));
   };
 
-  const handleDateChange = (date, fieldName) => {
+  const handleDateChange = (date, fieldName, field) => {
+    if (field.readOnly) return; // Prevent editing if readOnly
     setFormData((prev) => ({ ...prev, [fieldName]: date }));
   };
 
@@ -108,7 +107,6 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
         type: "success",
         message: response?.message || "Submission successful!",
       });
-      // Reset cleanly (no new Date() instances)
       setFormData(buildFormState({}));
     } catch (err) {
       const error = err?.response?.data?.error;
@@ -130,60 +128,68 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
     <form className="modal-form" onSubmit={handleSubmit}>
       <h2 className="modal-form__title">{title}</h2>
 
-      {fields.map((field) => (
-        <div className="modal-form__group" key={field.name}>
-          <label htmlFor={field.name}>{field.label}</label>
+      {fields.map((field) => {
+        const readOnly = field.readOnly ?? false;
 
-          {field.type === "checkbox-group" ? (
-            <div className="modal-form__preferences">
-              {field.options.map((opt) => (
-                <label key={opt.name}>
-                  <input
-                    type="checkbox"
-                    name={field.name}
-                    checked={formData[field.name]?.[opt.name] || false}
-                    onChange={(e) => handleChange(e, field, opt.name)}
-                  />
-                  {opt.description}
-                </label>
-              ))}
-            </div>
-          ) : field.type === "date" ? (
-            <DatePicker
-              id={field.name}
-              selected={
-                formData[field.name]
-                  ? new Date(formData[field.name])
-                  : null
-              }
-              onChange={(date) => handleDateChange(date, field.name)}
-              dateFormat="yyyy-MM-dd"
-              className="modal-form__input"
-              calendarClassName="dark-datepicker"
-            />
-          ) : field.type === "dropdown" ? (
-            <Dropdown
-              label={field.label}
-              name={field.name}
-              value={formData[field.name]}
-              onChange={(e) => handleChange(e, field)}
-              options={field.options || []}
-              placeholder={field.placeholder || `Select ${field.label}`}
-            />
-          ) : (
-            <input
-              id={field.name}
-              name={field.name}
-              type={field.type}
-              required={field.required}
-              value={formData[field.name] ?? ""}
-              onChange={(e) => handleChange(e, field)}
-              className="modal-form__input"
-              placeholder={field.placeholder || ""}
-            />
-          )}
-        </div>
-      ))}
+        return (
+          <div className="modal-form__group" key={field.name}>
+            <label htmlFor={field.name}>{field.label}</label>
+
+            {field.type === "checkbox-group" ? (
+              <div className="modal-form__preferences">
+                {field.options.map((opt) => (
+                  <label key={opt.name}>
+                    <input
+                      type="checkbox"
+                      name={field.name}
+                      checked={formData[field.name]?.[opt.name] || false}
+                      onChange={(e) => handleChange(e, field, opt.name)}
+                      disabled={readOnly}
+                    />
+                    {opt.description}
+                  </label>
+                ))}
+              </div>
+            ) : field.type === "date" ? (
+              <DatePicker
+                id={field.name}
+                selected={
+                  formData[field.name]
+                    ? new Date(formData[field.name])
+                    : null
+                }
+                onChange={(date) => handleDateChange(date, field.name, field)}
+                dateFormat="yyyy-MM-dd"
+                className="modal-form__input"
+                calendarClassName="dark-datepicker"
+                disabled={readOnly}
+              />
+            ) : field.type === "dropdown" ? (
+              <Dropdown
+                label={field.label}
+                name={field.name}
+                value={formData[field.name]}
+                onChange={(e) => handleChange(e, field)}
+                options={field.options || []}
+                placeholder={field.placeholder || `Select ${field.label}`}
+                disabled={readOnly}
+              />
+            ) : (
+              <input
+                id={field.name}
+                name={field.name}
+                type={field.type}
+                required={field.required}
+                value={formData[field.name] ?? ""}
+                onChange={(e) => handleChange(e, field)}
+                className="modal-form__input"
+                placeholder={field.placeholder || ""}
+                readOnly={readOnly}
+              />
+            )}
+          </div>
+        );
+      })}
 
       <PopupNotification
         type={notification.type}
@@ -202,4 +208,3 @@ const DynamicForm = ({ title, onSubmit, fields, initialValues = {} }) => {
 };
 
 export default React.memo(DynamicForm, propsAreEqual);
-

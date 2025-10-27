@@ -23,7 +23,7 @@ RequestTemplate.init({
     address: DataTypes.STRING,
 		expectedNumberOfAttendees: DataTypes.INTEGER,
 		
-  	reviewComment: {
+  	budgetComment: {
   	  type: DataTypes.STRING,
   	  allowNull: true,
   	},

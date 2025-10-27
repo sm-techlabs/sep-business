@@ -1,5 +1,5 @@
 // src/cards/NewEventRequest.jsx
-import { Eye, FileText, Pen, UserCheck, UserPlus } from 'lucide-react';
+import { Eye, FilePenLine, FileText, History, Pen, UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
@@ -16,9 +16,14 @@ const EventRequestAM = () => {
       ]}>
       <div className="workspace-card-actions">
         <ActionButton
-          icon={Eye}
+          icon={FilePenLine}
           label="Review Event Requests"
           onClick={() => openModalWithContent(<EventRequestTable filter={{ status: 'ReviewedByFinancialManager'}} mode="review"/>)}
+        />
+        <ActionButton
+          icon={History}
+          label="View Approved Event Requests"
+          onClick={() => openModalWithContent(<EventRequestTable filter={{ status: 'Approved'}} mode="readOnly"/>)}
         />
       </div>
 
