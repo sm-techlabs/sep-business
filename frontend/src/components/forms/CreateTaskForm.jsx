@@ -2,6 +2,7 @@ import DynamicForm from "../DynamicForm";
 import taskClient from "../../clients/taskClient";
 import teamClient from "../../clients/teamClient";
 import applicationClient from "../../clients/applicationClient";
+import { useState, useEffect } from "react";
 
 
 const CreateTaskForm = () => {
@@ -17,10 +18,10 @@ const CreateTaskForm = () => {
 
       const options = applications
         .filter((a) => a && a.id)
-        .sort((a, b) => (a.name || "").localeCompare(b.name || ""))
+        .sort((a, b) => (a.id || "").localeCompare(b.id || ""))
         .map((app) => ({
           value: app.id,
-          label: `${app.name || "Unnamed"} (Application #${app.id})`,
+          label: `(Application #${app.id})`,
         }));
 
       setApplicationOptions(
