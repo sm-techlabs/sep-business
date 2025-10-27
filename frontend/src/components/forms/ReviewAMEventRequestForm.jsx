@@ -1,11 +1,41 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 import customerClient from "../../clients/customerClient";
 
-const RegisteredEventRequestForm = () => {
+const ReviewAMEventRequestForm = (id) => {
 
   const [clientOptions, setClientOptions] = useState([])
+  const [initialValues, setInitialValues] = useState({
+    // Placeholder values for visual confirmation
+    recordNumber: 3,
+    eventType: "Corporate Conference",
+    startsOn: new Date("2025-11-05"),
+    endsOn: new Date("2025-11-07"),
+    estimatedBudget: 8500,
+    expectedNumberOfAttendees: 120,
+    preferences: {
+      decorations: true,
+      parties: false,
+      photosOrFilming: true,
+      breakfastLunchDinner: true,
+      softHotDrinks: false,
+    },
+    review: {
+      approved: false,
+      rejected: false,     
+    },
+    budgetComments: "",
+    reviewAM: {
+      approved: false,
+      rejected: false,     
+    },
+  })
+
+  useEffect(() => {
+    // Add logic to read target event request (id),
+    // map values to initialValues fields
+  }, []);
 
   useEffect(() => {
   const fetchClients = async () => {
@@ -39,9 +69,8 @@ const RegisteredEventRequestForm = () => {
   fetchClients();
 }, []);
 
-  
   const form = {
-    title: "New Event Request - Registered Client",
+    title: "Review Event Request - Registered Client",
     fields: [
     {
       name: "recordNumber",
@@ -95,20 +124,48 @@ const RegisteredEventRequestForm = () => {
         { name: "breakfastLunchDinner", description: "Breakfast, Lunch or Dinner" },
         { name: "softHotDrinks", description: "Soft or Hot Drinks" },
       ],
+    },
+    {
+      name: "review",
+      label: "Review (Senior Customer Service Officer)",
+      type: "checkbox-group",
+      options: [
+        { name: "approve", description: "Approve" },
+        { name: "reject", description: "Reject" },
+      ],
+    },
+    {
+      name: "budgetComments",
+      label: "Budget Comments",
+      type: "string",
+      placeholder: "e.g. Budget seems reasonable.",
+      required: true
+    },
+    {
+      name: "reviewAM",
+      label: "Review (Administrative Manager)",
+      type: "checkbox-group",
+      options: [
+        { name: "approve", description: "Approve" },
+        { name: "reject", description: "Reject" },
+      ],
     }
+  ]}
 
-  ]
-  }
+  const handleEditSubmit = async (formData) => {
+    return await formClient.updateEventRequest(id, formData);
+  };
 
   return (
     <div className="modal-form-container">
       <DynamicForm
         title={form.title}
-        onSubmit={formClient.createEventRequestForRegistered}
         fields={form.fields}
+        initialValues={initialValues}
+        onSubmit={handleEditSubmit}
       />
     </div>
   );
 };
 
-export default RegisteredEventRequestForm;
+export default ReviewAMEventRequestForm;

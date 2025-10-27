@@ -2,7 +2,7 @@ import React from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 
-const NonRegisteredEventRequestForm = () => {
+const CreateNonRegisteredEventRequestForm = () => {
 
   const form = {
     title: "New Event Request - Non Registered Client",
@@ -93,4 +93,4 @@ const NonRegisteredEventRequestForm = () => {
   );
 };
 
-export default NonRegisteredEventRequestForm;
+export default CreateNonRegisteredEventRequestForm;
