@@ -49,8 +49,7 @@ RequestTemplate.hasOne(RequestPreferences, {
 });
 RequestTemplate.belongsTo(Employee, { as: 'createdBy' });
 RequestTemplate.belongsTo(Client, { as: 'client' });
-RequestTemplate.belongsTo(Employee, { as: 'approvedBy', foreignKey: 'approvedById' });
-RequestTemplate.belongsTo(Employee, { as: 'rejectedBy', foreignKey: 'rejectedById' });
+RequestTemplate.belongsTo(Employee, { as: 'reviewedBy'});
 
 // Event associations
 Event.belongsTo(Client, { as: 'client' });
@@ -69,24 +68,92 @@ HiringOrOutsourcingRequest.belongsTo(Department, { as: 'requestingDepartment' })
 BudgetAdjustmentRequest.belongsTo(Department, { as: 'requestingDepartment' });
 BudgetAdjustmentRequest.belongsTo(Application, { as: 'applicationReference' });
 
-const passwordHash = await bcrypt.hash('test', await bcrypt.genSalt());
+const passwordHash = await bcrypt.hash('pwd', await bcrypt.genSalt());
 // Sample data initialization function
 const initSampleData = async () => {
     // Employees
+
+    // Financial Dept
     const alice = await Employee.create({
         name: 'Alice',
         username: 'alice',
         password: passwordHash,
         email: 'alice@sep.com',
-        jobTitle: 'Customer Service Officer'
+        jobTitle: 'Financial Manager'
     });
-    const bob = await Employee.create({
-        name: 'Bob',
-        username: 'bob',
+
+    // HR Dept
+    const simon = await Employee.create({
+        name: 'Simon',
+        username: 'simon',
         password: passwordHash,
-        email: 'bob@sep.com',
+        email: 'simon@sep.com',
+        jobTitle: 'Senior HR Manager'
+    });
+    const maria = await Employee.create({
+        name: 'Maria',
+        username: 'maria',
+        password: passwordHash,
+        email: 'maria@sep.com',
+        jobTitle: 'HR Assistant'
+    });
+
+    // Customer Service Dept
+    const janet = await Employee.create({
+        name: 'Janet',
+        username: 'janet',
+        password: passwordHash,
+        email: 'janet@sep.com',
+        jobTitle: 'Senior Customer Service Officer'
+    });
+    const sarah = await Employee.create({
+        name: 'Sarah',
+        username: 'sarah',
+        password: passwordHash,
+        email: 'sarah@sep.com',
         jobTitle: 'Customer Service Officer'
     });
+    
+    // Production Dept
+    const jack = await Employee.create({
+        name: 'Jack',
+        username: 'jack',
+        password: passwordHash,
+        email: 'jack@sep.com',
+        jobTitle: 'Production Manager'
+    });
+    const magy = await Employee.create({
+        name: 'Magy',
+        username: 'magy',
+        password: passwordHash,
+        email: 'magy@sep.com',
+        jobTitle: 'Decorating Architect'
+    });
+    
+    // Services Dept
+    const natalie = await Employee.create({
+        name: 'Natalie',
+        username: 'natalie',
+        password: passwordHash,
+        email: 'natalie@sep.com',
+        jobTitle: 'Services Manager'
+    });
+    const helen = await Employee.create({
+        name: 'Helen',
+        username: 'helen',
+        password: passwordHash,
+        email: 'helen@sep.com',
+        jobTitle: 'Head Chef'
+    });
+    const kate = await Employee.create({
+        name: 'Kate',
+        username: 'kate',
+        password: passwordHash,
+        email: 'kate@sep.com',
+        jobTitle: 'Senior Waitress'
+    });
+
+    //
     const admin = await Employee.create({
         name: 'Admin',
         username: 'admin',
@@ -94,22 +161,29 @@ const initSampleData = async () => {
         email: 'admin@sep.com',
         jobTitle: 'Admin'
     });
+    const mike = await Employee.create({
+        name: 'Mike',
+        username: 'mike',
+        password: passwordHash,
+        email: 'mike@sep.com',
+        jobTitle: 'Administration Manager'
+    });
 
-    // Department with manager
-    const itDept = await Department.create({ name: 'Services' });
-    await itDept.setManager(alice);
+    // // Department with manager
+    // const itDept = await Department.create({ name: 'Services' });
+    // await itDept.setManager(alice);
 
-    // Team under department (use hasMany side magic method since Team.belongsTo is commented out)
-    const teamA = await Team.create({ name: 'Team A' });
-    await itDept.addTeam(teamA);
-    // console.log((await Department.findAll({ include: 'teams' })).forEach(dept => {
-    //     console.log(dept.name);
-    //     dept.teams.forEach(team => console.log(` - ${team.name}`));
-    // }));
+    // // Team under department (use hasMany side magic method since Team.belongsTo is commented out)
+    // const teamA = await Team.create({ name: 'Team A' });
+    // await itDept.addTeam(teamA);
+    // // console.log((await Department.findAll({ include: 'teams' })).forEach(dept => {
+    // //     console.log(dept.name);
+    // //     dept.teams.forEach(team => console.log(` - ${team.name}`));
+    // // }));
 
-    // Assign employees to team (Employee.belongsTo Team is active)
-    await alice.setMemberOfTeam(teamA);
-    await bob.setMemberOfTeam(teamA);
+    // // Assign employees to team (Employee.belongsTo Team is active)
+    // await alice.setMemberOfTeam(teamA);
+    // await bob.setMemberOfTeam(teamA);
 
     // Client and application (use hasMany side magic method since Application.belongsTo Client is commented out)
     const client = await Client.create({
@@ -164,9 +238,9 @@ const initSampleData = async () => {
         priority: 'High',
         status: 'Pending'
     });
-    await task.setAuthor(alice);
-    await task.setAssignedTo(bob);
-    await task.setApplicationReference(app);
+    // await task.setAuthor(alice);
+    // await task.setAssignedTo(bob);
+    // await task.setApplicationReference(app);
 
     // Request preferences
     const prefsRegistered = await RequestPreferences.create({
@@ -214,7 +288,7 @@ const initSampleData = async () => {
         expectedNumberOfAttendees: 100,
     });
     await nonRegisteredRequest.setPreferences(prefsNonRegistered);
-    await nonRegisteredRequest.setCreatedBy(bob);
+    // await nonRegisteredRequest.setCreatedBy(bob);
 
     // Event for an existing client
     const event = await Event.create({
@@ -235,29 +309,19 @@ const initSampleData = async () => {
         yearsOfExperience: 3,
         status: 'Published'
     });
-    const hiringReq = await HiringOrOutsourcingRequest.create({
-        status: 'Approved'
-    });
-    await hiringReq.setJobAdvertisement(jobAd);
-    await hiringReq.setRequestingDepartment(itDept);
+    // const hiringReq = await HiringOrOutsourcingRequest.create({
+    //     status: 'Approved'
+    // });
+    // await hiringReq.setJobAdvertisement(jobAd);
+    // await hiringReq.setRequestingDepartment(itDept);
 
     // Budget adjustment request associated to department and application
-    const budgetAdj = await BudgetAdjustmentRequest.create({
-        requiredAmount: 1500,
-        reason: 'Unexpected vendor surcharge'
-    });
-    await budgetAdj.setRequestingDepartment(itDept);
-    await budgetAdj.setApplicationReference(app);
-
-    // create a new senior customer service officer
-    const charlie = await Employee.create({
-        name: 'Charlie',
-        username: 'charlie',
-        password: passwordHash,
-        email: 'charlie@example.com',
-        jobTitle: 'Senior Customer Service Officer'
-    });
-
+    // const budgetAdj = await BudgetAdjustmentRequest.create({
+    //     requiredAmount: 1500,
+    //     reason: 'Unexpected vendor surcharge'
+    // });
+    // await budgetAdj.setRequestingDepartment(itDept);
+    // await budgetAdj.setApplicationReference(app);
 }
 
 export {

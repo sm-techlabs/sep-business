@@ -17,4 +17,16 @@ export default {
       "*:event-requests",
     ]
   },
+  "financial manager": {
+    can: [
+      "view:event-requests",
+      "update:event-requests",
+    ]
+  },
+  "administration manager": {
+    can: [
+      "view:event-requests",
+      "update:event-requests",
+    ]
+  },
 };
