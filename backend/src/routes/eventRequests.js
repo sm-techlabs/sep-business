@@ -360,7 +360,6 @@ router.patch(
   authorize,
   createHandlerWrapper(async (req) => {
     const requestId = req.params.id;
-    const { reason } = req.body;
     const { id: reviewerId, name, jobTitle } = verifyToken(req.cookies.token);
 
     const request = await RequestTemplate.findByPk(requestId);

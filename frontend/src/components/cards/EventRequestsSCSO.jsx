@@ -4,8 +4,6 @@ import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
 import { useModalContext } from '../../utils/ModalContext';
-import RegisteredEventRequestForm from '../forms/CreateRegisteredEventRequestForm';
-import EditEventRequestForm from '../forms/EditRegisteredEventRequestForm';
 import EventRequestTable from '../tables/EventRequestTable';
 
 const EventRequestSCSO = () => {
@@ -17,11 +15,6 @@ const EventRequestSCSO = () => {
       'Senior Customer Service Officer',
       ]}>
       <div className="workspace-card-actions">
-        {/* <ActionButton
-          icon={UserCheck}
-          label="For Registered Clients"
-          onClick={() => openModalWithContent(<RegisteredEventRequestForm />)}
-        /> */}
         <ActionButton
           icon={Pen}
           label="Edit Event Requests"

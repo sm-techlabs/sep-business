@@ -1,17 +1,35 @@
 // src/cards/Tasks.jsx
-import { Plus, Eye, Edit, Trash } from 'lucide-react';
+import { Plus, Eye, Edit, Trash, CircleFadingPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
+import CreateTaskForm from '../forms/CreateTaskForm';
+import { useModalContext } from '../../utils/ModalContext';
 
-const Tasks = () => (
-  <WorkspaceCard title="Tasks" authorizedRoles={['Staff', 'Manager']}>
+const Tasks = () => {
+  
+    const { openModalWithContent } = useModalContext();
+  
+  return (
+  <WorkspaceCard title="Tasks" authorizedRoles={[
+    'Production Manager', 
+    'Service Manager',
+    ]}>
     <div className="workspace-card-actions">
-      <ActionButton icon={Plus} label="Add Task" />
-      <ActionButton icon={Eye} label="View Existing Tasks" />
+      <ActionButton
+          icon={CircleFadingPlus}
+          label="Create Tasks"
+          onClick={() => openModalWithContent(<CreateTaskForm />)}
+        />
+        {/* <ActionButton
+          icon={FilePenLine}
+          label="Review Tasks"
+          onClick={() => openModalWithContent(<EventRequestTable filter={{ status: '!Approved'}} mode="review"/>)}
+        />
+        */}
     </div>
   </WorkspaceCard>
-);
+);}
 
 Tasks.meta = {
   priority: 1,
