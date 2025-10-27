@@ -210,6 +210,7 @@ router.put(
                 endsOn: req.body.endsOn,
                 status: req.body.status,
                 estimatedBudget: req.body.estimatedBudget,
+                budgetComment: req.body.budgetComment,
             }, { transaction: t });
 
             // If preferences are provided, update them
@@ -269,6 +270,7 @@ router.put(
                 endsOn: req.body.endsOn,
                 status: req.body.status,
                 estimatedBudget: req.body.estimatedBudget,
+                budgetComment: req.body.budgetComment,
             }, { transaction: t });
 
             // If preferences are provided, update them
@@ -304,12 +306,6 @@ router.delete(
             throw new NotFoundError('Event Request not found');
         }
         await sequelize.transaction(async (t) => {
-            // // Delete associated preferences first
-            // const pref = await request.getPreferences({ transaction: t });
-            // if (pref) {
-            //     await pref.destroy({ transaction: t });
-            // }
-            // Then delete the request itself
             await request.destroy({ transaction: t });
         });
         return { message: `Event Request #${requestId} deleted successfully!` };

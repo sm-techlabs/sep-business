@@ -20,7 +20,9 @@ export default {
   "financial manager": {
     can: [
       "view:event-requests",
+      "view:clients",
       "update:event-requests",
+
     ]
   },
   "administration manager": {

@@ -7,6 +7,7 @@ import { useModalContext } from '../../utils/ModalContext';
 import RegisteredEventRequestForm from '../forms/CreateRegisteredEventRequestForm';
 import EditEventRequestForm from '../forms/EditRegisteredEventRequestForm';
 import EventRequestTable from '../tables/EventRequestTable';
+import EventRequestTableFM from '../tables/EventRequestTableFM';
 
 const EventRequestFM = () => {
 
@@ -20,7 +21,7 @@ const EventRequestFM = () => {
         <ActionButton
           icon={FilePenLine}
           label="Review Event Requests"
-          onClick={() => openModalWithContent(<EventRequestTable filter={{ status: 'ApprovedBySCSO'}} mode="review"/>)}
+          onClick={() => openModalWithContent(<EventRequestTableFM filter={{ status: 'ApprovedBySCSO'}} mode="edit"/>)}
         />
       </div>
 
