@@ -6,6 +6,7 @@ class Task extends Model {}
 Task.init({
 	startsOn: DataTypes.DATE,
 	endsOn: DataTypes.DATE,
+	title: DataTypes.STRING,
 	description: DataTypes.STRING,
 	comments: DataTypes.STRING,
 	priority: DataTypes.ENUM(...TASK_PRIORITIES),
