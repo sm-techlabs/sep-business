@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
 import TableView from "../TableView";
-import taskClient from "../../clients/taskClient";
+// import eventRequestClient from "../../clients/eventRequestClient";
 import { useModalContext } from "../../utils/ModalContext";
-import EditTaskForm from "../forms/EditTaskForm";
+// import EditRegisteredEventRequestForm from "../forms/EditRegisteredEventRequestForm";
+// import EditNonRegisteredEventRequestForm from "../forms/EditNonRegisteredEventRequestForm";
 import Loader from "../Loader";
+import taskClient from "../../clients/taskClient";
 
-const TaskTable = ({ createdById, mode }) => {
+const TaskTable = ({ filter = {}, mode }) => {
   const [records, setRecords] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const { openModalWithContent } = useModalContext();
 
   const fetchData = async () => {
     try {
-      const response = createdById
-        ? await taskClient.getAll({ createdById })
-        : await taskClient.getAll();
+      const response = await taskClient.getAll(filter);
       setRecords(response.data);
     } catch (err) {
-      console.error("Failed to load event requests", err);
+      console.error("Failed to load tasks", err);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [createdById]);
+  }, [JSON.stringify(filter)]); // re-fetch when filter changes
 
   const delayedRefresh = () => {
     setRefreshing(true);
@@ -33,23 +33,23 @@ const TaskTable = ({ createdById, mode }) => {
     }, 500);
   };
 
-  const handleApprove = async (id) => {
-    try {
-      await taskClient.approve(id);
-      delayedRefresh();
-    } catch (err) {
-      console.error("Approve failed", err);
-    }
-  };
+  // const handleApprove = async (id) => {
+  //   try {
+  //     await eventRequestClient.approve(id);
+  //     delayedRefresh();
+  //   } catch (err) {
+  //     console.error("Approve failed", err);
+  //   }
+  // };
 
-  const handleReject = async (id) => {
-    try {
-      await taskClient.reject(id);
-      delayedRefresh();
-    } catch (err) {
-      console.error("Reject failed", err);
-    }
-  };
+  // const handleReject = async (id) => {
+  //   try {
+  //     await eventRequestClient.reject(id);
+  //     delayedRefresh();
+  //   } catch (err) {
+  //     console.error("Reject failed", err);
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     try {
@@ -60,6 +60,16 @@ const TaskTable = ({ createdById, mode }) => {
     }
   };
 
+  const handleEdit = async (id) => {
+    try {
+      const response = await taskClient.getById(id);
+      openModalWithContent(<EditNonRegisteredEventRequestForm id={id} />);
+      openModalWithContent()
+    } catch (err) {
+      console.error("Failed to open edit form", err);
+    }
+  };
+
   return (
     <div>
       {refreshing ? (
@@ -67,12 +77,12 @@ const TaskTable = ({ createdById, mode }) => {
       ) : (
         <TableView
           mode={mode}
-          header="Event Requests"
+          header="Tasks"
           records={records}
           onDelete={handleDelete}
-          onEdit={(id) => openModalWithContent(<EditTaskForm id={id} />)}
-          onApprove={handleApprove}
-          onReject={handleReject}
+          onEdit={handleEdit}
+          // onApprove={handleApprove}
+          // onReject={handleReject}
         />
       )}
     </div>
