@@ -34,6 +34,7 @@ Employee.hasMany(Task, { as: 'assignmentHistory', foreignKey: 'authorId' });
 Task.belongsTo(Employee, { as: 'author', foreignKey: 'authorId' });
 Task.belongsTo(Employee, { as: 'assignedTo', foreignKey: 'assignedToId' });
 Task.belongsTo(Application, { as: 'applicationReference' });
+Task.belongsTo(Team, { as: 'subteam' });
 
 // Application associations
 // Application.belongsTo(Client, { as: 'client' });

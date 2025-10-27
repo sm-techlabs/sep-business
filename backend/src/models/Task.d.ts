@@ -6,6 +6,7 @@ import type {
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
 } from 'sequelize';
+import Team from './Team';
 
 declare class Employee extends Model {}
 declare class Application extends Model {}
@@ -17,6 +18,7 @@ export default class Task extends Model<
   declare id: CreationOptional<number>;
   declare startsOn: Date | null;
   declare endsOn: Date | null;
+  declare title: string | null;
   declare description: string | null;
   declare comments: string | null;
   declare priority: 'Low' | 'Medium' | 'High';
@@ -35,4 +37,8 @@ export default class Task extends Model<
   // Task.belongsTo(Application, { as: 'applicationReference' })
   declare getApplicationReference: BelongsToGetAssociationMixin<Application>;
   declare setApplicationReference: BelongsToSetAssociationMixin<Application, number>;
+  
+  // Task.belongsTo(Team, { as: 'subteam' });
+  declare getSubteam: BelongsToGetAssociationMixin<Team>;
+  declare setSubteam: BelongsToSetAssociationMixin<Team, number>;
 }

@@ -7,6 +7,9 @@ import authentication from './routes/authentication.js';
 import health from './routes/health.js';
 import eventRequest from './routes/eventRequests.js';
 import client from './routes/clients.js';
+import task from './routes/tasks.js';
+import application from './routes/applications.js';
+import team from './routes/teams.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,6 +29,9 @@ app.use('/api/health', health);
 app.use('/api/authentication', authentication);
 app.use('/api/event-requests', eventRequest);
 app.use('/api/clients', client);
+app.use('/api/tasks', task);
+app.use('/api/applications', application);
+app.use('/api/teams', team);
 
 // --- 🚀 Server startup (for local / prod only) ---
 const startServer = async () => {
