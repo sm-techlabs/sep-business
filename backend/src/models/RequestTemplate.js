@@ -23,32 +23,7 @@ RequestTemplate.init({
     address: DataTypes.STRING,
 		expectedNumberOfAttendees: DataTypes.INTEGER,
 		
-		// Approval flow fields
-  	approvedById: {
-  	  type: DataTypes.INTEGER,
-  	  allowNull: true,
-  	},
-		approvedByRole: {
-  	  type: DataTypes.STRING,
-  	  allowNull: true,
-  	},
-  	approvedAt: {
-  	  type: DataTypes.DATE,
-  	  allowNull: true,
-  	},
-		rejectedById: {
-  	  type: DataTypes.INTEGER,
-  	  allowNull: true,
-  	},
-		rejectedByRole: {
-  	  type: DataTypes.STRING,
-  	  allowNull: true,
-  	},
-  	rejectedAt: {
-  	  type: DataTypes.DATE,
-  	  allowNull: true,
-  	},
-  	rejectionReason: {
+  	reviewComment: {
   	  type: DataTypes.STRING,
   	  allowNull: true,
   	},

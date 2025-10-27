@@ -2,19 +2,18 @@ import React, { useEffect, useState } from "react";
 import TableView from "../TableView";
 import eventRequestClient from "../../clients/eventRequestClient";
 import { useModalContext } from "../../utils/ModalContext";
-import EditEventRequestForm from "../forms/EditEventRequestForm";
+import EditRegisteredEventRequestForm from "../forms/EditRegisteredEventRequestForm";
+import EditNonRegisteredEventRequestForm from "../forms/EditNonRegisteredEventRequestForm";
 import Loader from "../Loader";
 
-const EventRequestTable = ({ createdById, mode }) => {
+const EventRequestTable = ({ filter = {}, mode }) => {
   const [records, setRecords] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const { openModalWithContent } = useModalContext();
 
   const fetchData = async () => {
     try {
-      const response = createdById
-        ? await eventRequestClient.getAll({ createdById })
-        : await eventRequestClient.getAll();
+      const response = await eventRequestClient.getAll(filter);
       setRecords(response.data);
     } catch (err) {
       console.error("Failed to load event requests", err);
@@ -23,7 +22,7 @@ const EventRequestTable = ({ createdById, mode }) => {
 
   useEffect(() => {
     fetchData();
-  }, [createdById]);
+  }, [JSON.stringify(filter)]); // re-fetch when filter changes
 
   const delayedRefresh = () => {
     setRefreshing(true);
@@ -60,6 +59,19 @@ const EventRequestTable = ({ createdById, mode }) => {
     }
   };
 
+  const handleEdit = async (id) => {
+    try {
+      const response = await eventRequestClient.getById(id);
+      if (response.type === "registered") {
+        openModalWithContent(<EditRegisteredEventRequestForm id={id} />);
+      } else {
+        openModalWithContent(<EditNonRegisteredEventRequestForm id={id} />);
+      }
+    } catch (err) {
+      console.error("Failed to open edit form", err);
+    }
+  };
+
   return (
     <div>
       {refreshing ? (
@@ -70,7 +82,7 @@ const EventRequestTable = ({ createdById, mode }) => {
           header="Event Requests"
           records={records}
           onDelete={handleDelete}
-          onEdit={(id) => openModalWithContent(<EditEventRequestForm id={id} />)}
+          onEdit={handleEdit}
           onApprove={handleApprove}
           onReject={handleReject}
         />

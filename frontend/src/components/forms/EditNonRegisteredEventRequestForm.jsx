@@ -1,28 +1,11 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
-import customerClient from "../../clients/customerClient";
 import eventRequestClient from "../../clients/eventRequestClient";
 
-const EditEventRequestForm = ({ id }) => {
+const EditNonRegisteredEventRequestForm = ({ id }) => {
 
-  const [clientOptions, setClientOptions] = useState([])
-  const [initialValues, setInitialValues] = useState({
-    // // Placeholder values for visual confirmation
-    // recordNumber: 3,
-    // eventType: "Corporate Conference",
-    // startsOn: new Date("2025-11-05"),
-    // endsOn: new Date("2025-11-07"),
-    // estimatedBudget: 8500,
-    // expectedNumberOfAttendees: 120,
-    // preferences: {
-    //   decorations: true,
-    //   parties: false,
-    //   photosOrFilming: true,
-    //   breakfastLunchDinner: true,
-    //   softHotDrinks: false,
-    // },
-  })
+  const [initialValues, setInitialValues] = useState({})
 
   useEffect(() => {
   const getInitialValues = async () => {
@@ -31,7 +14,10 @@ const EditEventRequestForm = ({ id }) => {
 
       // Map API structure -> form structure
       const mapped = {
-        recordNumber: response.client?.id || "",
+        name: response.name || "",
+        email: response.email || "",
+        businessCode: response.businessCode || "",
+        address: response.address || "",
         eventType: response.eventType || "",
         startsOn: new Date(response.startsOn),
         endsOn: new Date(response.endsOn),
@@ -54,48 +40,35 @@ const EditEventRequestForm = ({ id }) => {
   getInitialValues();
 }, [id]);
 
-
-  useEffect(() => {
-  const fetchClients = async () => {
-    try {
-      const response = await customerClient.getClients(); // should call GET /clients
-      const clients = Array.isArray(response) ? response : [];
-
-      // Ensure the structure matches expected shape
-      const options = clients
-        .filter(client => client && client.id && client.name)
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map(client => ({
-          value: client.id,
-          label: `${client.name} (${client.businessCode || "N/A"})`,
-        }));
-
-      if (options.length === 0) {
-        console.warn("No clients found.");
-      }
-      setClientOptions(options);
-    } catch (error) {
-      console.error("Error fetching clients:", error);
-
-      // Optional: show a fallback option in the dropdown
-      setClientOptions([
-        { value: "", label: "⚠️ Failed to load clients" },
-      ]);
-    }
-  };
-
-  fetchClients();
-}, []);
-
   const form = {
-    title: "New Event Request - Registered Client",
+    title: "Edit Event Request - Non Registered Client",
     fields: [
     {
-      name: "recordNumber",
-      label: "Client Record",
-      type: "dropdown",
-      placeholder: "Select a Client Record",
-      options: clientOptions,
+      name: "name",
+      label: "Name",
+      type: "text",
+      placeholder: "New Customer Name",
+      required: true,
+    },
+    {
+      name: "email",
+      label: "E-mail",
+      type: "text",
+      placeholder: "client@business.com",
+      required: true,
+    },
+    {
+      name: "businessCode",
+      label: "Business Code",
+      type: "text",
+      placeholder: "Business identifier",
+      required: true,
+    },
+    {
+      name: "address",
+      label: "Address",
+      type: "text",
+      placeholder: "e.g. El. Venizelou 20, Thessaloniki 546 24, Greece",
       required: true,
     },
     {
@@ -143,24 +116,22 @@ const EditEventRequestForm = ({ id }) => {
         { name: "softHotDrinks", description: "Soft or Hot Drinks" },
       ],
     }
-  ]}
+  ]};
 
   const handleEditSubmit = async (formData) => {
-    return await eventRequestClient.update(id, formData);
+    return await eventRequestClient.updateNonRegistered(id, formData);
   };
 
   return (
     <div className="modal-form-container">
-      {initialValues &&
-        <DynamicForm
-          title={form.title}
-          fields={form.fields}
-          initialValues={initialValues}
-          onSubmit={handleEditSubmit}
-        />
-      }
+      <DynamicForm
+        title={form.title}
+        fields={form.fields}
+        initialValues={initialValues}
+        onSubmit={handleEditSubmit}
+      />
     </div>
   );
 };
 
-export default EditEventRequestForm;
+export default EditNonRegisteredEventRequestForm;

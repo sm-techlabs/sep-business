@@ -13,11 +13,14 @@ const eventRequestClient = {
   createRegistered: async (data) => 
     apiClient.post('/api/event-requests/registered', data),
 
-  createUnregistered: async (data) => 
-    apiClient.post('/api/event-requests/unregistered', data),
+  createNonRegistered: async (data) => 
+    apiClient.post('/api/event-requests/nonregistered', data),
 
-  update: async (id, data) => 
-    apiClient.put(`/api/event-requests/${id}`, data),
+  updateRegistered: async (id, data) => 
+    apiClient.put(`/api/event-requests/registered/${id}`, data),
+  
+  updateNonRegistered: async (id, data) => 
+    apiClient.put(`/api/event-requests/nonregistered/${id}`, data),
 
   delete: async (id) => 
     apiClient.delete(`/api/event-requests/${id}`),

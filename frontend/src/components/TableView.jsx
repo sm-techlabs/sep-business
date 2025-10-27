@@ -22,8 +22,14 @@ const flattenRecord = (record) => {
   const flat = {};
   for (const [key, val] of Object.entries(record)) {
     if (typeof val === "object" && val !== null && !Array.isArray(val)) {
-      for (const [nestedKey, nestedVal] of Object.entries(val)) {
-        flat[`${key}.${nestedKey}`] = nestedVal;
+      // Combine important info into a summary string
+      if (val.name) {
+        flat[key] = `${val.name}${val.email ? ` (${val.email})` : ""}`;
+      } else {
+        flat[key] = Object.entries(val)
+          .map(([k, v]) => `${k}: ${v}`)
+          .slice(0, 3)
+          .join(", ");
       }
     } else {
       flat[key] = val;
@@ -94,6 +100,8 @@ const TableView = ({ header, records, onEdit, onDelete, onApprove, onReject, mod
         </tbody>
       </table>
 
+      {mode !== "readOnly" &&
+      
       <TableTooltip
         visible={tooltip.visible}
         position={tooltip.position}
@@ -132,6 +140,7 @@ const TableView = ({ header, records, onEdit, onDelete, onApprove, onReject, mod
           )
         }
       />
+      }
 
     </div>
   );
