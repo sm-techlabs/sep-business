@@ -41,7 +41,7 @@ router.post(
             }, { transaction: t });
 
             // Optionally associate with application
-            await task.setApplication(application, { transaction: t });
+            await task.setApplicationReference(application, { transaction: t });
             await task.setSubteam(subteam, { transaction: t });
 
             return task.id;
@@ -161,7 +161,7 @@ router.put(
                 if (!application) {
                     throw new NotFoundError('Application not found');
                 }
-                await task.setApplication(application, { transaction: t });
+                await task.setApplicationReference(application, { transaction: t });
             }
 
             if (req.body.subteamId) {
