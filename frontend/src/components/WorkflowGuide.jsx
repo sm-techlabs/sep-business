@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { HelpCircle } from "lucide-react";
+import './WorkflowGuide.css'
 
 export default function WorkflowGuide() {
   const [open, setOpen] = useState(false);
