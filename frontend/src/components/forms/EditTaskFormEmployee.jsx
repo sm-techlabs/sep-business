@@ -126,19 +126,19 @@ const EditTaskFormEmployee = ({ id }) => {
       readOnly: true,
     },
     {
-      name: "comments",
-      label: "Comments",
-      type: "text",
-      placeholder: "Comments",
-      required: true,
-    },
-    {
       name: "description",
       label: "Description",
       type: "text",
       placeholder: "Expected outcomes and responsibilities",
       required: false,
       readOnly: true,
+    },
+    {
+      name: "comments",
+      label: "Comments",
+      type: "text",
+      placeholder: "Comments",
+      required: true,
     },
   ]};
 

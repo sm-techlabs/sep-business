@@ -25,17 +25,17 @@ const TasksManager = () => {
         <ActionButton
           icon={Clock}
           label="Pending"
-          onClick={() => openModalWithContent(<TaskTableManager filter={{ status: 'Pending'}} />)}
+          onClick={() => openModalWithContent(<TaskTableManager filter={{ status: 'Pending'}} mode={"readOnly"} />)}
         />
         <ActionButton
           icon={Wrench}
           label="In Progress"
-          onClick={() => openModalWithContent(<TaskTableManager filter={{ status: 'InProgress'}}/>)}
+          onClick={() => openModalWithContent(<TaskTableManager filter={{ status: 'InProgress'}} mode={"readOnly"}/>)}
         />
         <ActionButton
           icon={CircleCheckBig}
           label="Completed"
-          onClick={() => openModalWithContent(<TaskTableManager filter={{ status: 'Completed'}}/>)}
+          onClick={() => openModalWithContent(<TaskTableManager filter={{ status: 'Completed'}} mode={"readOnly"}/>)}
         />
     </div>
   </WorkspaceCard>

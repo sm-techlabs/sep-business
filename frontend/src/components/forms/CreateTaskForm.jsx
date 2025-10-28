@@ -121,18 +121,18 @@ const CreateTaskForm = () => {
       required: true,
     },
     {
-      name: "comments",
-      label: "Comments",
-      type: "text",
-      placeholder: "Comments",
-      required: true,
-    },
-    {
       name: "description",
       label: "Description",
       type: "text",
       placeholder: "Expected outcomes and responsibilities",
       required: false,
+    },
+    {
+      name: "comments",
+      label: "Comments",
+      type: "text",
+      placeholder: "Comments",
+      required: true,
     },
   ]};
 
