@@ -37,7 +37,7 @@ const EditBudgetAdjustmentRequestForm = ({ id }) => {
 
       const options = applications
         .filter((a) => a && a.id)
-        .sort((a, b) => (a.id || "").localeCompare(b.id || ""))
+        .sort((a, b) => a.id - b.id)
         .map((app) => ({
           value: app.id,
           label: `Application #${app.id}`,

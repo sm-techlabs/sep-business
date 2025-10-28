@@ -3,7 +3,7 @@ import DynamicForm from "../DynamicForm";
 import recruitmentRequestClient from "../../clients/recruitmentRequestClient";
 import { useState, useEffect } from "react";
 
-const EditRecruitmentRequestForm = ({ id }) => {
+const EditRecruitmentRequestFormHR = ({ id }) => {
   
   const [initialValues, setInitialValues] = useState([])
 
@@ -18,6 +18,7 @@ const EditRecruitmentRequestForm = ({ id }) => {
         minYearsOfExperience: response.minYearsOfExperience || 0,
         contractType: response.contractType || "",
         jobDescription: response.jobDescription || "",
+        status: response.status || "",
       };
       setInitialValues(mapped);
     } catch (err) {
@@ -31,6 +32,18 @@ const EditRecruitmentRequestForm = ({ id }) => {
   const form = {
     title: "Edit Recruitment Request",
     fields: [
+      {
+        name: "status",
+        label: "Status",
+        type: "dropdown",
+        options:
+        [
+          { label: "Active", value: "Active" },
+          { label: "Accepted", value: "Accepted" },
+          { label: "Rejected", value: "Rejected" },
+        ],
+        required: true,
+      },  
       {
         name: "jobTitle",
         label: "Job Title",
@@ -81,4 +94,4 @@ const EditRecruitmentRequestForm = ({ id }) => {
   );
 };
 
-export default EditRecruitmentRequestForm;
+export default EditRecruitmentRequestFormHR;

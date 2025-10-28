@@ -28,6 +28,7 @@ const TasksEmployee = () => {
     'Audio Engineer',
     'Network Engineer',
     'Graphic Designer',
+    'Photographer',
     ]}>
     <div className="workspace-card-actions">
       <ActionButton

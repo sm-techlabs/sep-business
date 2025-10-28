@@ -1,28 +1,34 @@
 // src/cards/NewEventRequest.jsx
-import { Pen, Plus, UserCheck, UserPlus } from 'lucide-react';
+import { ClockFading, Handshake, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
 import CreateRecruitmentRequestForm from '../forms/CreateRecruitmentRequestForm';
 import { useModalContext } from '../../utils/ModalContext';
 import EditRecruitmentRequestForm from '../forms/EditRecruitmentRequestForm';
+import RecruitmentRequestTable from '../tables/RecruitmentRequestTable';
 
-const NewRecruitmentRequest = () => {
+const RecruitmentRequests = () => {
 
   const { openModalWithContent } = useModalContext();
 
   return (
-    <WorkspaceCard title="Recruitment Requests" authorizedRoles={['HR Manager']}>
+    <WorkspaceCard title="Recruitment Requests" authorizedRoles={['Production Manager', 'Service Manager']}>
       <div className="workspace-card-actions">
         <ActionButton
-          icon={Plus}
-          label="New Recruitment Request"
+          icon={UserPlus}
+          label="Create Recruitment Request"
           onClick={() => openModalWithContent(<CreateRecruitmentRequestForm />)}
         />
         <ActionButton
-          icon={Pen}
-          label="Edit Recruitment Request"
-          onClick={() => openModalWithContent(<EditRecruitmentRequestForm />)}
+          icon={ClockFading}
+          label="Ongoing Requests"
+          onClick={() => openModalWithContent(<RecruitmentRequestTable filter={{ status: 'Active' }}/>)}
+        />
+        <ActionButton
+          icon={Handshake}
+          label="Resolved Requests"
+          onClick={() => openModalWithContent(<RecruitmentRequestTable filter={{ status: '!Active' }}/>)}
         />
       </div>
 
@@ -30,8 +36,8 @@ const NewRecruitmentRequest = () => {
   );
 };
 
-NewRecruitmentRequest.meta = {
+RecruitmentRequests.meta = {
   priority: 1,
 };
 
-export default NewRecruitmentRequest;
+export default RecruitmentRequests;

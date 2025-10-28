@@ -11,6 +11,7 @@ import task from './routes/tasks.js';
 import application from './routes/applications.js';
 import team from './routes/teams.js';
 import budgetAdjustmentRequest from './routes/budgetAdjustmentRequests.js';
+import hiringOrOutsourcingRequest from './routes/hiringOrOutsourcingRequests.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use('/api/tasks', task);
 app.use('/api/applications', application);
 app.use('/api/teams', team);
 app.use('/api/budget-adjustment-requests', budgetAdjustmentRequest);
+app.use('/api/recruitment-requests', hiringOrOutsourcingRequest);
 
 // --- 🚀 Server startup (for local / prod only) ---
 const startServer = async () => {
