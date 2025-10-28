@@ -49,6 +49,7 @@ useEffect(() => {
         applicationId: response.applicationReferenceId || "",
         requiredAmount: response.requiredAmount || 0,
         reason: response.reason || "",
+        status: response.status || "",
       };
       setInitialValues(mapped);
     } catch (err) {
