@@ -180,7 +180,7 @@ const initSampleData = async () => {
         username: 'natalie',
         password: passwordHash,
         email: 'natalie@sep.com',
-        jobTitle: 'Services Manager'
+        jobTitle: 'Service Manager'
     });
     const helen = await Employee.create({
         name: 'Helen',
