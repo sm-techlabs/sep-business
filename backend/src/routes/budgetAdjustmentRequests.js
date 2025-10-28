@@ -1,19 +1,11 @@
 import express from 'express';
-import NonRegisteredClientRequest from '../models/NonRegisteredClientRequest.js';
 import { BudgetAdjustmentRequest, Department, sequelize } from '../models/index.js';
-import RequestPreferences from '../models/RequestPreferences.js';
-import RegisteredClientRequest from '../models/RegisteredClientRequest.js';
-import Client from '../models/Client.js';
-import RequestTemplate from '../models/RequestTemplate.js';
 import Employee from '../models/Employee.js';
-import { Op } from 'sequelize';
 import { validate } from '../services/validation.js';
-import { nonRegisteredRequestSchema, registeredRequestSchema } from '../schemas/request.js';
 import { authorize } from '../services/authorization.js';
 import createHandlerWrapper from '../utils/createHandlerWrapper.js';
 import { BadRequestError, NotFoundError, UnprocessableEntityError } from '../utils/errors.js';
 import { verifyToken } from '../utils/jwt.js';
-import { REQUEST_TEMPLATE_STATUSES } from '../constants/enums.js';
 import { parseFilters } from '../utils/parseFilters.js';
 import { createBudgetAdjustmentRequestSchema } from '../schemas/budgetAdjustmentRequest.js';
 import Application from '../models/Application.js';
@@ -153,6 +145,41 @@ router.put(
             throw new NotFoundError('Application not found');
         }
 
+        // const department = await Department.findByPk(request.body.requestingDepartmentId);
+        // if (!department) {
+        //     throw new NotFoundError('Requesting Department not found');
+        // }
+            
+        await sequelize.transaction(async (t) => {
+            await request.update({
+                requiredAmount: req.body.requiredAmount,
+                reason: req.body.reason,
+                status: req.body.status,
+            }, { transaction: t });
+
+            await request.setApplicationReference(application, { transaction: t });
+            // await request.setRequestingDepartment(department, { transaction: t });
+        });
+
+        return { message: `Budget Adjustment Request #${requestId} updated successfully!` };
+    })
+);
+
+router.patch(
+    '/:id',
+    authorize,
+    createHandlerWrapper(async (req) => {
+        const requestId = req.params.id;
+        const request = await BudgetAdjustmentRequest.findByPk(requestId);
+        if (!request) {
+            throw new NotFoundError('Budget Adjustment Request not found');
+        }
+
+        const application = await Application.findByPk(req.body.applicationId);
+        if (!application) {
+            throw new NotFoundError('Application not found');
+        }
+
         const department = await Department.findByPk(request.body.requestingDepartmentId);
         if (!department) {
             throw new NotFoundError('Requesting Department not found');
@@ -172,6 +199,7 @@ router.put(
         return { message: `Budget Adjustment Request #${requestId} updated successfully!` };
     })
 );
+
 
 // DELETE /budget-adjustment-requests/:id
 router.delete(

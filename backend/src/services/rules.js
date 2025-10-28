@@ -22,7 +22,10 @@ export default {
       "view:event-requests",
       "view:clients",
       "update:event-requests",
-
+      "create:budget-adjustment-requests",
+      "view:budget-adjustment-requests",
+      "update:budget-adjustment-requests",
+      "view:applications"
     ]
   },
   "administration manager": {
@@ -38,6 +41,10 @@ export default {
       "view:applications",
       "view:teams",
       "update:tasks",
+      "create:budget-adjustment-requests",
+      "view:budget-adjustment-requests",
+      "update:budget-adjustment-requests",
+      "delete:budget-adjustment-requests",
     ]
   },
   "service manager": {
@@ -47,6 +54,9 @@ export default {
       "view:applications",
       "view:teams",
       "update:tasks",
+      "create:budget-adjustment-requests",
+      "view:budget-adjustment-requests",
+      "update:budget-adjustment-requests",
     ]
   },
   "decorating architect": {
@@ -92,6 +102,4 @@ export default {
       "update:tasks",
     ]
   },
-
-
 };

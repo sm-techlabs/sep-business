@@ -4,8 +4,9 @@ import { useModalContext } from "../../utils/ModalContext";
 import Loader from "../Loader";
 import budgetAdjustmentRequestClient from "../../clients/budgetAdjustmentRequestClient";
 import EditBudgetAdjustmentRequestForm from "../forms/EditBudgetAdjustmentRequestForm";
+import EditBudgetAdjustmentRequestFormFM from "../forms/EditBudgetAdjustmentRequestFormFM";
 
-const BudgetAdjustmentRequestTable = ({ filter = {}, mode }) => {
+const BudgetAdjustmentRequestTableFM = ({ filter = {}, mode }) => {
   const [records, setRecords] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const { openModalWithContent } = useModalContext();
@@ -15,7 +16,7 @@ const BudgetAdjustmentRequestTable = ({ filter = {}, mode }) => {
       const response = await budgetAdjustmentRequestClient.getAll(filter);
       setRecords(response.data);
     } catch (err) {
-      console.error("Failed to load tasks", err);
+      console.error("Failed to load budget adjustment requests", err);
     }
   };
 
@@ -42,7 +43,7 @@ const BudgetAdjustmentRequestTable = ({ filter = {}, mode }) => {
 
   const handleEdit = async (id) => {
     try {
-      openModalWithContent(<EditBudgetAdjustmentRequestForm id={id} />);
+      openModalWithContent(<EditBudgetAdjustmentRequestFormFM id={id} />);
     } catch (err) {
       console.error("Failed to open edit form", err);
     }
@@ -67,4 +68,4 @@ const BudgetAdjustmentRequestTable = ({ filter = {}, mode }) => {
   );
 };
 
-export default BudgetAdjustmentRequestTable;
+export default BudgetAdjustmentRequestTableFM;

@@ -4,9 +4,31 @@ import DynamicForm from "../DynamicForm";
 import budgetAdjustmentRequestClient from "../../clients/budgetAdjustmentRequestClient";
 import applicationClient from "../../clients/applicationClient";
 
-const CreateBudgetAdjustmentRequestForm = () => {
+const EditBudgetAdjustmentRequestForm = ({ id }) => {
 
   const [applicationOptions, setApplicationOptions] = useState([]);
+  const [initialValues, setInitialValues] = useState({})
+
+  useEffect(() => {
+  const getInitialValues = async () => {
+    try {
+      const response = await budgetAdjustmentRequestClient.getById(id);
+
+      // Map API structure -> form structure
+      const mapped = {
+        applicationId: response.applicationReferenceId || "",
+        requiredAmount: response.requiredAmount || 0,
+        reason: response.reason || "",
+      };
+      setInitialValues(mapped);
+    } catch (err) {
+      console.error("Failed to fetch event request:", err);
+    }
+  };
+
+  getInitialValues();
+}, [id]);
+
   useEffect(() => {
   const fetchApplications = async () => {
     try {
@@ -38,7 +60,7 @@ const CreateBudgetAdjustmentRequestForm = () => {
 }, []);
 
   const form = {
-    title: "Budget Adjustment Request",
+    title: "Edit Budget Adjustment Request",
     fields: [
     {
       name: "applicationId",
@@ -63,15 +85,20 @@ const CreateBudgetAdjustmentRequestForm = () => {
     },
   ]};
 
+  const handleEditSubmit = async (formData) => {
+    return await budgetAdjustmentRequestClient.update(id, formData);
+  };
+
   return (
     <div className="modal-form-container">
       <DynamicForm
         title={form.title}
         fields={form.fields}
-        onSubmit={budgetAdjustmentRequestClient.create}
+        onSubmit={handleEditSubmit}
+        initialValues={initialValues}
       />
     </div>
   );
 };
 
-export default CreateBudgetAdjustmentRequestForm;
+export default EditBudgetAdjustmentRequestForm;

@@ -1,5 +1,4 @@
-// src/cards/NewEventRequest.jsx
-import { DollarSign, FileSliders, } from 'lucide-react';
+import { DollarSign, FileSliders, ListChecks, Receipt, TicketPlus, } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
@@ -8,22 +7,27 @@ import BudgetAdjustmentRequestTable from '../tables/BudgetAdjustmentRequestTable
 import CreateBudgetAdjustmentRequestForm from '../forms/CreateBudgetAdjustmentRequestForm';
 
 
-const NewBudgetAdjustmentRequest = () => {
+const BudgetAdjustmentRequest = () => {
 
   const { openModalWithContent } = useModalContext();
 
   return (
-    <WorkspaceCard title="Financial Requests" authorizedRoles={['Production Manager', 'Service Manager']}>
+    <WorkspaceCard title="Budget Adjustment Requests" authorizedRoles={['Production Manager', 'Service Manager']}>
       <div className="workspace-card-actions">
         <ActionButton
-          icon={DollarSign}
+          icon={TicketPlus}
           label="Create Budget Adjustment Request"
           onClick={() => openModalWithContent(<CreateBudgetAdjustmentRequestForm />)}
         />
         <ActionButton
-          icon={FileSliders}
-          label="Financial Requests"
-          onClick={() => openModalWithContent(<BudgetAdjustmentRequestTable />)}
+          icon={Receipt}
+          label="Ongoing Requests"
+          onClick={() => openModalWithContent(<BudgetAdjustmentRequestTable filter={{ status: 'Active' }}/>)}
+        />
+        <ActionButton
+          icon={ListChecks}
+          label="Resolved Requests"
+          onClick={() => openModalWithContent(<BudgetAdjustmentRequestTable filter={{ status: '!Active' }}/>)}
         />
       </div>
 
@@ -31,8 +35,8 @@ const NewBudgetAdjustmentRequest = () => {
   );
 };
 
-NewBudgetAdjustmentRequest.meta = {
+BudgetAdjustmentRequest.meta = {
   priority: 1,
 };
 
-export default NewBudgetAdjustmentRequest;
+export default BudgetAdjustmentRequest;
