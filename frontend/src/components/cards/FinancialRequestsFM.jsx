@@ -3,9 +3,9 @@ import { Eye, Pen, Plus, UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
-import EditFinancialRequestForm from '../forms/EditFinancialRequestForm';
 import ReviewFinancialRequestForm from '../forms/ReviewFinancialRequestForm';
 import { useModalContext } from '../../utils/ModalContext';
+import BudgetAdjustmentRequestTable from '../tables/BudgetAdjustmentRequestTable';
 
 
 const ReviewFinancialRequest = () => {
@@ -23,7 +23,8 @@ const ReviewFinancialRequest = () => {
         <ActionButton
           icon={Pen}
           label="Edit Recruitment Request"
-          onClick={() => openModalWithContent(<EditFinancialRequestForm />)}
+          // onClick={() => openModalWithContent(<EditFinancialRequestForm />)}
+          onClick={() => openModalWithContent(<BudgetAdjustmentRequestTable />)}
         />
       </div>
 

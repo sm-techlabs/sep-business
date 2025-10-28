@@ -11,7 +11,6 @@ const EditTaskFormManager = ({ id }) => {
   const [subteamOptions, setSubteamOptions] = useState([]);
   const [initialValues, setInitialValues] = useState([]);
 
-
   useEffect(() => {
   const fetchApplications = async () => {
     try {
