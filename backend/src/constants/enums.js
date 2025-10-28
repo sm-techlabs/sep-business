@@ -33,8 +33,8 @@ export const REQUEST_TEMPLATE_STATUSES = [
     'Submitted',
     'ApprovedBySCSO',
     'ReviewedByFinancialManager',
-    'Rejected',
     'Approved',
+    'Rejected',
 ];
 
 export const JOB_AD_STATUSES = [

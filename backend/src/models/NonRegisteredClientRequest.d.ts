@@ -5,17 +5,19 @@ import type {
   CreationOptional,
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
 } from 'sequelize';
 
 declare class Client extends Model {}
 declare class RequestPreferences extends Model {}
+declare class Employee extends Model {}
 
 export default class NonRegisteredClientRequest extends Model<
   InferAttributes<NonRegisteredClientRequest>,
   InferCreationAttributes<NonRegisteredClientRequest>
 > {
   declare id: CreationOptional<number>;
-  // declare recordNumber: number | null;
   declare eventType: string | null;
   declare startsOn: Date | null;
   declare endsOn: Date | null;
@@ -41,6 +43,8 @@ export default class NonRegisteredClientRequest extends Model<
   declare setPreferences: BelongsToSetAssociationMixin<RequestPreferences, number>;
   // declare getClient: BelongsToGetAssociationMixin<Client>;
   // declare setClient: BelongsToSetAssociationMixin<Client, number>;
+  declare getCreatedBy: BelongsToGetAssociationMixin<Employee>;
+  declare setCreatedBy: BelongsToSetAssociationMixin<Employee, number>;
 }
 
 declare module '../models/NonRegisteredClientRequest.js' {

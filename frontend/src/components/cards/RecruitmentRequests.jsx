@@ -12,7 +12,7 @@ const NewRecruitmentRequest = () => {
   const { openModalWithContent } = useModalContext();
 
   return (
-    <WorkspaceCard title="Recruitment Requests" authorizedRoles={['Production Manager', 'Service Manager', 'Manager']}>
+    <WorkspaceCard title="Recruitment Requests" authorizedRoles={['HR Manager']}>
       <div className="workspace-card-actions">
         <ActionButton
           icon={Plus}

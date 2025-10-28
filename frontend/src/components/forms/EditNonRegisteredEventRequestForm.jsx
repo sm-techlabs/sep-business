@@ -1,12 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 import eventRequestClient from "../../clients/eventRequestClient";
 
-const CreateNonRegisteredEventRequestForm = () => {
+const EditNonRegisteredEventRequestForm = ({ id }) => {
+
+  const [initialValues, setInitialValues] = useState({})
+
+  useEffect(() => {
+  const getInitialValues = async () => {
+    try {
+      const response = await eventRequestClient.getById(id);
+
+      // Map API structure -> form structure
+      const mapped = {
+        name: response.name || "",
+        email: response.email || "",
+        businessCode: response.businessCode || "",
+        address: response.address || "",
+        eventType: response.eventType || "",
+        startsOn: new Date(response.startsOn),
+        endsOn: new Date(response.endsOn),
+        estimatedBudget: response.estimatedBudget || 0,
+        expectedNumberOfAttendees: response.expectedNumberOfAttendees || 0,
+        preferences: {
+          decorations: response.preferences?.decorations ?? false,
+          parties: response.preferences?.parties ?? false,
+          photosOrFilming: response.preferences?.photosOrFilming ?? false,
+          breakfastLunchDinner: response.preferences?.breakfastLunchDinner ?? false,
+          softHotDrinks: response.preferences?.softHotDrinks ?? false,
+        },
+      };
+      setInitialValues(mapped);
+    } catch (err) {
+      console.error("Failed to fetch event request:", err);
+    }
+  };
+
+  getInitialValues();
+}, [id]);
 
   const form = {
-    title: "New Event Request - Non Registered Client",
+    title: "Edit Event Request - Non Registered Client",
     fields: [
     {
       name: "name",
@@ -83,15 +118,20 @@ const CreateNonRegisteredEventRequestForm = () => {
     }
   ]};
 
+  const handleEditSubmit = async (formData) => {
+    return await eventRequestClient.updateNonRegistered(id, formData);
+  };
+
   return (
     <div className="modal-form-container">
       <DynamicForm
         title={form.title}
         fields={form.fields}
-        onSubmit={eventRequestClient.createNonRegistered}
+        initialValues={initialValues}
+        onSubmit={handleEditSubmit}
       />
     </div>
   );
 };
 
-export default CreateNonRegisteredEventRequestForm;
+export default EditNonRegisteredEventRequestForm;

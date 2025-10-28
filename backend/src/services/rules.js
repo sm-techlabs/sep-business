@@ -3,15 +3,95 @@ export default {
   admin: {
     can: ["*"], // full access
   },
-  manager: {
+  "customer service officer": {
     can: [
-      "view:health", 
       "view:clients",
-      "create:requests",
-      "update:team",
-    ], // can view all, update team only
+      "view:event-requests",
+      "create:event-requests",
+      "update:event-requests",
+    ],
   },
-  staff: {
-    can: ["edit:own_profile"],
+  "senior customer service officer": {
+    can: [
+      "view:clients",
+      "*:event-requests",
+    ]
   },
+  "financial manager": {
+    can: [
+      "view:event-requests",
+      "view:clients",
+      "update:event-requests",
+
+    ]
+  },
+  "administration manager": {
+    can: [
+      "view:event-requests",
+      "update:event-requests",
+    ]
+  },
+  "production manager": {
+    can: [
+      "create:tasks",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "service manager": {
+    can: [
+      "create:tasks",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "decorating architect": {
+    can: [
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "decorating assistant": {
+    can: [
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "audio engineer": {
+    can: [
+      "view:health",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "network engineer": {
+    can: [
+      "view:health",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+  "graphic designer": {
+    can: [
+      "view:health",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
+
+
 };

@@ -2,31 +2,43 @@ import { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
 import customerClient from "../../clients/customerClient";
+import eventRequestClient from "../../clients/eventRequestClient";
 
-const EditEventRequestForm = (id) => {
+const EditRegisteredEventRequestForm = ({ id }) => {
 
   const [clientOptions, setClientOptions] = useState([])
-  const [initialValues, setInitialValues] = useState({
-    // Placeholder values for visual confirmation
-    recordNumber: 3,
-    eventType: "Corporate Conference",
-    startsOn: new Date("2025-11-05"),
-    endsOn: new Date("2025-11-07"),
-    estimatedBudget: 8500,
-    expectedNumberOfAttendees: 120,
-    preferences: {
-      decorations: true,
-      parties: false,
-      photosOrFilming: true,
-      breakfastLunchDinner: true,
-      softHotDrinks: false,
-    },
-  })
+  const [initialValues, setInitialValues] = useState({})
 
   useEffect(() => {
-    // Add logic to read target event request (id),
-    // map values to initialValues fields
-  }, []);
+  const getInitialValues = async () => {
+    try {
+      const response = await eventRequestClient.getById(id);
+
+      // Map API structure -> form structure
+      const mapped = {
+        recordNumber: response.client?.id || "",
+        eventType: response.eventType || "",
+        startsOn: new Date(response.startsOn),
+        endsOn: new Date(response.endsOn),
+        estimatedBudget: response.estimatedBudget || 0,
+        expectedNumberOfAttendees: response.expectedNumberOfAttendees || 0,
+        preferences: {
+          decorations: response.preferences?.decorations ?? false,
+          parties: response.preferences?.parties ?? false,
+          photosOrFilming: response.preferences?.photosOrFilming ?? false,
+          breakfastLunchDinner: response.preferences?.breakfastLunchDinner ?? false,
+          softHotDrinks: response.preferences?.softHotDrinks ?? false,
+        },
+      };
+      setInitialValues(mapped);
+    } catch (err) {
+      console.error("Failed to fetch event request:", err);
+    }
+  };
+
+  getInitialValues();
+}, [id]);
+
 
   useEffect(() => {
   const fetchClients = async () => {
@@ -61,7 +73,7 @@ const EditEventRequestForm = (id) => {
 }, []);
 
   const form = {
-    title: "New Event Request - Registered Client",
+    title: "Edit Event Request",
     fields: [
     {
       name: "recordNumber",
@@ -119,19 +131,21 @@ const EditEventRequestForm = (id) => {
   ]}
 
   const handleEditSubmit = async (formData) => {
-    return await formClient.updateEventRequest(id, formData);
+    return await eventRequestClient.updateRegistered(id, formData);
   };
 
   return (
     <div className="modal-form-container">
-      <DynamicForm
-        title={form.title}
-        fields={form.fields}
-        initialValues={initialValues}
-        onSubmit={handleEditSubmit}
-      />
+      {initialValues &&
+        <DynamicForm
+          title={form.title}
+          fields={form.fields}
+          initialValues={initialValues}
+          onSubmit={handleEditSubmit}
+        />
+      }
     </div>
   );
 };
 
-export default EditEventRequestForm;
+export default EditRegisteredEventRequestForm;

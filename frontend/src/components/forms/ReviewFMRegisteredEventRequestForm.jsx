@@ -1,38 +1,45 @@
 import { useEffect, useState } from "react";
 import DynamicForm from "../DynamicForm";
 import formClient from "../../clients/formClient";
-import customerClient from "../../clients/customerClient";
+import eventRequestClient from "../../clients/eventRequestClient";
 
-const ReviewSCSOEventRequestForm = (id) => {
+const ReviewFMRegisteredEventRequestForm = ({ id }) => {
 
+  const [initialValues, setInitialValues] = useState({})
   const [clientOptions, setClientOptions] = useState([])
-  const [initialValues, setInitialValues] = useState({
-    // Placeholder values for visual confirmation
-    recordNumber: 3,
-    eventType: "Corporate Conference",
-    startsOn: new Date("2025-11-05"),
-    endsOn: new Date("2025-11-07"),
-    estimatedBudget: 8500,
-    expectedNumberOfAttendees: 120,
-    preferences: {
-      decorations: true,
-      parties: false,
-      photosOrFilming: true,
-      breakfastLunchDinner: true,
-      softHotDrinks: false,
-    },
-    review: {
-      approved: false,
-      rejected: false,     
-    },
-  })
+
 
   useEffect(() => {
-    // Add logic to read target event request (id),
-    // map values to initialValues fields
-  }, []);
+  const getInitialValues = async () => {
+    try {
+      const response = await eventRequestClient.getById(id);
 
-  useEffect(() => {
+      // Map API structure -> form structure
+      const mapped = {
+        recordNumber: response.client?.id || "",
+        eventType: response.eventType || "",
+        startsOn: new Date(response.startsOn),
+        endsOn: new Date(response.endsOn),
+        estimatedBudget: response.estimatedBudget || 0,
+        expectedNumberOfAttendees: response.expectedNumberOfAttendees || 0,
+        preferences: {
+          decorations: response.preferences?.decorations ?? false,
+          parties: response.preferences?.parties ?? false,
+          photosOrFilming: response.preferences?.photosOrFilming ?? false,
+          breakfastLunchDinner: response.preferences?.breakfastLunchDinner ?? false,
+          softHotDrinks: response.preferences?.softHotDrinks ?? false,
+        },
+      };
+      setInitialValues(mapped);
+    } catch (err) {
+      console.error("Failed to fetch event request:", err);
+    }
+  };
+
+  getInitialValues();
+}, [id]);
+
+useEffect(() => {
   const fetchClients = async () => {
     try {
       const response = await customerClient.getClients(); // should call GET /clients
@@ -74,6 +81,7 @@ const ReviewSCSOEventRequestForm = (id) => {
       placeholder: "Select a Client Record",
       options: clientOptions,
       required: true,
+      readOnly: true,
     },
     {
       name: "eventType",
@@ -81,32 +89,37 @@ const ReviewSCSOEventRequestForm = (id) => {
       type: "text",
       placeholder: "e.g. Conference, Birthday, Wedding...",
       required: true,
+      readOnly: true,
     },
     {
       name: "startsOn",
       label: "Start Date",
       type: "date",
       required: true,
+      readOnly: true,
     },
     {
       name: "endsOn",
       label: "End Date",
       type: "date",
       required: true,
+      readOnly: true,
     },
     {
       name: "estimatedBudget",
       label: "Estimated Budget (€)",
       type: "number",
-      required: true,
       placeholder: "Enter estimated cost",
+      required: true,
+      readOnly: true,
     },
     {
       name: "expectedNumberOfAttendees",
       label: "Expected Number of Attendees",
       type: "number",
       placeholder: "e.g. 50",
-      required: true
+      required: true,
+      readOnly: true,
     },
     {
       name: "preferences",
@@ -119,20 +132,20 @@ const ReviewSCSOEventRequestForm = (id) => {
         { name: "breakfastLunchDinner", description: "Breakfast, Lunch or Dinner" },
         { name: "softHotDrinks", description: "Soft or Hot Drinks" },
       ],
+      readOnly: true,
     },
     {
-      name: "review",
-      label: "Review (Senior Customer Service Officer)",
-      type: "checkbox-group",
-      options: [
-        { name: "approve", description: "Approve" },
-        { name: "reject", description: "Reject" },
-      ],
+      name: "budgetComment",
+      label: "Budget Comment",
+      type: "string",
+      placeholder: "e.g. Budget seems reasonable.",
+      required: true
     }
   ]}
 
   const handleEditSubmit = async (formData) => {
-    return await formClient.updateEventRequest(id, formData);
+    await eventRequestClient.updateRegistered(id, formData);
+    await eventRequestClient.approve(id);
   };
 
   return (
@@ -147,4 +160,4 @@ const ReviewSCSOEventRequestForm = (id) => {
   );
 };
 
-export default ReviewSCSOEventRequestForm;
+export default ReviewFMRegisteredEventRequestForm;

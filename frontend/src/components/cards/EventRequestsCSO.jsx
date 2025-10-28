@@ -1,19 +1,32 @@
 // src/cards/NewEventRequest.jsx
-import { Eye, MessageCirclePlus, Pen, UserCheck, UserPlus } from 'lucide-react';
+import { Eye, Pen, MessageCirclePlus, UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
 import CreateRegisteredEventRequestForm from '../forms/CreateRegisteredEventRequestForm';
 import CreateNonRegisteredEventRequestForm from '../forms/CreateNonRegisteredEventRequestForm';
 import { useModalContext } from '../../utils/ModalContext';
-import EditEventRequestForm from '../forms/EditEventRequestForm';
+import EventRequestTable from '../tables/EventRequestTable';
+import { useEffect, useState } from 'react';
+import authClient from '../../clients/authClient';
 
-const NewEventRequestCS = () => {
+const EventRequestCSO = () => {
 
   const { openModalWithContent } = useModalContext();
+  const [self, setSelf] = useState();
+
+  useEffect(() => {
+    const getSelfInfo = async () => {
+      const response = await authClient.validateToken();
+      setSelf(response)
+    } 
+    getSelfInfo()
+  }, [])
 
   return (
-    <WorkspaceCard title="New Event Requests" authorizedRoles={['Staff']}>
+    <WorkspaceCard title="New Event Requests" authorizedRoles={[
+      'Customer Service Officer',
+      ]}>
       <div className="workspace-card-actions">
         <ActionButton
           icon={UserCheck}
@@ -26,9 +39,9 @@ const NewEventRequestCS = () => {
           onClick={() => openModalWithContent(<CreateNonRegisteredEventRequestForm />)}
         />
         <ActionButton
-          icon={Pen}
-          label="Edit Event Request"
-          onClick={() => openModalWithContent(<EditEventRequestForm />)}
+          icon={Eye}
+          label="View My Event Requests"
+          onClick={() => openModalWithContent(<EventRequestTable filter={{createdById: self.id}} />)}
         />
       </div>
 
@@ -36,8 +49,8 @@ const NewEventRequestCS = () => {
   );
 };
 
-NewEventRequestCS.meta = {
+EventRequestCSO.meta = {
   priority: 1,
 };
 
-export default NewEventRequestCS;
+export default EventRequestCSO;

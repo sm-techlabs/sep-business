@@ -2,17 +2,20 @@ import { useAppContext } from '../utils/AppContext';
 import '../styles/workspace.css';
 import Departments from '../components/cards/Departments';
 import Employees from '../components/cards/Employees';
-import Tasks from '../components/cards/Tasks';
-import NewEventRequest from '../components/cards/EventRequests';
-import NewEventRequestCS from '../components/cards/EventRequestsCS';
 import NewRecruitmentRequest from '../components/cards/RecruitmentRequests';
 import Applications from '../components/cards/Applications';
 import HR from '../components/cards/HR';
 import Teams from '../components/cards/Teams';
 import EventArchive from '../components/cards/EventArchive';
 import Clients from '../components/cards/Clients';
-import NewFinancialRequest from '../components/cards/FinancialRequests';
+import NewFinancialRequest from '../components/cards/BudgetAdjustmentRequests';
 import RewiewFinancialRequest from '../components/cards/FinancialRequestsFM';
+import EventRequestCSO from '../components/cards/EventRequestsCSO';
+import EventRequestSCSO from '../components/cards/EventRequestsSCSO';
+import EventRequestFM from '../components/cards/EventRequestsFM';
+import EventRequestAM from '../components/cards/EventRequestsAM';
+import TasksEmployee from '../components/cards/TasksEmployee';
+import TasksManager from '../components/cards/TasksManager';
 
 const Workspace = () => {
   const { tokenValid, loading } = useAppContext();
@@ -31,9 +34,6 @@ const Workspace = () => {
       <div className="workspace-grid">
         <Employees />
         <Departments />
-        <Tasks />
-        <NewEventRequest />
-        <NewEventRequestCS />
         <NewRecruitmentRequest />
         <NewFinancialRequest />
         <RewiewFinancialRequest />
@@ -42,6 +42,16 @@ const Workspace = () => {
         <Teams />
         <EventArchive />
         <Clients />
+        {/* Event Requests */}
+        <EventRequestCSO />
+        <EventRequestSCSO />
+        <EventRequestFM />
+        <EventRequestAM />
+        {/* Tasks */}
+        <TasksEmployee />
+        <TasksManager />
+        
+
       </div>
     </div>
   );

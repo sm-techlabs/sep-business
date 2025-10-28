@@ -11,12 +11,13 @@ declare class Client extends Model {}
 
 declare class RequestPreferences extends Model {}
 
+declare class Employee extends Model {}
+
 export default class RequestTemplate extends Model<
   InferAttributes<RequestTemplate>,
   InferCreationAttributes<RequestTemplate>
 > {
   declare id: CreationOptional<number>;
-  declare recordNumber: number | null;
   declare eventType: string | null;
   declare startsOn: Date | null;
   declare endsOn: Date | null;
@@ -41,4 +42,8 @@ export default class RequestTemplate extends Model<
   declare setPreferences: BelongsToSetAssociationMixin<RequestPreferences, number>;
   declare getClient: BelongsToGetAssociationMixin<Client>;
   declare setClient: BelongsToSetAssociationMixin<Client, number>;
+
+  // createdBy association
+  declare getCreatedBy: BelongsToGetAssociationMixin<Employee>;
+  declare setCreatedBy: BelongsToSetAssociationMixin<Employee, number>;
 }

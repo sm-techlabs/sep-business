@@ -21,6 +21,15 @@ const authClient = {
   },
 
   /**
+   * Get information about the currently authenticated user.
+   * Returns { id, name, jobTitle } (requires /auth/self endpoint on backend).
+   */
+  // self: async () => {
+  //   const response = await apiClient.get('/api/authentication/self');
+  //   return response;
+  // },
+
+  /**
    * Log out the user (backend clears the cookie).
    */
   logout: async () => {

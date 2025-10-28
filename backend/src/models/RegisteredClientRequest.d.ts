@@ -9,13 +9,13 @@ import type {
 
 declare class Client extends Model {}
 declare class RequestPreferences extends Model {}
+declare class Employee extends Model {}
 
 export default class RegisteredClientRequest extends Model<
   InferAttributes<RegisteredClientRequest>,
   InferCreationAttributes<RegisteredClientRequest>
 > {
   declare id: CreationOptional<number>;
-  declare recordNumber: number | null;
   declare eventType: string | null;
   declare startsOn: Date | null;
   declare endsOn: Date | null;
@@ -42,6 +42,9 @@ export default class RegisteredClientRequest extends Model<
   declare setPreferences: BelongsToSetAssociationMixin<RequestPreferences, number>;
   declare getClient: BelongsToGetAssociationMixin<Client>;
   declare setClient: BelongsToSetAssociationMixin<Client, number>;
+
+  declare getCreatedBy: BelongsToGetAssociationMixin<Employee>;
+  declare setCreatedBy: BelongsToSetAssociationMixin<Employee, number>;
 }
 
 declare module '../models/RegisteredClientRequest.js' {
