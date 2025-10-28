@@ -11,6 +11,8 @@ import HR from '../components/cards/HR';
 import Teams from '../components/cards/Teams';
 import EventArchive from '../components/cards/EventArchive';
 import Clients from '../components/cards/Clients';
+import NewFinancialRequest from '../components/cards/FinancialRequests';
+import RewiewFinancialRequest from '../components/cards/FinancialRequestsFM';
 
 const Workspace = () => {
   const { tokenValid, loading } = useAppContext();
@@ -33,6 +35,8 @@ const Workspace = () => {
         <NewEventRequest />
         <NewEventRequestCS />
         <NewRecruitmentRequest />
+        <NewFinancialRequest />
+        <RewiewFinancialRequest />
         <Applications />
         <HR />
         <Teams />

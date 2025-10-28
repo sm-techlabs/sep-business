@@ -3,26 +3,28 @@ import { Pen, Plus, UserCheck, UserPlus } from 'lucide-react';
 import WorkspaceCard from '../WorkspaceCard';
 import '../WorkspaceCard.css';
 import ActionButton from '../ActionButton';
-import CreateRecruitmentRequestForm from '../forms/CreateRecruitmentRequestForm';
+import CreateFinancialRequestForm from '../forms/CreateFinancialRequestForm';
+import EditFinancialRequestForm from '../forms/EditFinancialRequestForm';
+import ReviewFinancialRequestForm from '../forms/ReviewFinancialRequestForm';
 import { useModalContext } from '../../utils/ModalContext';
-import EditRecruitmentRequestForm from '../forms/EditRecruitmentRequestForm';
 
-const NewRecruitmentRequest = () => {
+
+const NewFinancialRequest = () => {
 
   const { openModalWithContent } = useModalContext();
 
   return (
-    <WorkspaceCard title="Recruitment Requests" authorizedRoles={['Production Manager', 'Service Manager', 'Manager']}>
+    <WorkspaceCard title="Financial Requests" authorizedRoles={['Production Manager', 'Service Manager', 'Manager']}>
       <div className="workspace-card-actions">
         <ActionButton
           icon={Plus}
           label="New Recruitment Request"
-          onClick={() => openModalWithContent(<CreateRecruitmentRequestForm />)}
+          onClick={() => openModalWithContent(<CreateFinancialRequestForm />)}
         />
         <ActionButton
           icon={Pen}
           label="Edit Recruitment Request"
-          onClick={() => openModalWithContent(<EditRecruitmentRequestForm />)}
+          onClick={() => openModalWithContent(<EditFinancialRequestForm />)}
         />
       </div>
 
@@ -30,8 +32,8 @@ const NewRecruitmentRequest = () => {
   );
 };
 
-NewRecruitmentRequest.meta = {
+NewFinancialRequest.meta = {
   priority: 1,
 };
 
-export default NewRecruitmentRequest;
+export default NewFinancialRequest;
