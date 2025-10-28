@@ -7,6 +7,7 @@ import applicationClient from "../../clients/applicationClient";
 const CreateBudgetAdjustmentRequestForm = () => {
 
   const [applicationOptions, setApplicationOptions] = useState([]);
+  
   useEffect(() => {
   const fetchApplications = async () => {
     try {
@@ -15,7 +16,7 @@ const CreateBudgetAdjustmentRequestForm = () => {
 
       const options = applications
         .filter((a) => a && a.id)
-        .sort((a, b) => (a.id || "").localeCompare(b.id || ""))
+        .sort((a, b) => a.id - b.id)
         .map((app) => ({
           value: app.id,
           label: `Application #${app.id}`,

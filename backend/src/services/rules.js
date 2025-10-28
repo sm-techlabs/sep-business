@@ -41,10 +41,8 @@ export default {
       "view:applications",
       "view:teams",
       "update:tasks",
-      "create:budget-adjustment-requests",
-      "view:budget-adjustment-requests",
-      "update:budget-adjustment-requests",
-      "delete:budget-adjustment-requests",
+      "*:budget-adjustment-requests",
+      "*:recruitment-requests",
     ]
   },
   "service manager": {
@@ -54,9 +52,8 @@ export default {
       "view:applications",
       "view:teams",
       "update:tasks",
-      "create:budget-adjustment-requests",
-      "view:budget-adjustment-requests",
-      "update:budget-adjustment-requests",
+      "*:budget-adjustment-requests",
+      "*:recruitment-requests",
     ]
   },
   "decorating architect": {
@@ -93,6 +90,15 @@ export default {
       "update:tasks",
     ]
   },
+  "photographer": {
+    can: [
+      "view:health",
+      "view:tasks",
+      "view:applications",
+      "view:teams",
+      "update:tasks",
+    ]
+  },
   "graphic designer": {
     can: [
       "view:health",
@@ -102,4 +108,14 @@ export default {
       "update:tasks",
     ]
   },
+  "senior hr manager": {
+    can: [
+      "*:recruitment-requests",
+    ]
+  },
+  "hr assistant": {
+    can: [
+      "*:recruitment-requests",
+    ]
+  }
 };

@@ -20,7 +20,7 @@ const BudgetAdjustmentRequestFM = () => {
         />
         <ActionButton
           icon={ListCheck}
-          label="Resolved"
+          label="Resolved Requests"
           onClick={() => openModalWithContent(<BudgetAdjustmentRequestTableFM filter={{ status: '!Active' }}/>)}
         />
       </div>

@@ -287,6 +287,31 @@ const initSampleData = async () => {
         status: 'Open',
         clientId: client2.id
     });
+    
+    const app2 = await Application.create({
+        eventType: 'Workshop',
+        description: 'Frontend Development with React',
+        expectedNumberOfAttendees: 25,
+        budget: 1500,
+        startsOn: new Date('2025-11-15T09:00:00Z'),
+        endsOn: new Date('2025-11-15T17:00:00Z'),
+        otherNeeds: 'WiFi, Whiteboard, Coffee Break',
+        status: 'Pending',
+        clientId: client.id
+    });
+
+    const app3 = await Application.create({
+        eventType: 'Corporate Party',
+        description: 'End-of-Year Celebration for Company Staff',
+        expectedNumberOfAttendees: 200,
+        budget: 8000,
+        startsOn: new Date('2025-12-20T18:00:00Z'),
+        endsOn: new Date('2025-12-21T01:00:00Z'),
+        otherNeeds: 'Catering, DJ, Decorations',
+        status: 'Approved',
+        clientId: client3.id
+    });
+
 
     // Request preferences
     const prefsRegistered = await RequestPreferences.create({
