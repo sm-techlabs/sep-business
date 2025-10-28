@@ -61,3 +61,9 @@ export const REQUEST_TEMPLATE_TYPES = [
     'registered',
     'non_registered',
 ];
+
+export const BUDGET_ADJUSTMENT_REQUEST_STATUSES = [
+    'Active',
+    'Accepted',
+    'Rejected',
+];
