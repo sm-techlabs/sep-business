@@ -8,14 +8,14 @@ import HR from '../components/cards/HR';
 import Teams from '../components/cards/Teams';
 import EventArchive from '../components/cards/EventArchive';
 import Clients from '../components/cards/Clients';
-import NewFinancialRequest from '../components/cards/BudgetAdjustmentRequests';
-import RewiewFinancialRequest from '../components/cards/FinancialRequestsFM';
 import EventRequestCSO from '../components/cards/EventRequestsCSO';
 import EventRequestSCSO from '../components/cards/EventRequestsSCSO';
 import EventRequestFM from '../components/cards/EventRequestsFM';
 import EventRequestAM from '../components/cards/EventRequestsAM';
 import TasksEmployee from '../components/cards/TasksEmployee';
 import TasksManager from '../components/cards/TasksManager';
+import BudgetAdjustmentRequestFM from '../components/cards/BudgetAdjustmentRequestsFM';
+import BudgetAdjustmentRequest from '../components/cards/BudgetAdjustmentRequests';
 
 const Workspace = () => {
   const { tokenValid, loading } = useAppContext();
@@ -35,8 +35,6 @@ const Workspace = () => {
         <Employees />
         <Departments />
         <NewRecruitmentRequest />
-        <NewFinancialRequest />
-        <RewiewFinancialRequest />
         <Applications />
         <HR />
         <Teams />
@@ -50,7 +48,10 @@ const Workspace = () => {
         {/* Tasks */}
         <TasksEmployee />
         <TasksManager />
-        
+
+        {/* Budget Adjustment Requests */}
+        <BudgetAdjustmentRequestFM />
+        <BudgetAdjustmentRequest />
 
       </div>
     </div>

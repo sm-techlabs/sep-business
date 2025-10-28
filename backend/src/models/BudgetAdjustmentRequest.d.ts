@@ -18,6 +18,7 @@ export default class BudgetAdjustmentRequest extends Model<
   declare id: CreationOptional<number>;
   declare requiredAmount: number | null;
   declare reason: string | null;
+  declare status: 'Active' | 'Accepted' | 'Rejected';
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 

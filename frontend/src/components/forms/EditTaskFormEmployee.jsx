@@ -52,6 +52,7 @@ const EditTaskFormEmployee = ({ id }) => {
           title: response.title || "",
           priority: response.priority || "Medium",
           assignedToId: response.assignedToId || "",
+          status: response.status || "",
           startsOn: response.startsOn ? new Date(response.startsOn) : null,
           endsOn: response.endsOn ? new Date(response.endsOn) : null,
           comments: response.comments || "",
@@ -94,7 +95,7 @@ const EditTaskFormEmployee = ({ id }) => {
       options:
       [
         { label: "Pending", value: "Pending" },
-        { label: "InProgress", value: "InProgress" },
+        { label: "In Progress", value: "InProgress" },
         { label: "Completed", value: "Completed" },
       ],
       required: true,
