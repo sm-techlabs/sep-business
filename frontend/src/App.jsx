@@ -9,6 +9,7 @@ import Workspace from './routes/Workspace';
 import Modal from './components/Modal';
 import { useModalContext } from './utils/ModalContext';
 import { useEffect } from 'react';
+import WorkflowGuide from './components/WorkflowGuide';
 
 const routes = [
   { path: '/login', element: <Login />, protected: false },
@@ -48,6 +49,7 @@ function App() {
           ))}
           <Route path="*" element={<Navigate to="/workspace" replace />} />
         </Routes>
+        <WorkflowGuide />
       <Footer />
     </>
   );

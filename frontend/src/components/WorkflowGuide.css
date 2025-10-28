@@ -1,0 +1,102 @@
+/* ===============================
+   🧭 Workflow Guide Floating Tooltip
+   =============================== */
+
+.workflow-guide {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+}
+.workflow-button {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  width: 52px;                  /* Slightly larger for breathing room */
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-elevated);
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+
+  /* Center contents perfectly */
+  display: inline-flex;         /* ✅ inline-flex avoids flex-parent quirks */
+  align-items: center;
+  justify-content: center;
+
+  /* Remove font-size interference */
+  font-size: 0;                 /* ✅ prevents inherited line box from shrinking SVG */
+}
+
+.workflow-button:hover {
+  background-color: var(--color-accent-hover);
+  transform: scale(1.05);
+}
+
+.workflow-icon {
+  width: 24px;                  /* ✅ Explicit control over SVG size */
+  height: 24px;
+  stroke-width: 2;
+  flex-shrink: 0;               /* ✅ Prevent flexbox from scaling it */
+  pointer-events: none;         /* Better click handling */
+}
+
+
+/* Tooltip container */
+.workflow-tooltip {
+  position: absolute;
+  bottom: 64px;
+  right: 0;
+  width: 320px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevated);
+  padding: 1rem;
+  color: var(--color-text);
+  animation: fadeInUp 0.2s ease;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.workflow-tooltip h3 {
+  color: var(--color-text-strong);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3rem;
+}
+
+.workflow-section {
+  margin-bottom: 1rem;
+}
+
+.workflow-section h4 {
+  color: var(--color-accent-blue);
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+
+.workflow-section ul {
+  list-style: disc;
+  padding-left: 1.2rem;
+  margin: 0;
+}
+
+.workflow-section li {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 0.2rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
