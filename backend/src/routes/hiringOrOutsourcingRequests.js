@@ -1,5 +1,5 @@
 import express from 'express';
-import { BudgetAdjustmentRequest, Department, sequelize } from '../models/index.js';
+import { Department, HiringOrOutsourcingRequest, sequelize } from '../models/index.js';
 import Employee from '../models/Employee.js';
 import { validate } from '../services/validation.js';
 import { authorize } from '../services/authorization.js';
@@ -7,18 +7,14 @@ import createHandlerWrapper from '../utils/createHandlerWrapper.js';
 import { NotFoundError } from '../utils/errors.js';
 import { verifyToken } from '../utils/jwt.js';
 import { parseFilters } from '../utils/parseFilters.js';
-import { createBudgetAdjustmentRequestSchema } from '../schemas/budgetAdjustmentRequest.js';
-import Application from '../models/Application.js';
+import { createHiringOrOutsourcingRequestSchema } from '../schemas/hiringOrOutsourcingRequest.js';
 
 const router = express.Router();
 
-/**
- * 🧩 Create new Event Request route
- */
 router.post(
     '/', 
     authorize, 
-    validate(createBudgetAdjustmentRequestSchema),
+    validate(createHiringOrOutsourcingRequestSchema),
     createHandlerWrapper(async (req) => {
         const { id: requesterId } = verifyToken(req.cookies.token);
         
@@ -33,23 +29,20 @@ router.post(
             })
         )
         if (!department) throw new NotFoundError('Department not found for employee');
-        const application = await Application.findByPk(req.body.applicationId);
-        if (!application) {
-            throw new NotFoundError('Application not found');
-        }
 
         const id = await sequelize.transaction(async t => {
-            const newReq = await BudgetAdjustmentRequest.create({
-                requiredAmount: req.body.requiredAmount,
-                reason: req.body.reason,
+            const newReq = await HiringOrOutsourcingRequest.create({
+                contractType: req.body.contractType,
+                jobTitle: req.body.jobTitle,
+                minYearsOfExperience: req.body.minYearsOfExperience,
+                jobDescription: req.body.jobDescription,
                 status: 'Active',
             }, { transaction: t });
-            await newReq.setApplicationReference(application, { transaction: t });
             await newReq.setRequestingDepartment(department, { transaction: t });
             return newReq.id;
         });
 
-        return { id, message: `Budget Adjustment Request #${id} created successfully!` }
+        return { id, message: `Hiring/Outsourcing Request #${id} created successfully!` }
     })
 );
 
@@ -73,7 +66,6 @@ router.get(
       'id',
       'createdAt',
       'updatedAt',
-      'requiredAmount',
       'status',
     ]);
     const orderCol = sortable.has(String(sortBy)) ? String(sortBy) : 'createdAt';
@@ -83,15 +75,13 @@ router.get(
     const where = parseFilters(req.query, [
       'status',
       'requestingDepartmentId',
-      'applicationId',
     ]);
 
     const include = [
         { model: Department, as: 'requestingDepartment', attributes: ['id', 'name'] },
-        { model: Application, as: 'applicationReference', attributes: ['id'] },
     ];
 
-    const { rows, count } = await BudgetAdjustmentRequest.findAndCountAll({
+    const { rows, count } = await HiringOrOutsourcingRequest.findAndCountAll({
       where,
       include,
       limit: size,
@@ -115,15 +105,14 @@ router.get(
   createHandlerWrapper(async (req) => {
     const requestId = req.params.id;
 
-    const request = await BudgetAdjustmentRequest.findByPk(requestId, {
+    const request = await HiringOrOutsourcingRequest.findByPk(requestId, {
       include: [
         { model: Department, as: 'requestingDepartment', attributes: ['id', 'name'] },
-        { model: Application, as: 'applicationReference', attributes: ['id'] },
       ],
     });
 
     if (!request) {
-      throw new NotFoundError('Budget Adjustment Request not found');
+      throw new NotFoundError('Hiring/Outsourcing Request not found');
     }
 
     return request;
@@ -135,33 +124,22 @@ router.put(
     authorize,
     createHandlerWrapper(async (req) => {
         const requestId = req.params.id;
-        const request = await BudgetAdjustmentRequest.findByPk(requestId);
+        const request = await HiringOrOutsourcingRequest.findByPk(requestId);
         if (!request) {
-            throw new NotFoundError('Budget Adjustment Request not found');
+            throw new NotFoundError('Hiring/Outsourcing Request not found');
         }
-
-        const application = await Application.findByPk(req.body.applicationId);
-        if (!application) {
-            throw new NotFoundError('Application not found');
-        }
-
-        // const department = await Department.findByPk(request.body.requestingDepartmentId);
-        // if (!department) {
-        //     throw new NotFoundError('Requesting Department not found');
-        // }
             
         await sequelize.transaction(async (t) => {
             await request.update({
-                requiredAmount: req.body.requiredAmount,
-                reason: req.body.reason,
                 status: req.body.status,
+                contractType: req.body.contractType,
+                jobTitle: req.body.jobTitle,
+                minYearsOfExperience: req.body.minYearsOfExperience,
+                jobDescription: req.body.jobDescription,
             }, { transaction: t });
-
-            await request.setApplicationReference(application, { transaction: t });
-            // await request.setRequestingDepartment(department, { transaction: t });
         });
 
-        return { message: `Budget Adjustment Request #${requestId} updated successfully!` };
+        return { message: `Hiring/Outsourcing Request #${requestId} updated successfully!` };
     })
 );
 
@@ -170,14 +148,9 @@ router.patch(
     authorize,
     createHandlerWrapper(async (req) => {
         const requestId = req.params.id;
-        const request = await BudgetAdjustmentRequest.findByPk(requestId);
+        const request = await HiringOrOutsourcingRequest.findByPk(requestId);
         if (!request) {
-            throw new NotFoundError('Budget Adjustment Request not found');
-        }
-
-        const application = await Application.findByPk(req.body.applicationId);
-        if (!application) {
-            throw new NotFoundError('Application not found');
+            throw new NotFoundError('Hiring/Outsourcing Request not found');
         }
 
         const department = await Department.findByPk(request.body.requestingDepartmentId);
@@ -187,34 +160,35 @@ router.patch(
             
         await sequelize.transaction(async (t) => {
             await request.update({
-                requiredAmount: req.body.requiredAmount,
-                reason: req.body.reason,
+                contractType: req.body.contractType,
+                minYearsOfExperience: req.body.minYearsOfExperience,
+                jobTitle: req.body.jobTitle,
+                jobDescription: req.body.jobDescription,
                 status: req.body.status,
             }, { transaction: t });
 
-            await request.setApplicationReference(application, { transaction: t });
             await request.setRequestingDepartment(department, { transaction: t });
         });
 
-        return { message: `Budget Adjustment Request #${requestId} updated successfully!` };
+        return { message: `Hiring/Outsourcing Request #${requestId} updated successfully!` };
     })
 );
 
 
-// DELETE /budget-adjustment-requests/:id
+// DELETE /recruitment-requests/:id
 router.delete(
     '/:id',
     authorize,
     createHandlerWrapper(async (req) => {
         const requestId = req.params.id;
-        const request = await BudgetAdjustmentRequest.findByPk(requestId);
+        const request = await HiringOrOutsourcingRequest.findByPk(requestId);
         if (!request) {
-            throw new NotFoundError('Event Request not found');
+            throw new NotFoundError('Recruitment Request not found');
         }
         await sequelize.transaction(async (t) => {
             await request.destroy({ transaction: t });
         });
-        return { message: `Budget Adjustment Request #${requestId} deleted successfully!` };
+        return { message: `Recruitment Request #${requestId} deleted successfully!` };
     })
 );
 

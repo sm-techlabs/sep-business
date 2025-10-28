@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Common request fields
 const createBudgetAdjustmentRequestSchema = z.object({
     applicationId: z.number().int().positive(),
     requiredAmount: z.number().int().positive(),
