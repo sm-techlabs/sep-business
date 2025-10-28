@@ -43,6 +43,7 @@ export const JOB_AD_STATUSES = [
 ];
 
 export const HIRING_OR_OUTSOURCING_STATUSES = [
+    'Active',
     'Approved',
     'Rejected',
 ];
