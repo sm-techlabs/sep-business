@@ -5,7 +5,6 @@ import createHandlerWrapper from '../utils/createHandlerWrapper.js';
 import { NotFoundError } from '../utils/errors.js';
 import { verifyToken } from '../utils/jwt.js';
 import Department from '../models/Department.js';
-import Team from '../models/Team.js';
 
 const router = express.Router();
 
