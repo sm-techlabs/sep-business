@@ -42,7 +42,7 @@ const ReviewFinancialRequestForm = (id) => {
     },
     {
       name: "requiredAmount",
-      label: "Required Amount (€)",
+      label: "Required Amount (SEK)",
       type: "number",
       placeholder: "Required Amount",
       required: true,

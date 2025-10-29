@@ -92,7 +92,7 @@ const EditNonRegisteredEventRequestForm = ({ id }) => {
     },
     {
       name: "estimatedBudget",
-      label: "Estimated Budget (€)",
+      label: "Estimated Budget (SEK)",
       type: "number",
       required: true,
       placeholder: "Enter estimated cost",

@@ -98,7 +98,7 @@ const ReviewFMNonRegisteredEventRequestForm = ({ id }) => {
     },
     {
       name: "estimatedBudget",
-      label: "Estimated Budget (€)",
+      label: "Estimated Budget (SEK)",
       type: "number",
       placeholder: "Enter estimated cost",
       required: true,
