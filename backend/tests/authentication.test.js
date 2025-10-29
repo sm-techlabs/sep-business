@@ -43,7 +43,7 @@ describe('🧪 Authentication API', () => {
   test('logs in successfully with valid credentials', async () => {
     const res = await request(app)
       .post('/api/authentication/login')
-      .send({ username: 'alice', password: 'test' });
+      .send({ username: 'alice', password: 'pwd' });
 
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toMatch(/success/i);
