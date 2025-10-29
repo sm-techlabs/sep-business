@@ -165,42 +165,6 @@ router.put(
     })
 );
 
-router.patch(
-    '/:id',
-    authorize,
-    createHandlerWrapper(async (req) => {
-        const requestId = req.params.id;
-        const request = await BudgetAdjustmentRequest.findByPk(requestId);
-        if (!request) {
-            throw new NotFoundError('Budget Adjustment Request not found');
-        }
-
-        const application = await Application.findByPk(req.body.applicationId);
-        if (!application) {
-            throw new NotFoundError('Application not found');
-        }
-
-        const department = await Department.findByPk(request.body.requestingDepartmentId);
-        if (!department) {
-            throw new NotFoundError('Requesting Department not found');
-        }
-            
-        await sequelize.transaction(async (t) => {
-            await request.update({
-                requiredAmount: req.body.requiredAmount,
-                reason: req.body.reason,
-                status: req.body.status,
-            }, { transaction: t });
-
-            await request.setApplicationReference(application, { transaction: t });
-            await request.setRequestingDepartment(department, { transaction: t });
-        });
-
-        return { message: `Budget Adjustment Request #${requestId} updated successfully!` };
-    })
-);
-
-
 // DELETE /budget-adjustment-requests/:id
 router.delete(
     '/:id',

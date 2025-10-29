@@ -6,12 +6,11 @@ import RegisteredClientRequest from '../models/RegisteredClientRequest.js';
 import Client from '../models/Client.js';
 import RequestTemplate from '../models/RequestTemplate.js';
 import Employee from '../models/Employee.js';
-import { Op } from 'sequelize';
 import { validate } from '../services/validation.js';
 import { nonRegisteredRequestSchema, registeredRequestSchema } from '../schemas/request.js';
 import { authorize } from '../services/authorization.js';
 import createHandlerWrapper from '../utils/createHandlerWrapper.js';
-import { BadRequestError, NotFoundError, UnprocessableEntityError } from '../utils/errors.js';
+import { NotFoundError, UnprocessableEntityError } from '../utils/errors.js';
 import { verifyToken } from '../utils/jwt.js';
 import { REQUEST_TEMPLATE_STATUSES } from '../constants/enums.js';
 import { parseFilters } from '../utils/parseFilters.js';
@@ -211,6 +210,7 @@ router.put(
                 status: req.body.status,
                 estimatedBudget: req.body.estimatedBudget,
                 budgetComment: req.body.budgetComment,
+                expectedNumberOfAttendees: req.body.expectedNumberOfAttendees,
             }, { transaction: t });
 
             // If preferences are provided, update them
@@ -271,6 +271,7 @@ router.put(
                 status: req.body.status,
                 estimatedBudget: req.body.estimatedBudget,
                 budgetComment: req.body.budgetComment,
+                expectedNumberOfAttendees: req.body.expectedNumberOfAttendees,
             }, { transaction: t });
 
             // If preferences are provided, update them

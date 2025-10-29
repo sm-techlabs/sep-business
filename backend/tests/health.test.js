@@ -15,8 +15,10 @@ describe('GET /api/health', () => {
   it('should return a valid health message', async () => {
 
     const token = generateToken({
-      name: 'alice',
-      jobTitle: 'Manager',
+      id: 11,
+      name: 'Christian',
+      jobTitle: 'Network Engineer',
+      teamId: 5,
     });
 
     const res = await request(app)
