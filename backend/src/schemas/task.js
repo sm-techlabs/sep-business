@@ -22,10 +22,10 @@ const updateTaskSchema = z.object({
     description: z.string().min(1),
     comments: z.string(),
     priority: z.enum(TASK_PRIORITIES),
-    // status: z.enum(TASK_STATUSES),
     applicationId: z.number().int().positive(),
-    subteamId: z.number().int().positive(),
-    // assignedToId: z.number().int().positive(),
+    subteamId: z.number().int().positive().optional(),
+    applicationId: z.number().int().positive().optional(),
+    assignedToId: z.number().int().positive().optional(),
 }).refine(
     (data) => data.endsOn >= data.startsOn,
     { message: 'endsOn must be on or after startsOn', path: ['endsOn'] }

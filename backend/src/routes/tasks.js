@@ -153,7 +153,6 @@ router.put(
                 description: req.body.description,
                 comments: req.body.comments,
                 priority: req.body.priority,
-                status: req.body.status,
             }, { transaction: t });
 
             if (req.body.applicationId) {
